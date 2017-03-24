@@ -14,9 +14,10 @@ ENDPOINT = 'https://pypi.python.org/pypi'
 #    return parse(v).is_prerelease
 
 @click.command(context_settings={"help_option_names": ["-h", "--help"]})
+@click.option('-D', '--description', '--long-description', is_flag=True)
 @click.argument('packages', nargs=-1)
 @click.pass_context
-def qypi(ctx, packages):
+def qypi(ctx, packages, long_description):
     s = requests.Session()
     ok = True
     for pkgname in packages:
@@ -29,30 +30,34 @@ def qypi(ctx, packages):
         about = r.json()
         pkg = about["info"]
         #releases = about["releases"]
-        for k,v in list(pkg.items()):
-            if k.startswith(('cheesecake', '_pypi')):
-                del pkg[k]
-            elif v in ('', 'UNKNOWN'):
-                pkg[k] = None
-        pkg.pop('description', None)
-        pkg.pop('downloads', None)
-        pkg["url"] = pkg.pop('home_page', None)
-        pkg["release_date"] = min((obj["upload_time"] for obj in about["urls"]),
-                                  default=None)
-        pkg["people"] = []
-        if pkg.get('author') or pkg.get('author_email'):
-            pkg["people"].append({
-                "name": pkg.get('author'),
-                "email": pkg.get('author_email'),
-                "role": "author",
-            })
-        if pkg.get('maintainer') or pkg.get('maintainer_email'):
-            pkg["people"].append({
-                "name": pkg.get('maintainer'),
-                "email": pkg.get('maintainer_email'),
-                "role": "maintainer",
-            })
-        print(json.dumps(pkg, sort_keys=True, indent=4))
+        if long_description:
+            click.echo_via_pager(pkg["description"])
+        else:
+            for k,v in list(pkg.items()):
+                if k.startswith(('cheesecake', '_pypi')):
+                    del pkg[k]
+                elif v in ('', 'UNKNOWN'):
+                    pkg[k] = None
+            pkg.pop('description', None)
+            pkg.pop('downloads', None)
+            pkg["url"] = pkg.pop('home_page', None)
+            pkg["release_date"] = min(
+                (obj["upload_time"] for obj in about["urls"]), default=None,
+            )
+            pkg["people"] = []
+            if pkg.get('author') or pkg.get('author_email'):
+                pkg["people"].append({
+                    "name": pkg.get('author'),
+                    "email": pkg.get('author_email'),
+                    "role": "author",
+                })
+            if pkg.get('maintainer') or pkg.get('maintainer_email'):
+                pkg["people"].append({
+                    "name": pkg.get('maintainer'),
+                    "email": pkg.get('maintainer_email'),
+                    "role": "maintainer",
+                })
+            print(json.dumps(pkg, sort_keys=True, indent=4))
     ctx.exit(0 if ok else 1)
 
 if __name__ == '__main__':

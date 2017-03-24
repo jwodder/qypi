@@ -2,7 +2,6 @@
   Handle this.
 - Options to add:
     - `--pre` — include prereleases
-    - `--long-description`
     - `--index`
     - `--classifiers` / `--no-classifiers`
     - showing a list of all releases (sorted in version order) with their
