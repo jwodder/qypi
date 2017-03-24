@@ -14,12 +14,14 @@ ENDPOINT = 'https://pypi.python.org/pypi'
 #    return parse(v).is_prerelease
 
 @click.command(context_settings={"help_option_names": ["-h", "--help"]})
+@click.option('-a', '--array', is_flag=True)
 @click.option('-D', '--description', '--long-description', is_flag=True)
 @click.argument('packages', nargs=-1)
 @click.pass_context
-def qypi(ctx, packages, long_description):
+def qypi(ctx, packages, array, long_description):
     s = requests.Session()
     ok = True
+    pkgdata = []
     for pkgname in packages:
         r = s.get(ENDPOINT + '/' + pkgname + '/json')
         if r.status_code == 404:
@@ -57,7 +59,12 @@ def qypi(ctx, packages, long_description):
                     "email": pkg.get('maintainer_email'),
                     "role": "maintainer",
                 })
-            print(json.dumps(pkg, sort_keys=True, indent=4))
+            if array:
+                pkgdata.append(pkg)
+            else:
+                print(json.dumps(pkg, sort_keys=True, indent=4))
+    if array:
+        print(json.dumps(pkgdata, sort_keys=True, indent=4))
     ctx.exit(0 if ok else 1)
 
 if __name__ == '__main__':
