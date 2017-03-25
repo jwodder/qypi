@@ -62,18 +62,15 @@ def qypi(ctx, packages, array, long_description, pre):
                 (obj["upload_time"] for obj in about["urls"]), default=None,
             )
             pkg["people"] = []
-            if pkg.get('author') or pkg.get('author_email'):
-                pkg["people"].append({
-                    "name": pkg.get('author'),
-                    "email": pkg.get('author_email'),
-                    "role": "author",
-                })
-            if pkg.get('maintainer') or pkg.get('maintainer_email'):
-                pkg["people"].append({
-                    "name": pkg.get('maintainer'),
-                    "email": pkg.get('maintainer_email'),
-                    "role": "maintainer",
-                })
+            for role in ('author', 'maintainer'):
+                name = pkg.pop(role, None)
+                email = pkg.pop(role + '_email', None)
+                if name or email:
+                    pkg["people"].append({
+                        "name": name,
+                        "email": email,
+                        "role": role,
+                    })
             if array:
                 pkgdata.append(pkg)
             else:
