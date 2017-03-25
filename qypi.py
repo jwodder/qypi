@@ -3,22 +3,23 @@
 # normalization
 
 import json
-#from   packaging.version import parse
 import click
+from   packaging.version import parse
 import requests
 
 ENDPOINT = 'https://pypi.python.org/pypi'
 #ENDPOINT = 'https://pypi.org/pypi'
 
-#def is_prerelease(v):
-#    return parse(v).is_prerelease
+def dumps(obj):
+    return json.dumps(obj, sort_keys=True, indent=4, ensure_ascii=False)
 
 @click.command(context_settings={"help_option_names": ["-h", "--help"]})
 @click.option('-a', '--array', is_flag=True)
 @click.option('-D', '--description', '--long-description', is_flag=True)
+@click.option('--pre', is_flag=True)
 @click.argument('packages', nargs=-1)
 @click.pass_context
-def qypi(ctx, packages, array, long_description):
+def qypi(ctx, packages, array, long_description, pre):
     s = requests.Session()
     ok = True
     pkgdata = []
@@ -30,6 +31,20 @@ def qypi(ctx, packages, array, long_description):
             continue
         r.raise_for_status()
         about = r.json()
+        if not pre and parse(about["info"]["version"]).is_prerelease:
+            latest = max((v for v in map(parse, about["releases"])
+                            if not v.is_prerelease), default=None)
+            if latest is None:
+                click.echo('qypi: {}: no stable versions available'
+                           .format(pkgname), err=True)
+                ok = False
+                continue
+            r = s.get('{}/{}/{}/json'.format(ENDPOINT, pkgname, latest))
+            ### Will stringifying the parsed version string instead of using
+            ### the original key from `about["releases"]` ever change the
+            ### version string in a meaningful way?
+            r.raise_for_status()
+            about = r.json()
         pkg = about["info"]
         #releases = about["releases"]
         if long_description:
@@ -62,9 +77,9 @@ def qypi(ctx, packages, array, long_description):
             if array:
                 pkgdata.append(pkg)
             else:
-                print(json.dumps(pkg, sort_keys=True, indent=4))
+                click.echo(dumps(pkg))
     if array:
-        print(json.dumps(pkgdata, sort_keys=True, indent=4))
+        click.echo(dumps(pkgdata))
     ctx.exit(0 if ok else 1)
 
 if __name__ == '__main__':
