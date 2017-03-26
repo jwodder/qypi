@@ -1,6 +1,4 @@
 - Options to add:
-    - `--index-url`
-        - Support setting via a `PIP_INDEX_URL`(?) environment variable
     - `--repository`/`-r` — support for `~/.pypirc` files
         - See <https://docs.python.org/3/distutils/packageindex.html#pypirc>
     - showing a list of all releases (sorted in version order) with their
@@ -49,7 +47,7 @@
     - `readme [--pre] <package>[=version]` — show package long descriptions in
       pager
 
-    - `search [--and|--or] <field>=<value> ...`
+    - `search [--and|--or] <field>:<value> ...`
         - If the field is omitted from an argument, implicitly set it to
           `description` (or `summary`?)
         - Allow the field `url` as a synonym of `home_page`?

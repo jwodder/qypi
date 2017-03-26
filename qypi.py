@@ -8,11 +8,12 @@ ENDPOINT = 'https://pypi.python.org/pypi'
 #ENDPOINT = 'https://pypi.org/pypi'
 
 class QyPI:
-    def __init__(self):
+    def __init__(self, index_url):
+        self.index_url = index_url
         self.s = requests.Session()
 
     def get_latest_version(self, package, pre=False):
-        r = self.s.get(ENDPOINT + '/' + package + '/json')
+        r = self.s.get(self.index_url + '/' + package + '/json')
         # Unlike the XML-RPC API, the JSON API accepts package names regardless
         # of normalization
         if r.status_code == 404:
@@ -24,7 +25,7 @@ class QyPI:
                             if not v.is_prerelease), default=None)
             if latest is None:
                 raise NoStableVersionError(package)
-            r = self.s.get('{}/{}/{}/json'.format(ENDPOINT, package, latest))
+            r = self.s.get('{}/{}/{}/json'.format(self.index_url, package, latest))
             ### Will stringifying the parsed version string instead of using
             ### the original key from `about["releases"]` ever change the
             ### version string in a meaningful way?
@@ -57,10 +58,12 @@ def dumps(obj):
     return json.dumps(obj, sort_keys=True, indent=4, ensure_ascii=False)
 
 @click.group(context_settings={"help_option_names": ["-h", "--help"]})
+@click.option('-i', '--index-url', default=ENDPOINT, metavar='URL',
+              envvar='PIP_INDEX_URL')
 @click.pass_context
-def qypi(ctx):
+def qypi(ctx, index_url):
     """ Query PyPI """
-    ctx.obj = QyPI()
+    ctx.obj = QyPI(index_url)
 
 @qypi.command()
 @click.option('-a', '--array', is_flag=True)
