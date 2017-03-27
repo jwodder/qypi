@@ -13,7 +13,7 @@ ENDPOINT = 'https://pypi.org/pypi'
               envvar='PIP_INDEX_URL')
 @click.pass_context
 def qypi(ctx, index_url):
-    """ Query & search PyPI from the command line """
+    """ Query PyPI from the command line """
     ctx.obj = PyPIClient(index_url)
 
 @qypi.command()
