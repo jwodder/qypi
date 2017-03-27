@@ -189,6 +189,18 @@ def search(obj, terms):
         spec.setdefault(key, []).append(value)
     click.echo(dumps(list(map(clean_pypi_dict, obj.xmlrpc('search', spec)))))
 
+@qypi.command()
+@click.option('-f', '--file', type=click.File('r'))
+@click.argument('classifiers', nargs=-1)
+@click.pass_obj
+def browse(obj, classifiers, file):
+    if file is not None:
+        classifiers += tuple(map(str.strip, file))
+    click.echo(dumps([
+        {"name": name, "version": version or None}
+        for name, version in obj.xmlrpc('browse', classifiers)
+    ]))
+
 def parse_packages(ctx, packages, pre):
     ### TODO: Figure out a better way to integrate this with Click
     ok = True

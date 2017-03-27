@@ -21,10 +21,9 @@
     - Add an `--array`/`--map` option?
 - `search`:
     - Add an `--or` option (and an explicit `--and` option?)
+- `browse`:
+    - Rethink name; "`classified`"? "`classed`"? "`troves`"? "`troved`"?
 
 - Subcommands to add:
-    - `browse <classifier> ...`
-        - Add an option for reading the list of classifiers from a file/stdin
-        - Rethink name; "`classified`"? "`classed`"?
     - `users <package> ...` — list users & roles for packages
     - `??? [--owner|--maintainer] <user> ...` - list packages & roles for users
