@@ -68,9 +68,6 @@ class NoStableVersionError(QyPIError):
         return self.package + ': no stable versions available'
 
 
-def dumps(obj):
-    return json.dumps(obj, sort_keys=True, indent=4, ensure_ascii=False)
-
 @click.group(context_settings={"help_option_names": ["-h", "--help"]})
 @click.option('-i', '--index-url', default=ENDPOINT, metavar='URL',
               envvar='PIP_INDEX_URL')
@@ -97,9 +94,7 @@ def info(ctx, packages, array, pre):
             info.pop('description', None)
             info.pop('downloads', None)
             info["url"] = info.pop('home_page', None)
-            info["release_date"] = min(
-                (obj["upload_time"] for obj in pkg["urls"]), default=None,
-            )
+            info["release_date"] = first_upload(pkg["urls"])
             info["people"] = []
             for role in ('author', 'maintainer'):
                 name = info.pop(role, None)
@@ -126,6 +121,31 @@ def readme(ctx, packages, pre):
     for pkg in parse_packages(ctx, packages, pre):
         click.echo_via_pager(pkg["info"]["description"])
 
+@qypi.command()
+@click.argument('packages', nargs=-1)
+@click.pass_context
+def releases(ctx, packages):
+    ok = True
+    for name in packages:
+        try:
+            pkg = ctx.obj.get_latest_version(name, pre=True)
+        except QyPIError as e:
+            click.echo(ctx.command_path + ': ' + str(e), err=True)
+            ok = False
+        else:
+            about = {
+                "name": pkg["info"]["name"],
+                "releases": [{
+                    "version": version,
+                    "is_prerelease": parse(version).is_prerelease,
+                    "release_date": first_upload(pkg["releases"][version]),
+                    "release_url": pkg["info"]["package_url"] + '/' + version,
+                } for version in sorted(pkg["releases"], key=parse)],
+            }
+            click.echo(dumps(about))
+    if not ok:
+        ctx.exit(1)
+
 def parse_packages(ctx, packages, pre):
     ### TODO: Look into a better way to integrate this with Click
     ok = True
@@ -143,6 +163,12 @@ def parse_packages(ctx, packages, pre):
             yield pkg
     if not ok:
         ctx.exit(1)
+
+def dumps(obj):
+    return json.dumps(obj, sort_keys=True, indent=4, ensure_ascii=False)
+
+def first_upload(files):
+    return min((f["upload_time"] for f in files), default=None)
 
 if __name__ == '__main__':
     qypi()
