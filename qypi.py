@@ -97,12 +97,7 @@ def info(ctx, packages, array, pre):
     pkgdata = []
     try:
         for pkg in parse_packages(ctx, packages, pre):
-            info = pkg["info"]
-            for k,v in list(info.items()):
-                if k.startswith(('cheesecake', '_pypi')):
-                    del info[k]
-                elif v in ('', 'UNKNOWN'):
-                    info[k] = None
+            info = clean_pypi_dict(pkg["info"])
             info.pop('description', None)
             info.pop('downloads', None)
             info["url"] = info.pop('home_page', None)
@@ -179,6 +174,21 @@ def listcmd(obj):
     for pkg in obj.xmlrpc('list_packages'):
         click.echo(pkg)
 
+@qypi.command()
+@click.argument('terms', nargs=-1, required=True)
+@click.pass_obj
+def search(obj, terms):
+    spec = {}
+    for t in terms:
+        key, colon, value = t.partition(':')
+        if colon == '':
+            key, value = 'description', t
+        elif key == 'url':
+            key = 'home_page'
+        # ServerProxy can't handle defaultdicts, so we can't use those instead.
+        spec.setdefault(key, []).append(value)
+    click.echo(dumps(list(map(clean_pypi_dict, obj.xmlrpc('search', spec)))))
+
 def parse_packages(ctx, packages, pre):
     ### TODO: Figure out a better way to integrate this with Click
     ok = True
@@ -202,6 +212,12 @@ def dumps(obj):
 
 def first_upload(files):
     return min((f["upload_time"] for f in files), default=None)
+
+def clean_pypi_dict(d):
+    return {
+        k: (None if v in ('', 'UNKNOWN') else v)
+        for k,v in d.items() if not k.startswith(('cheesecake', '_pypi'))
+    }
 
 if __name__ == '__main__':
     qypi()

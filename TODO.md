@@ -19,13 +19,12 @@
 - `files`:
     - Add an `--all-versions` option?
     - Add an `--array`/`--map` option?
+- `search`:
+    - Add an `--or` option (and an explicit `--and` option?)
 
 - Subcommands to add:
-    - `search [--and|--or] <field>:<value> ...`
-        - If the field is omitted from an argument, implicitly set it to
-          `description` (or `summary`?)
-        - Allow the field `url` as a synonym of `home_page`?
     - `browse <classifier> ...`
         - Add an option for reading the list of classifiers from a file/stdin
+        - Rethink name; "`classified`"? "`classed`"?
     - `users <package> ...` — list users & roles for packages
     - `??? [--owner|--maintainer] <user> ...` - list packages & roles for users
