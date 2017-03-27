@@ -19,19 +19,24 @@ class QyPI:
         if r.status_code == 404:
             raise PackageNotFoundError(package)
         r.raise_for_status()
-        about = r.json()
-        if not pre and parse(about["info"]["version"]).is_prerelease:
-            latest = max((v for v in map(parse, about["releases"])
+        pkg = r.json()
+        if not pre and parse(pkg["info"]["version"]).is_prerelease:
+            latest = max((v for v in map(parse, pkg["releases"])
                             if not v.is_prerelease), default=None)
             if latest is None:
                 raise NoStableVersionError(package)
-            r = self.s.get('{}/{}/{}/json'.format(self.index_url, package, latest))
+            return self.get_version(package, str(latest))
             ### Will stringifying the parsed version string instead of using
-            ### the original key from `about["releases"]` ever change the
-            ### version string in a meaningful way?
-            r.raise_for_status()
-            about = r.json()
-        return about
+            ### the original key from `pkg["releases"]` ever change the version
+            ### string in a meaningful way?
+        return pkg
+
+    def get_version(self, package, version):
+        r = self.s.get('{}/{}/{}/json'.format(self.index_url, package, version))
+        if r.status_code == 404:
+            raise VersionNotFoundError(package, version)
+        r.raise_for_status()
+        return r.json()
 
 
 class QyPIError(Exception):
@@ -44,6 +49,15 @@ class PackageNotFoundError(QyPIError):
 
     def __str__(self):
         return self.package + ': package not found'
+
+
+class VersionNotFoundError(QyPIError):
+    def __init__(self, package, version):
+        self.package = package
+        self.version = version
+
+    def __str__(self):
+        return '{0.package}: version {0.version} not found'.format(self)
 
 
 class NoStableVersionError(QyPIError):
@@ -62,7 +76,7 @@ def dumps(obj):
               envvar='PIP_INDEX_URL')
 @click.pass_context
 def qypi(ctx, index_url):
-    """ Query PyPI """
+    """ Query & search PyPI from the command line """
     ctx.obj = QyPI(index_url)
 
 @qypi.command()
@@ -71,60 +85,60 @@ def qypi(ctx, index_url):
 @click.argument('packages', nargs=-1)
 @click.pass_context
 def info(ctx, packages, array, pre):
-    ok = True
     pkgdata = []
-    for pkgname in packages:
-        try:
-            about = ctx.obj.get_latest_version(pkgname, pre)
-        except QyPIError as e:
-            click.echo('qypi: ' + str(e), err=True)
-            ok = False
-            continue
-        pkg = about["info"]
-        for k,v in list(pkg.items()):
-            if k.startswith(('cheesecake', '_pypi')):
-                del pkg[k]
-            elif v in ('', 'UNKNOWN'):
-                pkg[k] = None
-        pkg.pop('description', None)
-        pkg.pop('downloads', None)
-        pkg["url"] = pkg.pop('home_page', None)
-        pkg["release_date"] = min(
-            (obj["upload_time"] for obj in about["urls"]), default=None,
-        )
-        pkg["people"] = []
-        for role in ('author', 'maintainer'):
-            name = pkg.pop(role, None)
-            email = pkg.pop(role + '_email', None)
-            if name or email:
-                pkg["people"].append({
-                    "name": name,
-                    "email": email,
-                    "role": role,
-                })
+    try:
+        for pkg in parse_packages(ctx, packages, pre):
+            info = pkg["info"]
+            for k,v in list(info.items()):
+                if k.startswith(('cheesecake', '_pypi')):
+                    del info[k]
+                elif v in ('', 'UNKNOWN'):
+                    info[k] = None
+            info.pop('description', None)
+            info.pop('downloads', None)
+            info["url"] = info.pop('home_page', None)
+            info["release_date"] = min(
+                (obj["upload_time"] for obj in pkg["urls"]), default=None,
+            )
+            info["people"] = []
+            for role in ('author', 'maintainer'):
+                name = info.pop(role, None)
+                email = info.pop(role + '_email', None)
+                if name or email:
+                    info["people"].append({
+                        "name": name,
+                        "email": email,
+                        "role": role,
+                    })
+            if array:
+                pkgdata.append(info)
+            else:
+                click.echo(dumps(info))
+    finally:
         if array:
-            pkgdata.append(pkg)
-        else:
-            click.echo(dumps(pkg))
-    if array:
-        click.echo(dumps(pkgdata))
-    ctx.exit(0 if ok else 1)
+            click.echo(dumps(pkgdata))
 
 @qypi.command()
 @click.option('--pre', is_flag=True)
 @click.argument('packages', nargs=-1)
 @click.pass_context
 def readme(ctx, packages, pre):
+    for pkg in parse_packages(ctx, packages, pre):
+        click.echo_via_pager(pkg["info"]["description"])
+
+def parse_packages(ctx, packages, pre):
+    ### TODO: Look into a better way to integrate this with Click
     ok = True
     for pkgname in packages:
         try:
-            about = ctx.obj.get_latest_version(pkgname, pre)
+            pkg = ctx.obj.get_latest_version(pkgname, pre)
         except QyPIError as e:
-            click.echo('qypi: ' + str(e), err=True)
+            click.echo(ctx.command_path + ': ' + str(e), err=True)
             ok = False
-            continue
-        click.echo_via_pager(about["info"]["description"])
-    ctx.exit(0 if ok else 1)
+        else:
+            yield pkg
+    if not ok:
+        ctx.exit(1)
 
 if __name__ == '__main__':
     qypi()

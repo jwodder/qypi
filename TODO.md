@@ -19,7 +19,7 @@
                 }
 
     - showing downloadable files (including URLs?)
-    - showing download counts
+    - `--[no-]trust-downloads` — showing download counts
     - getting the PyPI users associated with a package (via the XML-RPC API) ?
     - listing all of a user's packages (via the XML-RPC API)
 - Support getting details for a specific version (at `/$pkg/$version/json`)
@@ -37,7 +37,6 @@
       versions of packages as JSON
         - Add an `--all-versions` option?
         - Add an option for including the long description?
-        - Rename to "`show`"?
     - `releases <package> ...` — list all releases of the given packages as
       JSON
         - Rethink name; "`versions`"? "`history`"?
@@ -56,4 +55,5 @@
     - `listall` — outputs the name of each & every package, one per line
         - Rethink name; "`all`"? "`everything`"?
     - `users <package> ...` — list users & roles for packages
+        - Rename to "`roles`"?
     - `??? [--owner|--maintainer] <user> ...` - list packages & roles for users
