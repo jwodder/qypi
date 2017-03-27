@@ -5,8 +5,8 @@ import click
 from   packaging.version import parse
 import requests
 
-ENDPOINT = 'https://pypi.python.org/pypi'
-#ENDPOINT = 'https://pypi.org/pypi'
+#ENDPOINT = 'https://pypi.python.org/pypi'
+ENDPOINT = 'https://pypi.org/pypi'
 
 class PyPIClient:
     def __init__(self, index_url):
@@ -112,6 +112,9 @@ def info(ctx, packages, array, pre):
                         "email": email,
                         "role": role,
                     })
+            if "package_url" in info and "project_url" not in info:
+                # Field was renamed between PyPI Legacy and Warehouse
+                info["project_url"] = info.pop("package_url")
             if array:
                 pkgdata.append(info)
             else:
@@ -142,13 +145,19 @@ def releases(ctx, packages):
             click.echo(ctx.command_path + ': ' + str(e), err=True)
             ok = False
         else:
+            try:
+                project_url = pkg["info"]["project_url"]
+            except KeyError:
+                project_url = pkg["info"]["package_url"]
+            if not project_url.endswith('/'):
+                project_url += '/'
             about = {
                 "name": pkg["info"]["name"],
                 "releases": [{
                     "version": version,
                     "is_prerelease": parse(version).is_prerelease,
                     "release_date": first_upload(pkg["releases"][version]),
-                    "release_url": pkg["info"]["package_url"] + '/' + version,
+                    "release_url": project_url + version,
                 } for version in sorted(pkg["releases"], key=parse)],
             }
             click.echo(dumps(about))
