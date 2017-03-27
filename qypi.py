@@ -146,6 +146,19 @@ def releases(ctx, packages):
     if not ok:
         ctx.exit(1)
 
+@qypi.command()
+@click.option('--pre', is_flag=True)
+@click.argument('packages', nargs=-1)
+@click.pass_context
+def files(ctx, packages, pre):
+    for pkg in parse_packages(ctx, packages, pre):
+        pkgfiles = pkg["urls"]
+        for pf in pkgfiles:
+            pf.pop("downloads", None)
+            pf.pop("path", None)
+            ### Change empty comment_text fields to None?
+        click.echo(dumps(pkgfiles))
+
 def parse_packages(ctx, packages, pre):
     ### TODO: Look into a better way to integrate this with Click
     ok = True
