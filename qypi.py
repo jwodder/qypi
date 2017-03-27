@@ -131,7 +131,11 @@ def parse_packages(ctx, packages, pre):
     ok = True
     for pkgname in packages:
         try:
-            pkg = ctx.obj.get_latest_version(pkgname, pre)
+            name, eq, version = pkgname.partition('=')
+            if eq == '':
+                pkg = ctx.obj.get_latest_version(name, pre)
+            else:
+                pkg = ctx.obj.get_version(name, version.lstrip('='))
         except QyPIError as e:
             click.echo(ctx.command_path + ': ' + str(e), err=True)
             ok = False

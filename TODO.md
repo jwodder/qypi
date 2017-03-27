@@ -22,8 +22,6 @@
     - `--[no-]trust-downloads` — showing download counts
     - getting the PyPI users associated with a package (via the XML-RPC API) ?
     - listing all of a user's packages (via the XML-RPC API)
-- Support getting details for a specific version (at `/$pkg/$version/json`)
-  rather than the latest one
 - Parse `requires_dist` entries?
 - Add docstrings and `--help` output
 - Support searching PyPI via the XML-RPC API
