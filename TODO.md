@@ -27,7 +27,5 @@
         - Allow the field `url` as a synonym of `home_page`?
     - `browse <classifier> ...`
         - Add an option for reading the list of classifiers from a file/stdin
-    - `listall` — outputs the name of each & every package, one per line
-        - Rethink name; "`all`"? "`everything`"? "`list`"?
     - `users <package> ...` — list users & roles for packages
     - `??? [--owner|--maintainer] <user> ...` - list packages & roles for users

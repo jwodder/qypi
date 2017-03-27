@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 import json
+from   xmlrpc.client     import ServerProxy
 import click
 from   packaging.version import parse
 import requests
@@ -7,13 +8,19 @@ import requests
 ENDPOINT = 'https://pypi.python.org/pypi'
 #ENDPOINT = 'https://pypi.org/pypi'
 
-class QyPI:
+class PyPIClient:
     def __init__(self, index_url):
         self.index_url = index_url
-        self.s = requests.Session()
+        self.s = None
+        self.xsp = None
+
+    def get(self, *path):
+        if self.s is None:
+            self.s = requests.Session()
+        return self.s.get(self.index_url.rstrip('/') + '/' + '/'.join(path))
 
     def get_latest_version(self, package, pre=False):
-        r = self.s.get(self.index_url + '/' + package + '/json')
+        r = self.get(package, 'json')
         # Unlike the XML-RPC API, the JSON API accepts package names regardless
         # of normalization
         if r.status_code == 404:
@@ -32,11 +39,16 @@ class QyPI:
         return pkg
 
     def get_version(self, package, version):
-        r = self.s.get('{}/{}/{}/json'.format(self.index_url, package, version))
+        r = self.get(package, version, 'json')
         if r.status_code == 404:
             raise VersionNotFoundError(package, version)
         r.raise_for_status()
         return r.json()
+
+    def xmlrpc(self, method, *args, **kwargs):
+        if self.xsp is None:
+            self.xsp = ServerProxy(self.index_url)
+        return getattr(self.xsp, method)(*args, **kwargs)
 
 
 class QyPIError(Exception):
@@ -74,7 +86,7 @@ class NoStableVersionError(QyPIError):
 @click.pass_context
 def qypi(ctx, index_url):
     """ Query & search PyPI from the command line """
-    ctx.obj = QyPI(index_url)
+    ctx.obj = PyPIClient(index_url)
 
 @qypi.command()
 @click.option('-a', '--array', is_flag=True)
@@ -125,6 +137,8 @@ def readme(ctx, packages, pre):
 @click.argument('packages', nargs=-1)
 @click.pass_context
 def releases(ctx, packages):
+    ### TODO: Use `parse_packages()` for this (without allowing `=version`
+    ### suffixes)
     ok = True
     for name in packages:
         try:
@@ -159,8 +173,14 @@ def files(ctx, packages, pre):
             ### Change empty comment_text fields to None?
         click.echo(dumps(pkgfiles))
 
+@qypi.command('list')
+@click.pass_obj
+def listcmd(obj):
+    for pkg in obj.xmlrpc('list_packages'):
+        click.echo(pkg)
+
 def parse_packages(ctx, packages, pre):
-    ### TODO: Look into a better way to integrate this with Click
+    ### TODO: Figure out a better way to integrate this with Click
     ok = True
     for pkgname in packages:
         try:
