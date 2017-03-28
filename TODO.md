@@ -7,6 +7,8 @@
 - Upload to PyPI
 - Fill in keywords and classifiers in `setup.py`
 - Improve the way messages printed to stderr interact with stdout
+- When using a package name as a dictionary key in output, use the same casing
+  as on the command line?
 
 - `info`:
     - Add an `--all-versions` option?
@@ -20,7 +22,3 @@
     - Add an `--or` option (and an explicit `--and` option?)
 - `browse`:
     - Rethink name; "`classified`"? "`classed`"? "`troves`"? "`troved`"?
-
-- Subcommands to add:
-    - `users <package> ...` — list users & roles for packages
-    - `??? <user> ...` - list packages & roles for users

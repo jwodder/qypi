@@ -164,5 +164,32 @@ def browse(obj, classifiers, file):
         for name, version in obj.xmlrpc('browse', classifiers)
     ]))
 
+@qypi.command()
+@click.argument('packages', nargs=-1)
+@click.pass_context
+def owner(ctx, packages):
+    """ List package owners & maintainers """
+    with JSONMapper() as jmap:
+        for pkg in parse_packages(ctx, packages, versioned=False):
+            # Map through the JSON API so we can get the correct casing to
+            # query the XML-RPC API with
+            name = pkg["info"]["name"]
+            jmap.append(name, [
+                {"role": role, "user": user}
+                for role, user in ctx.obj.xmlrpc('package_roles', name)
+            ])
+
+@qypi.command()
+@click.argument('users', nargs=-1)
+@click.pass_context
+def owned(ctx, users):
+    """ List packages owned/maintained by a user """
+    with JSONMapper() as jmap:
+        for u in users:
+            jmap.append(u, [
+                {"role": role, "package": pkg}
+                for role, pkg in ctx.obj.xmlrpc('user_packages', u)
+            ])
+
 if __name__ == '__main__':
     qypi()
