@@ -10,17 +10,25 @@ ENDPOINT = 'https://pypi.org/pypi'
 
 @click.group(context_settings={"help_option_names": ["-h", "--help"]})
 @click.option('-i', '--index-url', default=ENDPOINT, metavar='URL',
-              envvar='PIP_INDEX_URL')
+              envvar='PIP_INDEX_URL', help='Use a different URL for PyPI',
+              show_default=True)
 @click.pass_context
 def qypi(ctx, index_url):
     """ Query PyPI from the command line """
     ctx.obj = PyPIClient(index_url)
 
 @qypi.command()
-@click.option('--pre', is_flag=True)
+@click.option('--pre', is_flag=True, help='Show prerelease versions')
 @click.argument('packages', nargs=-1)
 @click.pass_context
 def info(ctx, packages, pre):
+    """
+    Show package details.
+
+    Packages can be specified as either ``packagename`` to show the latest
+    version (ignoring prerelease versions unless --pre is given) or as
+    ``packagename==version`` to show the details for ``version``.
+    """
     with JSONLister() as jlist:
         for pkg in parse_packages(ctx, packages, pre):
             info = clean_pypi_dict(pkg["info"])
@@ -44,10 +52,20 @@ def info(ctx, packages, pre):
             jlist.append(info)
 
 @qypi.command()
-@click.option('--pre', is_flag=True)
+@click.option('--pre', is_flag=True, help='Show prerelease versions')
 @click.argument('packages', nargs=-1)
 @click.pass_context
 def readme(ctx, packages, pre):
+    """
+    View packages' long descriptions.
+
+    If stdout is a terminal, the descriptions are passed to a pager program
+    (e.g., `less(1)`).
+
+    Packages can be specified as either ``packagename`` to show the latest
+    version (ignoring prerelease versions unless --pre is given) or as
+    ``packagename==version`` to show the long description for ``version``.
+    """
     for pkg in parse_packages(ctx, packages, pre):
         click.echo_via_pager(pkg["info"]["description"])
 
@@ -55,6 +73,7 @@ def readme(ctx, packages, pre):
 @click.argument('packages', nargs=-1)
 @click.pass_context
 def releases(ctx, packages):
+    """ List released package versions """
     with JSONMapper() as jmap:
         for pkg in parse_packages(ctx, packages, versioned=False):
             try:
@@ -74,10 +93,17 @@ def releases(ctx, packages):
             )
 
 @qypi.command()
-@click.option('--pre', is_flag=True)
+@click.option('--pre', is_flag=True, help='Show prerelease versions')
 @click.argument('packages', nargs=-1)
 @click.pass_context
 def files(ctx, packages, pre):
+    """
+    List files available for download.
+
+    Packages can be specified as either ``packagename`` to show the latest
+    version (ignoring prerelease versions unless --pre is given) or as
+    ``packagename==version`` to show the files available for ``version``.
+    """
     with JSONLister() as jlist:
         for pkg in parse_packages(ctx, packages, pre):
             pkgfiles = pkg["urls"]
@@ -94,6 +120,7 @@ def files(ctx, packages, pre):
 @qypi.command('list')
 @click.pass_obj
 def listcmd(obj):
+    """ List all packages on PyPI """
     for pkg in obj.xmlrpc('list_packages'):
         click.echo(pkg)
 
@@ -101,6 +128,12 @@ def listcmd(obj):
 @click.argument('terms', nargs=-1, required=True)
 @click.pass_obj
 def search(obj, terms):
+    """
+    Search PyPI for packages.
+
+    Search terms may be specified as either ``field:value`` (e.g.,
+    ``summary:Django``) or just ``value`` to search long descriptions.
+    """
     spec = {}
     for t in terms:
         key, colon, value = t.partition(':')
@@ -117,6 +150,13 @@ def search(obj, terms):
 @click.argument('classifiers', nargs=-1)
 @click.pass_obj
 def browse(obj, classifiers, file):
+    """
+    List packages with given trove classifiers.
+
+    The list of classifiers may optionally be read from a file, one classifier
+    per line.  Any further classifiers listed on the command line will be added
+    to the file's list.
+    """
     if file is not None:
         classifiers += tuple(map(str.strip, file))
     click.echo(dumps([

@@ -2,7 +2,6 @@
     - `--repository`/`-r` — support for `~/.pypirc` files
         - See <https://docs.python.org/3/distutils/packageindex.html#pypirc>
     - `--[no-]trust-downloads` — showing download counts
-- Add docstrings and `--help` output
 - Add a README
     - Expand primary module docstring
 - Upload to PyPI
