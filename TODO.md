@@ -5,7 +5,6 @@
 - Add docstrings and `--help` output
 - Add a README
     - Expand primary module docstring
-- Upload to GitHub
 - Fill in keywords and classifiers in `setup.py`
 
 - `info`:

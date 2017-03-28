@@ -31,7 +31,7 @@ setup(
     ###keywords='',
     description='Query PyPI from the command line',
     long_description=long_desc,
-    #url='https://github.com/jwodder/qypi',
+    url='https://github.com/jwodder/qypi',
 
     install_requires=[
         'click~=6.5',
