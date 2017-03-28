@@ -1,4 +1,5 @@
 import json
+import re
 import click
 from   .api import QyPIError
 
@@ -31,3 +32,52 @@ def clean_pypi_dict(d):
         k: (None if v in ('', 'UNKNOWN') else v)
         for k,v in d.items() if not k.startswith(('cheesecake', '_pypi'))
     }
+
+
+class JSONLister:
+    def __init__(self):
+        self.first = True
+
+    def __enter__(self):
+        click.echo('[', nl=False)
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        if not self.first:
+            click.echo()
+        click.echo(']')
+        return False
+
+    def append(self, obj):
+        if self.first:
+            click.echo()
+            self.first = False
+        else:
+            click.echo(',')
+        click.echo(re.sub(r'^', '    ', dumps(obj), flags=re.M), nl=False)
+
+
+class JSONMapper:
+    def __init__(self):
+        self.first = True
+
+    def __enter__(self):
+        click.echo('{', nl=False)
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        if not self.first:
+            click.echo()
+        click.echo('}')
+        return False
+
+    def append(self, key, value):
+        if self.first:
+            click.echo()
+            self.first = False
+        else:
+            click.echo(',')
+        click.echo(
+            re.sub(r'^', '    ', json.dumps(key)+': '+dumps(value), flags=re.M),
+            nl=False,
+        )

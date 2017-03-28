@@ -2,8 +2,8 @@
 import click
 from   packaging.version import parse
 from   .api              import PyPIClient, QyPIError
-from   .util             import clean_pypi_dict, dumps, first_upload, \
-                                    parse_packages
+from   .util             import JSONLister, JSONMapper, clean_pypi_dict, \
+                                    dumps, first_upload, parse_packages
 
 #ENDPOINT = 'https://pypi.python.org/pypi'
 ENDPOINT = 'https://pypi.org/pypi'
@@ -17,13 +17,11 @@ def qypi(ctx, index_url):
     ctx.obj = PyPIClient(index_url)
 
 @qypi.command()
-@click.option('-a', '--array', is_flag=True)
 @click.option('--pre', is_flag=True)
 @click.argument('packages', nargs=-1)
 @click.pass_context
-def info(ctx, packages, array, pre):
-    pkgdata = []
-    try:
+def info(ctx, packages, pre):
+    with JSONLister() as jlist:
         for pkg in parse_packages(ctx, packages, pre):
             info = clean_pypi_dict(pkg["info"])
             info.pop('description', None)
@@ -43,13 +41,7 @@ def info(ctx, packages, array, pre):
             if "package_url" in info and "project_url" not in info:
                 # Field was renamed between PyPI Legacy and Warehouse
                 info["project_url"] = info.pop("package_url")
-            if array:
-                pkgdata.append(info)
-            else:
-                click.echo(dumps(info))
-    finally:
-        if array:
-            click.echo(dumps(pkgdata))
+            jlist.append(info)
 
 @qypi.command()
 @click.option('--pre', is_flag=True)
@@ -66,44 +58,49 @@ def releases(ctx, packages):
     ### TODO: Use `parse_packages()` for this (without allowing `=version`
     ### suffixes)
     ok = True
-    for name in packages:
-        try:
-            pkg = ctx.obj.get_latest_version(name, pre=True)
-        except QyPIError as e:
-            click.echo(ctx.command_path + ': ' + str(e), err=True)
-            ok = False
-        else:
+    with JSONMapper() as jmap:
+        for name in packages:
             try:
-                project_url = pkg["info"]["project_url"]
-            except KeyError:
-                project_url = pkg["info"]["package_url"]
-            if not project_url.endswith('/'):
-                project_url += '/'
-            about = {
-                "name": pkg["info"]["name"],
-                "releases": [{
-                    "version": version,
-                    "is_prerelease": parse(version).is_prerelease,
-                    "release_date": first_upload(pkg["releases"][version]),
-                    "release_url": project_url + version,
-                } for version in sorted(pkg["releases"], key=parse)],
-            }
-            click.echo(dumps(about))
-    if not ok:
-        ctx.exit(1)
+                pkg = ctx.obj.get_latest_version(name, pre=True)
+            except QyPIError as e:
+                click.echo(ctx.command_path + ': ' + str(e), err=True)
+                ok = False
+            else:
+                try:
+                    project_url = pkg["info"]["project_url"]
+                except KeyError:
+                    project_url = pkg["info"]["package_url"]
+                if not project_url.endswith('/'):
+                    project_url += '/'
+                jmap.append(
+                    pkg["info"]["name"],
+                    [{
+                        "version": version,
+                        "is_prerelease": parse(version).is_prerelease,
+                        "release_date": first_upload(pkg["releases"][version]),
+                        "release_url": project_url + version,
+                    } for version in sorted(pkg["releases"], key=parse)],
+                )
+        if not ok:
+            ctx.exit(1)
 
 @qypi.command()
 @click.option('--pre', is_flag=True)
 @click.argument('packages', nargs=-1)
 @click.pass_context
 def files(ctx, packages, pre):
-    for pkg in parse_packages(ctx, packages, pre):
-        pkgfiles = pkg["urls"]
-        for pf in pkgfiles:
-            pf.pop("downloads", None)
-            pf.pop("path", None)
-            ### Change empty comment_text fields to None?
-        click.echo(dumps(pkgfiles))
+    with JSONLister() as jlist:
+        for pkg in parse_packages(ctx, packages, pre):
+            pkgfiles = pkg["urls"]
+            for pf in pkgfiles:
+                pf.pop("downloads", None)
+                pf.pop("path", None)
+                ### Change empty comment_text fields to None?
+            jlist.append({
+                "name": pkg["info"]["name"],
+                "version": pkg["info"]["version"],
+                "files": pkgfiles,
+            })
 
 @qypi.command('list')
 @click.pass_obj

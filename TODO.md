@@ -5,20 +5,18 @@
 - Add docstrings and `--help` output
 - Add a README
     - Expand primary module docstring
+- Upload to PyPI
 - Fill in keywords and classifiers in `setup.py`
+- Improve the way messages printed to stderr interact with stdout
 
 - `info`:
     - Add an `--all-versions` option?
     - Add an option for including the long description?
-    - Make `--array` the default/only behavior?
     - Parse/explode `requires_dist` entries?
 - `releases`:
-    - Add a `--map` option for merging the output into a single JSON object
-        - Make it the default/only behavior?
     - Rethink name; "`versions`"? "`history`"?
 - `files`:
     - Add an `--all-versions` option?
-    - Add an `--array`/`--map` option?
 - `search`:
     - Add an `--or` option (and an explicit `--and` option?)
 - `browse`:
@@ -26,4 +24,4 @@
 
 - Subcommands to add:
     - `users <package> ...` — list users & roles for packages
-    - `??? [--owner|--maintainer] <user> ...` - list packages & roles for users
+    - `??? <user> ...` - list packages & roles for users
