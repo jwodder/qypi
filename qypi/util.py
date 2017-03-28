@@ -3,14 +3,17 @@ import re
 import click
 from   .api import QyPIError
 
-def parse_packages(ctx, packages, pre):
+def parse_packages(ctx, packages, pre=False, versioned=True):
     ### TODO: Figure out a better way to integrate this with Click
     ok = True
     for pkgname in packages:
         try:
             name, eq, version = pkgname.partition('=')
-            if eq == '':
-                pkg = ctx.obj.get_latest_version(name, pre)
+            if not versioned or eq == '':
+                if eq == '=':
+                    click.echo('{}: {}: package version ignored'
+                               .format(ctx.command_path, pkgname), err=True)
+                pkg = ctx.obj.get_latest_version(name, not versioned or pre)
             else:
                 pkg = ctx.obj.get_version(name, version.lstrip('='))
         except QyPIError as e:

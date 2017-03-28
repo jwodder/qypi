@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 import click
 from   packaging.version import parse
-from   .api              import PyPIClient, QyPIError
+from   .api              import PyPIClient
 from   .util             import JSONLister, JSONMapper, clean_pypi_dict, \
                                     dumps, first_upload, parse_packages
 
@@ -55,34 +55,23 @@ def readme(ctx, packages, pre):
 @click.argument('packages', nargs=-1)
 @click.pass_context
 def releases(ctx, packages):
-    ### TODO: Use `parse_packages()` for this (without allowing `=version`
-    ### suffixes)
-    ok = True
     with JSONMapper() as jmap:
-        for name in packages:
+        for pkg in parse_packages(ctx, packages, versioned=False):
             try:
-                pkg = ctx.obj.get_latest_version(name, pre=True)
-            except QyPIError as e:
-                click.echo(ctx.command_path + ': ' + str(e), err=True)
-                ok = False
-            else:
-                try:
-                    project_url = pkg["info"]["project_url"]
-                except KeyError:
-                    project_url = pkg["info"]["package_url"]
-                if not project_url.endswith('/'):
-                    project_url += '/'
-                jmap.append(
-                    pkg["info"]["name"],
-                    [{
-                        "version": version,
-                        "is_prerelease": parse(version).is_prerelease,
-                        "release_date": first_upload(pkg["releases"][version]),
-                        "release_url": project_url + version,
-                    } for version in sorted(pkg["releases"], key=parse)],
-                )
-        if not ok:
-            ctx.exit(1)
+                project_url = pkg["info"]["project_url"]
+            except KeyError:
+                project_url = pkg["info"]["package_url"]
+            if not project_url.endswith('/'):
+                project_url += '/'
+            jmap.append(
+                pkg["info"]["name"],
+                [{
+                    "version": version,
+                    "is_prerelease": parse(version).is_prerelease,
+                    "release_date": first_upload(pkg["releases"][version]),
+                    "release_url": project_url + version,
+                } for version in sorted(pkg["releases"], key=parse)],
+            )
 
 @qypi.command()
 @click.option('--pre', is_flag=True)
