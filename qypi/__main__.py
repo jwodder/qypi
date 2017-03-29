@@ -132,9 +132,12 @@ def listcmd(obj):
         click.echo(pkg)
 
 @qypi.command()
+@click.option('--and', 'oper', flag_value='and', default=True,
+              help='AND conditions together (default)')
+@click.option('--or', 'oper', flag_value='or', help='OR conditions together')
 @click.argument('terms', nargs=-1, required=True)
 @click.pass_obj
-def search(obj, terms):
+def search(obj, terms, oper):
     """
     Search PyPI for packages.
 
@@ -150,7 +153,7 @@ def search(obj, terms):
             key = 'home_page'
         # ServerProxy can't handle defaultdicts, so we can't use those instead.
         spec.setdefault(key, []).append(value)
-    click.echo(dumps(list(map(clean_pypi_dict, obj.xmlrpc('search', spec)))))
+    click.echo(dumps(list(map(clean_pypi_dict,obj.xmlrpc('search',spec,oper)))))
 
 @qypi.command()
 @click.option('-f', '--file', type=click.File('r'))

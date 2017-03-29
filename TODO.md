@@ -17,5 +17,4 @@
 - `files`:
     - Add an `--all-versions` option?
 - `search`:
-    - Add an `--or` option (and an explicit `--and` option?)
     - Double-check that I'm passing arguments to the API correctly
