@@ -1,7 +1,6 @@
 - Options to add:
     - `--repository`/`-r` — support for `~/.pypirc` files
         - See <https://docs.python.org/3/distutils/packageindex.html#pypirc>
-    - `--[no-]trust-downloads` — showing download counts
 - Add a README
     - Expand primary module docstring
 - Upload to PyPI
@@ -9,16 +8,14 @@
 - Improve the way messages printed to stderr interact with stdout
 - When using a package name as a dictionary key in output, use the same casing
   as on the command line?
+    - Normalize package names in output?
 
 - `info`:
     - Add an `--all-versions` option?
     - Add an option for including the long description?
     - Parse/explode `requires_dist` entries?
-- `releases`:
-    - Rethink name; "`versions`"? "`history`"?
 - `files`:
     - Add an `--all-versions` option?
 - `search`:
     - Add an `--or` option (and an explicit `--and` option?)
-- `browse`:
-    - Rethink name; "`classified`"? "`classed`"? "`troves`"? "`troved`"?
+    - Double-check that I'm passing arguments to the API correctly

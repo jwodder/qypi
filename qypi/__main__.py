@@ -7,6 +7,7 @@ from   .util             import JSONLister, JSONMapper, clean_pypi_dict, \
 
 #ENDPOINT = 'https://pypi.python.org/pypi'
 ENDPOINT = 'https://pypi.org/pypi'
+TRUST_DOWNLOADS = False
 
 @click.group(context_settings={"help_option_names": ["-h", "--help"]})
 @click.option('-i', '--index-url', default=ENDPOINT, metavar='URL',
@@ -19,9 +20,11 @@ def qypi(ctx, index_url):
 
 @qypi.command()
 @click.option('--pre', is_flag=True, help='Show prerelease versions')
+@click.option('--trust-downloads/--no-trust-downloads', default=TRUST_DOWNLOADS,
+              help='Show download stats', show_default=True)
 @click.argument('packages', nargs=-1)
 @click.pass_context
-def info(ctx, packages, pre):
+def info(ctx, packages, pre, trust_downloads):
     """
     Show package details.
 
@@ -33,7 +36,8 @@ def info(ctx, packages, pre):
         for pkg in parse_packages(ctx, packages, pre):
             info = clean_pypi_dict(pkg["info"])
             info.pop('description', None)
-            info.pop('downloads', None)
+            if not trust_downloads:
+                info.pop('downloads', None)
             info["url"] = info.pop('home_page', None)
             info["release_date"] = first_upload(pkg["urls"])
             info["people"] = []
@@ -94,9 +98,11 @@ def releases(ctx, packages):
 
 @qypi.command()
 @click.option('--pre', is_flag=True, help='Show prerelease versions')
+@click.option('--trust-downloads/--no-trust-downloads', default=TRUST_DOWNLOADS,
+              help='Show download stats', show_default=True)
 @click.argument('packages', nargs=-1)
 @click.pass_context
-def files(ctx, packages, pre):
+def files(ctx, packages, pre, trust_downloads):
     """
     List files available for download.
 
@@ -108,7 +114,8 @@ def files(ctx, packages, pre):
         for pkg in parse_packages(ctx, packages, pre):
             pkgfiles = pkg["urls"]
             for pf in pkgfiles:
-                pf.pop("downloads", None)
+                if not trust_downloads:
+                    pf.pop("downloads", None)
                 pf.pop("path", None)
                 ### Change empty comment_text fields to None?
             jlist.append({
