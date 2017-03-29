@@ -11,8 +11,7 @@ TRUST_DOWNLOADS = False
 
 @click.group(context_settings={"help_option_names": ["-h", "--help"]})
 @click.option('-i', '--index-url', default=ENDPOINT, metavar='URL',
-              envvar='PIP_INDEX_URL', help='Use a different URL for PyPI',
-              show_default=True)
+              help='Use a different URL for PyPI', show_default=True)
 @click.pass_context
 def qypi(ctx, index_url):
     """ Query PyPI from the command line """
