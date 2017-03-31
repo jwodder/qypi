@@ -28,7 +28,7 @@ setup(
     license='MIT',
     author='John Thorvald Wodder II',
     author_email='qypi@varonathe.org',
-    ###keywords='',
+    keywords='pypi warehouse search packages pip',
     description='Query PyPI from the command line',
     long_description=long_desc,
     url='https://github.com/jwodder/qypi',
@@ -51,8 +51,11 @@ setup(
         'Programming Language :: Python :: 3.6',
 
         'License :: OSI Approved :: MIT License',
-
-        ###
+        'Environment :: Console',
+        'Intended Audience :: Developers',
+        'Intended Audience :: Information Technology',
+        'Topic :: Software Development :: Libraries :: Python Modules',
+        'Topic :: System :: Software Distribution',
     ],
 
     entry_points={

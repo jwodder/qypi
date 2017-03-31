@@ -4,11 +4,13 @@
 - Add a README
     - Expand primary module docstring
 - Upload to PyPI
-- Fill in keywords and classifiers in `setup.py`
 - Improve the way messages printed to stderr interact with stdout
 - When using a package name as a dictionary key in output, use the same casing
   as on the command line?
     - Normalize package names in output?
+- Add `--no-pre` options?
+- Add a `python_requires` option to `setup.py`?
+- Determine the minimum versions of `packaging` and `requests` needed
 
 - `info`:
     - Add an `--all-versions` option?
