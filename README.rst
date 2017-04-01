@@ -50,6 +50,7 @@ List Packages
 ^^^^^^^^
 
 ::
+
     qypi list
 
 List all packages registered on PyPI, one per line, in the order that they are
@@ -105,6 +106,7 @@ classifiers listed on the command line will be added to the file's list.
 ^^^^^^^^^
 
 ::
+
     qypi owned <user> ...
 
 List packages owned or maintained by the given PyPI users
@@ -117,6 +119,7 @@ Package Information
 ^^^^^^^^^^^^
 
 ::
+
     qypi releases <package> ...
 
 List the released versions for the given packages in PEP 440 order
@@ -149,6 +152,7 @@ there are no files associated with a release, its release date will be
 ^^^^^^^^^
 
 ::
+
     qypi owner <package> ...
 
 List the PyPI users that own and/or maintain the given packages
@@ -197,6 +201,7 @@ qypi==0.1.0``).
 ^^^^^^^^
 
 ::
+
     qypi info [--pre] [--trust-downloads] <package[==version]> ...
 
 Show basic information about the given package releases.  Download counts are
@@ -254,6 +259,7 @@ Example::
 ^^^^^^^^^^
 
 ::
+
     qypi readme [--pre] <package[==version]> ...
 
 Display the given package releases' long descriptions in a pager one at a time
@@ -262,6 +268,7 @@ Display the given package releases' long descriptions in a pager one at a time
 ^^^^^^^^^
 
 ::
+
     qypi files [--pre] [--trust-downloads] <package[==version]> ...
 
 List files available for download for the given package releases.  Download
