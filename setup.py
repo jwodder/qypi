@@ -1,43 +1,19 @@
-import errno
-from   os.path    import dirname, join
-import re
-from   setuptools import setup, find_packages
-
-with open(join(dirname(__file__), 'qypi', '__init__.py')) as fp:
-    for line in fp:
-        m = re.search(r'^\s*__version__\s*=\s*([\'"])([^\'"]+)\1\s*$', line)
-        if m:
-            version = m.group(2)
-            break
-    else:
-        raise RuntimeError('Unable to find own __version__ string')
-
-try:
-    with open(join(dirname(__file__), 'README.rst')) as fp:
-        long_desc = fp.read()
-except EnvironmentError as e:
-    if e.errno == errno.ENOENT:
-        long_desc = None
-    else:
-        raise
+from setuptools import setup, find_packages
 
 setup(
     name='qypi',
-    version=version,
+    #version - in setup.cfg
     packages=find_packages(),
     license='MIT',
     author='John Thorvald Wodder II',
     author_email='qypi@varonathe.org',
     keywords='pypi warehouse search packages pip',
     description='Query PyPI from the command line',
-    long_description=long_desc,
+    #long_description - in setup.cfg
     url='https://github.com/jwodder/qypi',
 
-    install_requires=[
-        'click~=6.5',
-        'packaging',
-        'requests',
-    ],
+    python_requires='~=3.4',
+    install_requires=['click~=6.5', 'packaging>=16', 'requests==2.*'],
 
     classifiers=[
         'Development Status :: 3 - Alpha',

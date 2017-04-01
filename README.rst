@@ -18,8 +18,9 @@ examples below).
 
 Installation
 ============
-``qypi`` requires Python 3.4 or newer.  Just use `pip <https://pip.pypa.io/>`_
-for Python 3 (You have pip, right?) to install ``qypi`` and its dependencies::
+``qypi`` requires Python 3.4 or newer.  Just use version 6.0 or higher of `pip
+<https://pip.pypa.io/>`_ for Python 3 (You have pip, right?) to install
+``qypi`` and its dependencies::
 
     pip3 install qypi
 

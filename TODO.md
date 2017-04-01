@@ -1,11 +1,10 @@
+- Double-check that I'm passing arguments to the API's `search` function
+  correctly
 - Upload to PyPI
-- Improve the way messages printed to stderr interact with stdout
-- When using a package name as a dictionary key in output, use the same casing
-  as on the command line?
-    - Normalize package names in output?
-- Add `--no-pre` options?
-- Add a `python_requires` option to `setup.py`?
-- Determine the minimum versions of `packaging` and `requests` needed
+
+- Give `info` and `files` an `--all-versions` option
+- Give `info` an option for including the long description
+
 - When fetching details for a package without specifying the version, it
   appears that Legacy PyPI returns information for the release with the highest
   version number, while Warehouse returns the most recent release.  Try to make
@@ -13,12 +12,11 @@
     - Give the relevant subcommands ``--newest`` and ``--highest`` options?
       (Default to ``--highest`` because ``--newest`` would fail if there have
       never been any uploads)
-- Add examples to the README for every subcommand
+- Add `--no-pre` options?
 
-- `info`:
-    - Add an `--all-versions` option
-    - Add an option for including the long description?
-- `files`:
-    - Add an `--all-versions` option
-- `search`:
-    - Double-check that I'm passing arguments to the API correctly
+- Improve the way messages printed to stderr interact with stdout
+
+- When using a package name as a dictionary key in output, use the same casing
+  as on the command line?
+    - Normalize package names in output?
+- Add examples to the README for every subcommand
