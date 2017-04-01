@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 import click
 from   packaging.version import parse
+from   .                 import __version__
 from   .api              import PyPIClient
 from   .util             import JSONLister, JSONMapper, clean_pypi_dict, \
                                     dumps, first_upload, parse_packages
@@ -12,6 +13,8 @@ TRUST_DOWNLOADS = False
 @click.group(context_settings={"help_option_names": ["-h", "--help"]})
 @click.option('-i', '--index-url', default=ENDPOINT, metavar='URL',
               help='Use a different URL for PyPI', show_default=True)
+@click.version_option(__version__, '-V', '--version',
+                      message='%(prog)s %(version)s')
 @click.pass_context
 def qypi(ctx, index_url):
     """ Query PyPI from the command line """
