@@ -36,11 +36,11 @@ Global Option
 
 - ``-i <URL>``, ``--index-url <URL>`` — Query the Python package server at the
   given URL, which must support both the `XML-RPC
-  <http://wiki.python.org/moin/PyPiXmlRpc>`_ and `JSON
-  <http://wiki.python.org/moin/PyPiJson>`_ APIs.  By default, ``qypi`` queries
-  `Warehouse <https://pypi.org>`_ at <https://pypi.org/pypi>; to use the
+  <http://wiki.python.org/moin/PyPIXmlRpc>`_ and `JSON
+  <http://wiki.python.org/moin/PyPIJSON>`_ APIs.  By default, ``qypi`` queries
+  `Warehouse <https://pypi.org>`_ at ``https://pypi.org/pypi``; to use the
   current/legacy PyPI instance instead, set the index URL to
-  <https://pypi.python.org/pypi>.
+  ``https://pypi.python.org/pypi``.
 
 
 List Packages
@@ -54,7 +54,8 @@ List Packages
     qypi list
 
 List all packages registered on PyPI, one per line, in the order that they are
-returned by the API
+returned by the API.  ``list`` and ``readme`` are the only subcommands that do
+not output JSON.
 
 ``search``
 ^^^^^^^^^^
@@ -262,7 +263,8 @@ Example::
 
     qypi readme [--pre] <package[==version]> ...
 
-Display the given package releases' long descriptions in a pager one at a time
+Display the given package releases' long descriptions in a pager one at a time.
+``list`` and ``readme`` are the only subcommands that do not output JSON.
 
 ``files``
 ^^^^^^^^^

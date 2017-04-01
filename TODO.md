@@ -1,4 +1,3 @@
-- Expand primary module docstring
 - Upload to PyPI
 - Improve the way messages printed to stderr interact with stdout
 - When using a package name as a dictionary key in output, use the same casing

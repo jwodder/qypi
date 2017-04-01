@@ -1,5 +1,12 @@
 """
 Query PyPI from the command line
+
+``qypi`` is a command-line client for querying & searching `PyPI
+<https://pypi.python.org>`_ for Python package information and outputting JSON
+(with some minor opinionated changes to the output data structures).
+
+Run ``qypi --help`` or visit <https://github.com/jwodder/qypi> for more
+information.
 """
 
 __version__      = '0.1.0.dev1'
