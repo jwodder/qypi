@@ -150,6 +150,8 @@ def search(obj, terms, oper):
             key, value = 'description', t
         elif key == 'url':
             key = 'home_page'
+        elif key in ('long_description', 'readme'):
+            key = 'description'
         # ServerProxy can't handle defaultdicts, so we can't use those instead.
         spec.setdefault(key, []).append(value)
     click.echo(dumps(list(map(clean_pypi_dict,obj.xmlrpc('search',spec,oper)))))
