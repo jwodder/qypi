@@ -13,24 +13,42 @@ class PyPIClient:
             self.s = requests.Session()
         return self.s.get(self.index_url.rstrip('/') + '/' + '/'.join(path))
 
-    def get_latest_version(self, package, pre=False):
+    def get_package(self, package):
         r = self.get(package, 'json')
         # Unlike the XML-RPC API, the JSON API accepts package names regardless
         # of normalization
         if r.status_code == 404:
             raise PackageNotFoundError(package)
         r.raise_for_status()
-        pkg = r.json()
-        if not pre and parse(pkg["info"]["version"]).is_prerelease:
-            latest = max((v for v in map(parse, pkg["releases"])
-                            if not v.is_prerelease), default=None)
-            if latest is None:
-                raise NoStableVersionError(package)
-            return self.get_version(package, str(latest))
-            ### Will stringifying the parsed version string instead of using
-            ### the original key from `pkg["releases"]` ever change the version
-            ### string in a meaningful way?
-        return pkg
+        return r.json()
+
+    def get_latest_version(self, package, pre=False, newest=False):
+        pkg = self.get_package(package)
+        releases = {
+            parse(rel): first_upload(files)
+            for rel, files in pkg["releases"].items()
+        }
+        candidates = releases.keys()
+        if not pre:
+            candidates = filter(lambda v: not v.is_prerelease, candidates)
+        if newest:
+            latest = max(
+                filter(releases.__getitem__, candidates),
+                key=releases.__getitem__,
+                default=None,
+            )
+        else:
+            latest = max(candidates, default=None)
+        if latest is None:
+            raise NoSuitableVersionError(package)
+        latest = str(latest)
+        ### TODO: Will stringifying the parsed version string instead of using
+        ### the original key from `pkg["releases"]` ever change the version
+        ### string in a meaningful way?
+        if pkg["info"]["version"] == latest:
+            return pkg
+        else:
+            return self.get_version(package, latest)
 
     def get_version(self, package, version):
         r = self.get(package, version, 'json')
@@ -66,9 +84,12 @@ class VersionNotFoundError(QyPIError):
         return '{0.package}: version {0.version} not found'.format(self)
 
 
-class NoStableVersionError(QyPIError):
+class NoSuitableVersionError(QyPIError):
     def __init__(self, package):
         self.package = package
 
     def __str__(self):
-        return self.package + ': no stable versions available'
+        return self.package + ': no suitable versions available'
+
+def first_upload(files):
+    return min((f["upload_time"] for f in files), default=None)

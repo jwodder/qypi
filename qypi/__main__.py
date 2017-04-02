@@ -2,9 +2,9 @@
 import click
 from   packaging.version import parse
 from   .                 import __version__
-from   .api              import PyPIClient
+from   .api              import PyPIClient, first_upload
 from   .util             import JSONLister, JSONMapper, clean_pypi_dict, \
-                                    dumps, first_upload, parse_packages
+                                    dumps, parse_packages
 
 #ENDPOINT = 'https://pypi.python.org/pypi'
 ENDPOINT = 'https://pypi.org/pypi'
@@ -22,11 +22,13 @@ def qypi(ctx, index_url):
 
 @qypi.command()
 @click.option('--pre', is_flag=True, help='Show prerelease versions')
+@click.option('--newest/--highest', default=False,
+              help='Does "latest" mean "newest" or "highest"? (default: highest)')
 @click.option('--trust-downloads/--no-trust-downloads', default=TRUST_DOWNLOADS,
               help='Show download stats', show_default=True)
 @click.argument('packages', nargs=-1)
 @click.pass_context
-def info(ctx, packages, pre, trust_downloads):
+def info(ctx, packages, pre, newest, trust_downloads):
     """
     Show package details.
 
@@ -35,7 +37,7 @@ def info(ctx, packages, pre, trust_downloads):
     ``packagename==version`` to show the details for ``version``.
     """
     with JSONLister() as jlist:
-        for pkg in parse_packages(ctx, packages, pre):
+        for pkg in parse_packages(ctx, packages, pre=pre, newest=newest):
             info = clean_pypi_dict(pkg["info"])
             info.pop('description', None)
             if not trust_downloads:
@@ -59,9 +61,11 @@ def info(ctx, packages, pre, trust_downloads):
 
 @qypi.command()
 @click.option('--pre', is_flag=True, help='Show prerelease versions')
+@click.option('--newest/--highest', default=False,
+              help='Does "latest" mean "newest" or "highest"? (default: highest)')
 @click.argument('packages', nargs=-1)
 @click.pass_context
-def readme(ctx, packages, pre):
+def readme(ctx, packages, pre, newest):
     """
     View packages' long descriptions.
 
@@ -72,7 +76,7 @@ def readme(ctx, packages, pre):
     version (ignoring prerelease versions unless --pre is given) or as
     ``packagename==version`` to show the long description for ``version``.
     """
-    for pkg in parse_packages(ctx, packages, pre):
+    for pkg in parse_packages(ctx, packages, pre=pre, newest=newest):
         click.echo_via_pager(pkg["info"]["description"])
 
 @qypi.command()
@@ -100,11 +104,13 @@ def releases(ctx, packages):
 
 @qypi.command()
 @click.option('--pre', is_flag=True, help='Show prerelease versions')
+@click.option('--newest/--highest', default=False,
+              help='Does "latest" mean "newest" or "highest"? (default: highest)')
 @click.option('--trust-downloads/--no-trust-downloads', default=TRUST_DOWNLOADS,
               help='Show download stats', show_default=True)
 @click.argument('packages', nargs=-1)
 @click.pass_context
-def files(ctx, packages, pre, trust_downloads):
+def files(ctx, packages, pre, newest, trust_downloads):
     """
     List files available for download.
 
@@ -113,7 +119,7 @@ def files(ctx, packages, pre, trust_downloads):
     ``packagename==version`` to show the files available for ``version``.
     """
     with JSONLister() as jlist:
-        for pkg in parse_packages(ctx, packages, pre):
+        for pkg in parse_packages(ctx, packages, pre=pre, newest=newest):
             pkgfiles = pkg["urls"]
             for pf in pkgfiles:
                 if not trust_downloads:
