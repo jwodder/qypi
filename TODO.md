@@ -1,7 +1,3 @@
-- Double-check that I'm passing arguments to the API's `search` function
-  correctly
-- Upload to PyPI
-
 - Give `info` and `files` an `--all-versions` option
 - Give `info` an option for including the long description
 

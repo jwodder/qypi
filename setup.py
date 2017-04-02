@@ -16,8 +16,7 @@ setup(
     install_requires=['click~=6.5', 'packaging>=16', 'requests==2.*'],
 
     classifiers=[
-        'Development Status :: 3 - Alpha',
-        #'Development Status :: 4 - Beta',
+        'Development Status :: 4 - Beta',
         #'Development Status :: 5 - Production/Stable',
 
         'Programming Language :: Python :: 3 :: Only',
