@@ -14,10 +14,10 @@
 | `PyPI <https://pypi.python.org/pypi/qypi>`_
 | `Issues <https://github.com/jwodder/qypi/issues>`_
 
-``qypi`` is a command-line client for querying & searching `PyPI
-<https://pypi.python.org>`_ for Python package information and outputting JSON
-(with some minor opinionated changes to the output data structures; see the
-examples below).
+``qypi`` is a command-line client for querying & searching `the Python Package
+Index <https://pypi.python.org>`_ for Python package information and outputting
+JSON (with some minor opinionated changes to the output data structures; see
+the examples below).
 
 
 Installation
