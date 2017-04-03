@@ -24,7 +24,7 @@ def qypi(ctx, index_url):
 @click.option('--pre/--no-pre', help='Show prerelease versions',
               show_default=True)
 @click.option('--newest/--highest', default=False,
-              help='Does "latest" mean "newest" or "highest"? (default: highest)')
+              help='Does "latest" mean "newest" or "highest"? [default: highest]')
 @click.option('--trust-downloads/--no-trust-downloads', default=TRUST_DOWNLOADS,
               help='Show download stats', show_default=True)
 @click.argument('packages', nargs=-1)
@@ -34,8 +34,7 @@ def info(ctx, packages, pre, newest, trust_downloads):
     Show package details.
 
     Packages can be specified as either ``packagename`` to show the latest
-    version (ignoring prerelease versions unless --pre is given) or as
-    ``packagename==version`` to show the details for ``version``.
+    version or as ``packagename==version`` to show the details for ``version``.
     """
     with JSONLister() as jlist:
         for pkg in parse_packages(ctx, packages, pre=pre, newest=newest):
@@ -64,7 +63,7 @@ def info(ctx, packages, pre, newest, trust_downloads):
 @click.option('--pre/--no-pre', help='Show prerelease versions',
               show_default=True)
 @click.option('--newest/--highest', default=False,
-              help='Does "latest" mean "newest" or "highest"? (default: highest)')
+              help='Does "latest" mean "newest" or "highest"? [default: highest]')
 @click.argument('packages', nargs=-1)
 @click.pass_context
 def readme(ctx, packages, pre, newest):
@@ -75,8 +74,8 @@ def readme(ctx, packages, pre, newest):
     (e.g., `less(1)`).
 
     Packages can be specified as either ``packagename`` to show the latest
-    version (ignoring prerelease versions unless --pre is given) or as
-    ``packagename==version`` to show the long description for ``version``.
+    version or as ``packagename==version`` to show the long description for
+    ``version``.
     """
     for pkg in parse_packages(ctx, packages, pre=pre, newest=newest):
         click.echo_via_pager(pkg["info"]["description"])
@@ -108,7 +107,7 @@ def releases(ctx, packages):
 @click.option('--pre/--no-pre', help='Show prerelease versions',
               show_default=True)
 @click.option('--newest/--highest', default=False,
-              help='Does "latest" mean "newest" or "highest"? (default: highest)')
+              help='Does "latest" mean "newest" or "highest"? [default: highest]')
 @click.option('--trust-downloads/--no-trust-downloads', default=TRUST_DOWNLOADS,
               help='Show download stats', show_default=True)
 @click.argument('packages', nargs=-1)
@@ -118,8 +117,8 @@ def files(ctx, packages, pre, newest, trust_downloads):
     List files available for download.
 
     Packages can be specified as either ``packagename`` to show the latest
-    version (ignoring prerelease versions unless --pre is given) or as
-    ``packagename==version`` to show the files available for ``version``.
+    version or as ``packagename==version`` to show the files available for
+    ``version``.
     """
     with JSONLister() as jlist:
         for pkg in parse_packages(ctx, packages, pre=pre, newest=newest):
@@ -144,7 +143,7 @@ def listcmd(obj):
 
 @qypi.command()
 @click.option('--and', 'oper', flag_value='and', default=True,
-              help='AND conditions together (default)')
+              help='AND conditions together [default]')
 @click.option('--or', 'oper', flag_value='or', help='OR conditions together')
 @click.argument('terms', nargs=-1, required=True)
 @click.pass_obj
