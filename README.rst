@@ -132,20 +132,20 @@ List the released versions for the given packages in PEP 440 order
 
 Example::
 
-    $ qypi releases in_place
+    $ qypi releases qypi
     {
-        "in-place": [
+        "qypi": [
             {
                 "is_prerelease": false,
-                "release_date": "2017-01-27T23:41:06",
-                "release_url": "https://pypi.org/project/in-place/0.1.1",
-                "version": "0.1.1"
+                "release_date": "2017-04-02T03:07:42",
+                "release_url": "https://pypi.org/project/qypi/0.1.0",
+                "version": "0.1.0"
             },
             {
                 "is_prerelease": false,
-                "release_date": "2017-02-23T16:49:00",
-                "release_url": "https://pypi.org/project/in-place/0.2.0",
-                "version": "0.2.0"
+                "release_date": "2017-04-02T03:32:44",
+                "release_url": "https://pypi.org/project/qypi/0.1.0.post1",
+                "version": "0.1.0.post1"
             }
         ]
     }
@@ -220,49 +220,46 @@ omitted because `the feature is currently broken & unreliable
 
 Example::
 
-    $ qypi info requests
+    $ qypi info qypi
     [
         {
             "bugtrack_url": null,
             "classifiers": [
-                "Development Status :: 5 - Production/Stable",
+                "Development Status :: 4 - Beta",
+                "Environment :: Console",
                 "Intended Audience :: Developers",
-                "License :: OSI Approved :: Apache Software License",
-                "Natural Language :: English",
-                "Programming Language :: Python",
-                "Programming Language :: Python :: 2.6",
-                "Programming Language :: Python :: 2.7",
+                "Intended Audience :: Information Technology",
+                "License :: OSI Approved :: MIT License",
                 "Programming Language :: Python :: 3",
-                "Programming Language :: Python :: 3.3",
                 "Programming Language :: Python :: 3.4",
                 "Programming Language :: Python :: 3.5",
                 "Programming Language :: Python :: 3.6",
-                "Programming Language :: Python :: Implementation :: CPython",
-                "Programming Language :: Python :: Implementation :: PyPy"
+                "Programming Language :: Python :: 3 :: Only",
+                "Topic :: Software Development :: Libraries :: Python Modules",
+                "Topic :: System :: Software Distribution"
             ],
             "docs_url": null,
             "download_url": null,
-            "keywords": null,
-            "license": "Apache 2.0",
-            "name": "requests",
+            "keywords": "pypi warehouse search packages pip",
+            "license": "MIT",
+            "name": "qypi",
             "people": [
                 {
-                    "email": "me@kennethreitz.com",
-                    "name": "Kenneth Reitz",
+                    "email": "qypi@varonathe.org",
+                    "name": "John Thorvald Wodder II",
                     "role": "author"
                 }
             ],
             "platform": null,
-            "project_url": "https://pypi.org/project/requests/",
-            "release_date": "2017-01-24T12:53:25",
-            "release_url": "https://pypi.org/project/requests/2.13.0/",
-            "requires_python": null,
-            "summary": "Python HTTP for Humans.",
-            "url": "http://python-requests.org",
-            "version": "2.13.0"
+            "project_url": "https://pypi.org/project/qypi/",
+            "release_date": "2017-04-02T03:32:44",
+            "release_url": "https://pypi.org/project/qypi/0.1.0.post1/",
+            "requires_python": "~=3.4",
+            "summary": "Query PyPI from the command line",
+            "url": "https://github.com/jwodder/qypi",
+            "version": "0.1.0.post1"
         }
     ]
-
 
 ``readme``
 ^^^^^^^^^^
@@ -288,42 +285,42 @@ counts are omitted because `the feature is currently broken & unreliable
 
 Example::
 
-    $ qypi files requests
+    $ qypi files qypi
     [
         {
             "files": [
                 {
                     "comment_text": "",
                     "digests": {
-                        "md5": "5e432dcf5bd1e3402ea1656700d99365",
-                        "sha256": "1a720e8862a41aa22e339373b526f508ef0c8988baf48b84d3fc891a8e237efb"
+                        "md5": "58863d77e19bf4aa1ae85026cc1ff0f6",
+                        "sha256": "5946a4557550479af90278e5418cd2c32a2626936075078a4c7096be52d43078"
                     },
-                    "filename": "requests-2.13.0-py2.py3-none-any.whl",
-                    "has_sig": false,
-                    "md5_digest": "5e432dcf5bd1e3402ea1656700d99365",
+                    "filename": "qypi-0.1.0.post1-py3-none-any.whl",
+                    "has_sig": true,
+                    "md5_digest": "58863d77e19bf4aa1ae85026cc1ff0f6",
                     "packagetype": "bdist_wheel",
-                    "python_version": "py2.py3",
-                    "size": 584556,
-                    "upload_time": "2017-01-24T12:53:25",
-                    "url": "https://files.pythonhosted.org/packages/7e/ac/a80ed043485a3764053f59ca92f809cc8a18344692817152b0e8bd3ca891/requests-2.13.0-py2.py3-none-any.whl"
+                    "python_version": "py3",
+                    "size": 13590,
+                    "upload_time": "2017-04-02T03:32:44",
+                    "url": "https://files.pythonhosted.org/packages/f9/3f/6b184713e79da15cd451f0dab91864633175242f4d321df0cacdd2dc8300/qypi-0.1.0.post1-py3-none-any.whl"
                 },
                 {
                     "comment_text": "",
                     "digests": {
-                        "md5": "921ec6b48f2ddafc8bb6160957baf444",
-                        "sha256": "5722cd09762faa01276230270ff16af7acf7c5c45d623868d9ba116f15791ce8"
+                        "md5": "bfd357b3df2c2f1cbb6d23ff7c61fbb9",
+                        "sha256": "c99eea315455cf9fde722599ab67eeefdff5c184bb3861a7fd82f8a9387c252d"
                     },
-                    "filename": "requests-2.13.0.tar.gz",
-                    "has_sig": false,
-                    "md5_digest": "921ec6b48f2ddafc8bb6160957baf444",
+                    "filename": "qypi-0.1.0.post1.tar.gz",
+                    "has_sig": true,
+                    "md5_digest": "bfd357b3df2c2f1cbb6d23ff7c61fbb9",
                     "packagetype": "sdist",
                     "python_version": "source",
-                    "size": 557508,
-                    "upload_time": "2017-01-24T12:53:28",
-                    "url": "https://files.pythonhosted.org/packages/16/09/37b69de7c924d318e51ece1c4ceb679bf93be9d05973bb30c35babd596e2/requests-2.13.0.tar.gz"
+                    "size": 8975,
+                    "upload_time": "2017-04-02T03:32:46",
+                    "url": "https://files.pythonhosted.org/packages/0e/49/3056ee68b44c8eab4d4698b52ae4d18c0db92c80abc312894c02c4722621/qypi-0.1.0.post1.tar.gz"
                 }
             ],
-            "name": "requests",
-            "version": "2.13.0"
+            "name": "qypi",
+            "version": "0.1.0.post1"
         }
     ]
