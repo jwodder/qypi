@@ -1,8 +1,6 @@
 - Give `info` and `files` an `--all-versions` option
 - Give `info` an option for including the long description
 
-- Add `--no-pre` options?
-
 - Improve the way messages printed to stderr interact with stdout
 
 - When using a package name as a dictionary key in output, use the same casing

@@ -21,7 +21,8 @@ def qypi(ctx, index_url):
     ctx.obj = PyPIClient(index_url)
 
 @qypi.command()
-@click.option('--pre', is_flag=True, help='Show prerelease versions')
+@click.option('--pre/--no-pre', help='Show prerelease versions',
+              show_default=True)
 @click.option('--newest/--highest', default=False,
               help='Does "latest" mean "newest" or "highest"? (default: highest)')
 @click.option('--trust-downloads/--no-trust-downloads', default=TRUST_DOWNLOADS,
@@ -60,7 +61,8 @@ def info(ctx, packages, pre, newest, trust_downloads):
             jlist.append(info)
 
 @qypi.command()
-@click.option('--pre', is_flag=True, help='Show prerelease versions')
+@click.option('--pre/--no-pre', help='Show prerelease versions',
+              show_default=True)
 @click.option('--newest/--highest', default=False,
               help='Does "latest" mean "newest" or "highest"? (default: highest)')
 @click.argument('packages', nargs=-1)
@@ -103,7 +105,8 @@ def releases(ctx, packages):
             )
 
 @qypi.command()
-@click.option('--pre', is_flag=True, help='Show prerelease versions')
+@click.option('--pre/--no-pre', help='Show prerelease versions',
+              show_default=True)
 @click.option('--newest/--highest', default=False,
               help='Does "latest" mean "newest" or "highest"? (default: highest)')
 @click.option('--trust-downloads/--no-trust-downloads', default=TRUST_DOWNLOADS,
