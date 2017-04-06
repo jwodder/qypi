@@ -1,3 +1,6 @@
+v0.3.0 (in development)
+-----------------------
+
 v0.2.0 (2017-04-03)
 -------------------
 - Gave `info`, `readme`, and `files` `--newest` and `--highest` options for

@@ -7,3 +7,5 @@
   as on the command line?
     - Normalize package names in output?
 - Add examples to the README for every subcommand
+- Write tests?
+- Give `readme` an option for setting the pager

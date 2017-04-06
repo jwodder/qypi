@@ -2,9 +2,9 @@
 import click
 from   packaging.version import parse
 from   .                 import __version__
-from   .api              import PyPIClient, first_upload
+from   .api              import QyPI, first_upload
 from   .util             import JSONLister, JSONMapper, clean_pypi_dict, \
-                                    dumps, parse_packages
+                                    dumps, package_args
 
 #ENDPOINT = 'https://pypi.python.org/pypi'
 ENDPOINT = 'https://pypi.org/pypi'
@@ -18,18 +18,19 @@ TRUST_DOWNLOADS = False
 @click.pass_context
 def qypi(ctx, index_url):
     """ Query PyPI from the command line """
-    ctx.obj = PyPIClient(index_url)
+    ctx.obj = QyPI(index_url)
+
+@qypi.resultcallback()
+@click.pass_context
+def die_if_not_ok(ctx, *args, **kwargs):
+    if not ctx.obj.ok:
+        ctx.exit(1)
 
 @qypi.command()
-@click.option('--pre/--no-pre', help='Show prerelease versions',
-              show_default=True)
-@click.option('--newest/--highest', default=False,
-              help='Does "latest" mean "newest" or "highest"? [default: highest]')
 @click.option('--trust-downloads/--no-trust-downloads', default=TRUST_DOWNLOADS,
               help='Show download stats', show_default=True)
-@click.argument('packages', nargs=-1)
-@click.pass_context
-def info(ctx, packages, pre, newest, trust_downloads):
+@package_args()
+def info(packages, trust_downloads):
     """
     Show package details.
 
@@ -37,7 +38,7 @@ def info(ctx, packages, pre, newest, trust_downloads):
     version or as ``packagename==version`` to show the details for ``version``.
     """
     with JSONLister() as jlist:
-        for pkg in parse_packages(ctx, packages, pre=pre, newest=newest):
+        for pkg in sum(packages, []):
             info = clean_pypi_dict(pkg["info"])
             info.pop('description', None)
             if not trust_downloads:
@@ -60,13 +61,8 @@ def info(ctx, packages, pre, newest, trust_downloads):
             jlist.append(info)
 
 @qypi.command()
-@click.option('--pre/--no-pre', help='Show prerelease versions',
-              show_default=True)
-@click.option('--newest/--highest', default=False,
-              help='Does "latest" mean "newest" or "highest"? [default: highest]')
-@click.argument('packages', nargs=-1)
-@click.pass_context
-def readme(ctx, packages, pre, newest):
+@package_args()
+def readme(packages):
     """
     View packages' long descriptions.
 
@@ -77,16 +73,15 @@ def readme(ctx, packages, pre, newest):
     version or as ``packagename==version`` to show the long description for
     ``version``.
     """
-    for pkg in parse_packages(ctx, packages, pre=pre, newest=newest):
+    for pkg in sum(packages, []):
         click.echo_via_pager(pkg["info"]["description"])
 
 @qypi.command()
-@click.argument('packages', nargs=-1)
-@click.pass_context
-def releases(ctx, packages):
+@package_args(versioned=False)
+def releases(packages):
     """ List released package versions """
     with JSONMapper() as jmap:
-        for pkg in parse_packages(ctx, packages, versioned=False):
+        for pkg in sum(packages, []):
             try:
                 project_url = pkg["info"]["project_url"]
             except KeyError:
@@ -104,15 +99,10 @@ def releases(ctx, packages):
             )
 
 @qypi.command()
-@click.option('--pre/--no-pre', help='Show prerelease versions',
-              show_default=True)
-@click.option('--newest/--highest', default=False,
-              help='Does "latest" mean "newest" or "highest"? [default: highest]')
 @click.option('--trust-downloads/--no-trust-downloads', default=TRUST_DOWNLOADS,
               help='Show download stats', show_default=True)
-@click.argument('packages', nargs=-1)
-@click.pass_context
-def files(ctx, packages, pre, newest, trust_downloads):
+@package_args()
+def files(packages, trust_downloads):
     """
     List files available for download.
 
@@ -121,7 +111,7 @@ def files(ctx, packages, pre, newest, trust_downloads):
     ``version``.
     """
     with JSONLister() as jlist:
-        for pkg in parse_packages(ctx, packages, pre=pre, newest=newest):
+        for pkg in sum(packages, []):
             pkgfiles = pkg["urls"]
             for pf in pkgfiles:
                 if not trust_downloads:
@@ -187,30 +177,30 @@ def browse(obj, classifiers, file):
     ]))
 
 @qypi.command()
-@click.argument('packages', nargs=-1)
-@click.pass_context
-def owner(ctx, packages):
+@package_args(versioned=False)
+# Map through the JSON API so we can get the correct casing to query the
+# XML-RPC API with
+@click.pass_obj
+def owner(obj, packages):
     """ List package owners & maintainers """
     with JSONMapper() as jmap:
-        for pkg in parse_packages(ctx, packages, versioned=False):
-            # Map through the JSON API so we can get the correct casing to
-            # query the XML-RPC API with
+        for pkg in sum(packages, []):
             name = pkg["info"]["name"]
             jmap.append(name, [
                 {"role": role, "user": user}
-                for role, user in ctx.obj.xmlrpc('package_roles', name)
+                for role, user in obj.xmlrpc('package_roles', name)
             ])
 
 @qypi.command()
 @click.argument('users', nargs=-1)
-@click.pass_context
-def owned(ctx, users):
+@click.pass_obj
+def owned(obj, users):
     """ List packages owned/maintained by a user """
     with JSONMapper() as jmap:
         for u in users:
             jmap.append(u, [
                 {"role": role, "package": pkg}
-                for role, pkg in ctx.obj.xmlrpc('user_packages', u)
+                for role, pkg in obj.xmlrpc('user_packages', u)
             ])
 
 if __name__ == '__main__':

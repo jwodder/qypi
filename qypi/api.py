@@ -2,11 +2,14 @@ from   xmlrpc.client     import ServerProxy
 from   packaging.version import parse
 import requests
 
-class PyPIClient:
+class QyPI:
     def __init__(self, index_url):
         self.index_url = index_url
         self.s = None
         self.xsp = None
+        self.pre = False
+        self.newest = False
+        self.ok = True
 
     def get(self, *path):
         if self.s is None:
@@ -22,16 +25,16 @@ class PyPIClient:
         r.raise_for_status()
         return r.json()
 
-    def get_latest_version(self, package, pre=False, newest=False):
+    def get_latest_version(self, package):
         pkg = self.get_package(package)
         releases = {
             parse(rel): first_upload(files)
             for rel, files in pkg["releases"].items()
         }
         candidates = releases.keys()
-        if not pre:
+        if not self.pre:
             candidates = filter(lambda v: not v.is_prerelease, candidates)
-        if newest:
+        if self.newest:
             latest = max(
                 filter(releases.__getitem__, candidates),
                 key=releases.__getitem__,
