@@ -22,7 +22,7 @@ class QyPI:
         # Unlike the XML-RPC API, the JSON API accepts package names regardless
         # of normalization
         if r.status_code == 404:
-            raise PackageNotFoundError(package)
+            raise QyPIError(package + ': package not found')
         r.raise_for_status()
         return r.json()
 
@@ -44,7 +44,7 @@ class QyPI:
         else:
             latest = max(candidates, default=None)
         if latest is None:
-            raise NoSuitableVersionError(package)
+            raise QyPIError(package + ': no suitable versions available')
         latest = str(latest)
         ### TODO: Will stringifying the parsed version string instead of using
         ### the original key from `pkg["releases"]` ever change the version
@@ -57,7 +57,7 @@ class QyPI:
     def get_version(self, package, version):
         r = self.get(package, version, 'json')
         if r.status_code == 404:
-            raise VersionNotFoundError(package, version)
+            raise QyPIError('{}: version {} not found'.format(package, version))
         r.raise_for_status()
         return r.json()
 
@@ -98,30 +98,6 @@ class QyPI:
 class QyPIError(Exception):
     pass
 
-
-class PackageNotFoundError(QyPIError):
-    def __init__(self, package):
-        self.package = package
-
-    def __str__(self):
-        return self.package + ': package not found'
-
-
-class VersionNotFoundError(QyPIError):
-    def __init__(self, package, version):
-        self.package = package
-        self.version = version
-
-    def __str__(self):
-        return '{0.package}: version {0.version} not found'.format(self)
-
-
-class NoSuitableVersionError(QyPIError):
-    def __init__(self, package):
-        self.package = package
-
-    def __str__(self):
-        return self.package + ': no suitable versions available'
 
 def first_upload(files):
     return min((f["upload_time"] for f in files), default=None)
