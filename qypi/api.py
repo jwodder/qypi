@@ -1,4 +1,5 @@
 from   xmlrpc.client     import ServerProxy
+import click
 from   packaging.version import parse
 import requests
 
@@ -9,7 +10,7 @@ class QyPI:
         self.xsp = None
         self.pre = False
         self.newest = False
-        self.ok = True
+        self.errmsgs = []
 
     def get(self, *path):
         if self.s is None:
@@ -64,6 +65,34 @@ class QyPI:
         if self.xsp is None:
             self.xsp = ServerProxy(self.index_url)
         return getattr(self.xsp, method)(*args, **kwargs)
+
+    def lookup_package(self, args):
+        pkgs = []
+        for name in args:
+            try:
+                pkgs.append(self.get_package(name))
+            except QyPIError as e:
+                self.errmsgs.append(str(e))
+        return pkgs
+
+    def lookup_package_version(self, args):
+        pkgs = []
+        for spec in args:
+            name, eq, version = spec.partition('=')
+            try:
+                if eq == '':
+                    pkgs.append(self.get_latest_version(name))
+                else:
+                    pkgs.append(self.get_version(name, version.lstrip('=')))
+            except QyPIError as e:
+                self.errmsgs.append(str(e))
+        return pkgs
+
+    def cleanup(self, ctx):
+        if self.errmsgs:
+            for msg in self.errmsgs:
+                click.echo(ctx.command_path + ': ' + msg, err=True)
+                ctx.exit(1)
 
 
 class QyPIError(Exception):

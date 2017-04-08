@@ -22,9 +22,8 @@ def qypi(ctx, index_url):
 
 @qypi.resultcallback()
 @click.pass_context
-def die_if_not_ok(ctx, *args, **kwargs):
-    if not ctx.obj.ok:
-        ctx.exit(1)
+def cleanup(ctx, *args, **kwargs):
+    ctx.obj.cleanup(ctx)
 
 @qypi.command()
 @click.option('--trust-downloads/--no-trust-downloads', default=TRUST_DOWNLOADS,
@@ -38,7 +37,7 @@ def info(packages, trust_downloads):
     version or as ``packagename==version`` to show the details for ``version``.
     """
     with JSONLister() as jlist:
-        for pkg in sum(packages, []):
+        for pkg in packages:
             info = clean_pypi_dict(pkg["info"])
             info.pop('description', None)
             if not trust_downloads:
@@ -73,7 +72,7 @@ def readme(packages):
     version or as ``packagename==version`` to show the long description for
     ``version``.
     """
-    for pkg in sum(packages, []):
+    for pkg in packages:
         click.echo_via_pager(pkg["info"]["description"])
 
 @qypi.command()
@@ -81,7 +80,7 @@ def readme(packages):
 def releases(packages):
     """ List released package versions """
     with JSONMapper() as jmap:
-        for pkg in sum(packages, []):
+        for pkg in packages:
             try:
                 project_url = pkg["info"]["project_url"]
             except KeyError:
@@ -111,7 +110,7 @@ def files(packages, trust_downloads):
     ``version``.
     """
     with JSONLister() as jlist:
-        for pkg in sum(packages, []):
+        for pkg in packages:
             pkgfiles = pkg["urls"]
             for pf in pkgfiles:
                 if not trust_downloads:
@@ -184,7 +183,7 @@ def browse(obj, classifiers, file):
 def owner(obj, packages):
     """ List package owners & maintainers """
     with JSONMapper() as jmap:
-        for pkg in sum(packages, []):
+        for pkg in packages:
             name = pkg["info"]["name"]
             jmap.append(name, [
                 {"role": role, "user": user}
