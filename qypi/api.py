@@ -68,34 +68,31 @@ class QyPI:
         return getattr(self.xsp, method)(*args, **kwargs)
 
     def lookup_package(self, args):
-        pkgs = []
         for name in args:
             try:
-                pkgs.append(self.get_package(name))
+                yield self.get_package(name)
             except QyPIError as e:
                 self.errmsgs.append(str(e))
-        return pkgs
 
     def lookup_package_version(self, args):
-        pkgs = []
         for spec in args:
             name, eq, version = spec.partition('=')
             try:
                 if eq != '':
-                    pkgs.append(self.get_version(name, version.lstrip('=')))
+                    yield self.get_version(name, version.lstrip('='))
                 elif self.all_versions:
                     p = self.get_package(name)
-                    pkgs.extend(
-                        p if v == p["info"]["version"]
-                          else self.get_version(name, v)
-                        for v in sorted(p["releases"], key=parse)
-                        if self.pre or not parse(v).is_prerelease
-                    )
+                    for v in sorted(p["releases"], key=parse):
+                        if self.pre or not parse(v).is_prerelease:
+                            if v == p["info"]["version"]:
+                                yield p
+                            else:
+                                ### TODO: Can this call ever fail?
+                                yield self.get_version(name, v)
                 else:
-                    pkgs.append(self.get_latest_version(name))
+                    yield self.get_latest_version(name)
             except QyPIError as e:
                 self.errmsgs.append(str(e))
-        return pkgs
 
     def cleanup(self, ctx):
         if self.errmsgs:
