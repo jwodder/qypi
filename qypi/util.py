@@ -7,8 +7,11 @@ def obj_option(*args, **kwargs):
         setattr(ctx.obj, param.name, value)
     return click.option(*args, callback=callback, expose_value=False, **kwargs)
 
-pre_opt = obj_option('--pre/--no-pre', help='Show prerelease versions',
-                     show_default=True)
+pre_opt = obj_option('--pre/--no-pre', show_default=True,
+                     help='Show prerelease versions')
+
+all_opt = obj_option('--all-versions/--no-all-versions', show_default=True,
+                     help='Show all versions when no version is specified')
 
 sort_opt = obj_option('--newest/--highest', default=False,
                       help='Does "latest" mean "newest" or "highest"?'
@@ -17,12 +20,12 @@ sort_opt = obj_option('--newest/--highest', default=False,
 def package_args(versioned=True):
     if versioned:
         def wrapper(f):
-            return pre_opt(sort_opt(click.argument(
+            return all_opt(pre_opt(sort_opt(click.argument(
                 'packages',
                 nargs=-1,
                 callback=lambda ctx, param, value:
                             ctx.obj.lookup_package_version(value),
-            )(f)))
+            )(f))))
         return wrapper
     else:
         return click.argument(

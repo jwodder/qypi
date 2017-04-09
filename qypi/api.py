@@ -10,6 +10,7 @@ class QyPI:
         self.xsp = None
         self.pre = False
         self.newest = False
+        self.all_versions = False
         self.errmsgs = []
 
     def get(self, *path):
@@ -80,10 +81,18 @@ class QyPI:
         for spec in args:
             name, eq, version = spec.partition('=')
             try:
-                if eq == '':
-                    pkgs.append(self.get_latest_version(name))
-                else:
+                if eq != '':
                     pkgs.append(self.get_version(name, version.lstrip('=')))
+                elif self.all_versions:
+                    p = self.get_package(name)
+                    pkgs.extend(
+                        p if v == p["info"]["version"]
+                          else self.get_version(name, v)
+                        for v in sorted(p["releases"], key=parse)
+                        if self.pre or not parse(v).is_prerelease
+                    )
+                else:
+                    pkgs.append(self.get_latest_version(name))
             except QyPIError as e:
                 self.errmsgs.append(str(e))
         return pkgs
