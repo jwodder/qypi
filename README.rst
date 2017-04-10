@@ -224,11 +224,16 @@ with the following options:
 
 ::
 
-    qypi info [<options>] [--trust-downloads] <package[==version]> ...
+    qypi info [<options>] [--description] [--trust-downloads] <package[==version]> ...
 
-Show basic information about the given package releases.  Download counts are
-omitted because `the feature is currently broken & unreliable
-<https://github.com/pypa/pypi-legacy/issues/396>`_; use the
+Show basic information about the given package releases.
+
+By default, (long) descriptions are omitted because they can be *very* long,
+and it is recommended that you view them with the ``readme`` subcommand
+instead; use the ``--description`` option to include them anyway.
+
+By default, download counts are omitted because `the feature is currently
+broken & unreliable <https://github.com/pypa/pypi-legacy/issues/396>`_; use the
 ``--trust-downloads`` option if you want to see the values anyway.
 
 Example::
@@ -281,8 +286,9 @@ Example::
 
     qypi readme [<options>] <package[==version]> ...
 
-Display the given package releases' long descriptions in a pager one at a time.
-``list`` and ``readme`` are the only subcommands that do not output JSON.
+Display the given package releases' (long) descriptions in a pager one at a
+time.  ``list`` and ``readme`` are the only subcommands that do not output
+JSON.
 
 ``files``
 ^^^^^^^^^

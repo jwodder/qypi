@@ -25,10 +25,12 @@ def cleanup(ctx, *args, **kwargs):
     ctx.obj.cleanup(ctx)
 
 @qypi.command()
+@click.option('--description/--no-description', default=False,
+              help='Include (long) descriptions', show_default=True)
 @click.option('--trust-downloads/--no-trust-downloads', default=TRUST_DOWNLOADS,
               help='Show download stats', show_default=True)
 @package_args()
-def info(packages, trust_downloads):
+def info(packages, trust_downloads, description):
     """
     Show package details.
 
@@ -38,7 +40,8 @@ def info(packages, trust_downloads):
     with JSONLister() as jlist:
         for pkg in packages:
             info = clean_pypi_dict(pkg["info"])
-            info.pop('description', None)
+            if not description:
+                info.pop('description', None)
             if not trust_downloads:
                 info.pop('downloads', None)
             info["url"] = info.pop('home_page', None)

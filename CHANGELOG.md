@@ -1,6 +1,7 @@
 v0.3.0 (in development)
 -----------------------
 - Gave `info`, `readme`, and `files` an `--all-versions` option
+- Gave `info` a `--description` option for including (long) descriptions
 
 v0.2.0 (2017-04-03)
 -------------------
