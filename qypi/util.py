@@ -3,19 +3,32 @@ import re
 import click
 
 def obj_option(*args, **kwargs):
+    """
+    Like `click.option`, but sets an attribute on ``ctx.obj`` instead of
+    creating a parameter
+    """
     def callback(ctx, param, value):
         setattr(ctx.obj, param.name, value)
     return click.option(*args, callback=callback, expose_value=False, **kwargs)
 
-pre_opt = obj_option('--pre/--no-pre', show_default=True,
-                     help='Show prerelease versions')
+pre_opt = obj_option(
+    '--pre/--no-pre',
+    default=False,
+    help='Show prerelease versions',
+    show_default=True,
+)
 
-all_opt = obj_option('--all-versions/--no-all-versions', show_default=True,
-                     help='Show all versions when no version is specified')
+all_opt = obj_option(
+    '--all-versions/--latest-version',
+    default=False,
+    help='Show all versions/only the latest version when no version is specified [default: latest]',
+)
 
-sort_opt = obj_option('--newest/--highest', default=False,
-                      help='Does "latest" mean "newest" or "highest"?'
-                           ' [default: highest]')
+sort_opt = obj_option(
+    '--newest/--highest',
+    default=False,
+    help='Does "latest" mean "newest" or "highest"? [default: highest]',
+)
 
 def package_args(versioned=True):
     if versioned:
