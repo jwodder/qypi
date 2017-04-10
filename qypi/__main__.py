@@ -1,4 +1,3 @@
-#!/usr/bin/python3
 import click
 from   packaging.version import parse
 from   .                 import __version__

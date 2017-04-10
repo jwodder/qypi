@@ -33,7 +33,7 @@ sort_opt = obj_option(
 def package_args(versioned=True):
     if versioned:
         def wrapper(f):
-            return all_opt(pre_opt(sort_opt(click.argument(
+            return all_opt(sort_opt(pre_opt(click.argument(
                 'packages',
                 nargs=-1,
                 callback=lambda ctx, param, value:

@@ -197,24 +197,34 @@ Example::
 
 Release Information
 -------------------
-These subcommands show information for specific package releases/versions.
-Arguments can be in the form ``package==version`` (e.g., ``qypi info
-qypi==0.1.0``) in order to query the given version of the given package; or
-they can be just a package name in order to query (by default) the
-highest-numbered non-prerelease version of the package.  Package-only arguments
-can be made to refer to the most recently-released version (as determined by
-file upload times) instead of the highest-numbered by specifying the
-``--newest`` option on the command line, and prerelease versions can be added
-to consideration with the ``--pre`` option.  These options can be negated back
-to the default behavior with the ``--highest`` and ``--no-pre`` options,
-respectively.
+These subcommands show information about individual package releases/versions
+and share the same command-line options and argument syntax.
+
+Arguments of the form ``package==version`` (e.g., ``qypi info qypi==0.1.0``)
+always refer to the given version of the given package.
+
+Arguments that are just a package name refer to (by default) the
+highest-numbered non-prerelease version of the package.  This can be changed
+with the following options:
+
+- ``--all-versions``/``--latest-version`` — Show information for all versions
+  (in PEP 440 order, excluding prereleases unless ``--pre`` is given)/only the
+  latest version of each package; default: latest only
+
+- ``--newest``/``--highest`` — Define "latest version" to mean the most
+  recently released/highest-numbered version; default: highest-numbered.
+  ``--newest`` determines release dates based on file upload times; releases
+  without file uploads are thus ignored.
+
+- ``--pre``/``--no-pre`` — Include/don't include prerelease & development
+  versions; default: don't include
 
 ``info``
 ^^^^^^^^
 
 ::
 
-    qypi info [--pre|--no-pre] [--newest|--highest] [--trust-downloads] <package[==version]> ...
+    qypi info [<options>] [--trust-downloads] <package[==version]> ...
 
 Show basic information about the given package releases.  Download counts are
 omitted because `the feature is currently broken & unreliable
@@ -269,7 +279,7 @@ Example::
 
 ::
 
-    qypi readme [--pre|--no-pre] [--newest|--highest] <package[==version]> ...
+    qypi readme [<options>] <package[==version]> ...
 
 Display the given package releases' long descriptions in a pager one at a time.
 ``list`` and ``readme`` are the only subcommands that do not output JSON.
@@ -279,7 +289,7 @@ Display the given package releases' long descriptions in a pager one at a time.
 
 ::
 
-    qypi files [--pre|--no-pre] [--newest|--highest] [--trust-downloads] <package[==version]> ...
+    qypi files [<options>] [--trust-downloads] <package[==version]> ...
 
 List files available for download for the given package releases.  Download
 counts are omitted because `the feature is currently broken & unreliable
