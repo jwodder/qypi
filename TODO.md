@@ -7,6 +7,5 @@
 - Add examples to the README for every subcommand
 - Write tests?
 - Give `readme` an option for setting the pager
-- Give `--all-versions` an `-a` (or `-A`?) short form?
-    - Give `--latest-version` a short form?
+- Give `--latest-version` a short form?
 - Set the user agent when using `requests`?

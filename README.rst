@@ -211,6 +211,8 @@ with the following options:
   (in PEP 440 order, excluding prereleases unless ``--pre`` is given)/only the
   latest version of each package; default: latest only
 
+  - ``--all-versions`` may optionally be written ``-A``.
+
 - ``--newest``/``--highest`` — Define "latest version" to mean the most
   recently released/highest-numbered version; default: highest-numbered.
   ``--newest`` determines release dates based on file upload times; releases
