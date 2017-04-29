@@ -1,3 +1,8 @@
+v0.3.1 (in development)
+-----------------------
+- **Bugfix**: An error message will now be displayed for each nonexistent
+  package/version given on the command line, not just the first one
+
 v0.3.0 (2017-04-14)
 -------------------
 - Gave `info`, `readme`, and `files` an `-A`/`--all-versions` option

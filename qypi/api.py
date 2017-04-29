@@ -98,7 +98,7 @@ class QyPI:
         if self.errmsgs:
             for msg in self.errmsgs:
                 click.echo(ctx.command_path + ': ' + msg, err=True)
-                ctx.exit(1)
+            ctx.exit(1)
 
 
 class QyPIError(Exception):

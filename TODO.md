@@ -6,6 +6,8 @@
     - Normalize package names in output?
 - Add examples to the README for every subcommand
 - Write tests?
-- Give `readme` an option for setting the pager
 - Give `--latest-version` a short form?
 - Set the user agent when using `requests`?
+- Give `search` a convience option for showing no more than one version per
+  project
+- Give `releases` an option for sorting by release date?
