@@ -1,3 +1,5 @@
+from   itertools         import groupby
+from   operator          import itemgetter
 import click
 from   packaging.version import parse
 from   .                 import __version__
@@ -136,11 +138,14 @@ def listcmd(obj):
 @click.option('--and', 'oper', flag_value='and', default=True,
               help='AND conditions together [default]')
 @click.option('--or', 'oper', flag_value='or', help='OR conditions together')
+@click.option('-p/-r', '--packages/--releases', default=False,
+              help='Show one result per package/per release'
+                   ' [default: per release]')
 @click.argument('terms', nargs=-1, required=True)
 @click.pass_obj
-def search(obj, terms, oper):
+def search(obj, terms, oper, packages):
     """
-    Search PyPI for packages.
+    Search PyPI for packages or releases thereof.
 
     Search terms may be specified as either ``field:value`` (e.g.,
     ``summary:Django``) or just ``value`` to search long descriptions.
@@ -156,7 +161,14 @@ def search(obj, terms, oper):
             key = 'description'
         # ServerProxy can't handle defaultdicts, so we can't use those instead.
         spec.setdefault(key, []).append(value)
-    click.echo(dumps(list(map(clean_pypi_dict,obj.xmlrpc('search',spec,oper)))))
+    results = map(clean_pypi_dict, obj.xmlrpc('search', spec, oper))
+    if packages:
+        results = (
+            max(versions, key=lambda v: parse(v["version"]))
+            # Assume multiple versions of the same package are always adjacent
+            for _, versions in groupby(results, itemgetter("name"))
+        )
+    click.echo(dumps(list(results)))
 
 @qypi.command()
 @click.option('-f', '--file', type=click.File('r'))

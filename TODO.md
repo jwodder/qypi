@@ -10,4 +10,8 @@
 - Set the user agent when using `requests`?
 - Give `search` a convience option for showing no more than one version per
   project
+    - Do likewise for `browse`
 - Give `releases` an option for sorting by release date?
+- Try to make the use of "release" vs. "version" consistent
+    - Give `releases` a `versions` synonym?
+    - Rename `releases` to `versions`?
