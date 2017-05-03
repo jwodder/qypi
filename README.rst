@@ -67,11 +67,11 @@ not output JSON.
 
 ::
 
-    qypi search [--and|--or] <term> ...
+    qypi search [--and|--or] [--packages|--releases] <term> ...
 
-Search PyPI for package releases matching the given search terms.  Search terms
-consist of a field name and a value separated by a colon; a term without a
-colon searches the ``description`` field.  As documented `here
+Search PyPI for packages or package releases matching the given search terms.
+Search terms consist of a field name and a value separated by a colon; a term
+without a colon searches the ``description`` field.  As documented `here
 <https://wiki.python.org/moin/PyPIXmlRpc>`_, the supported searchable fields
 are:
 
@@ -94,6 +94,11 @@ All other fields are ignored.
 Multiple search terms referring to the same field are combined with logical OR.
 Search terms on different fields are combined according to whether ``--and`` or
 ``--or`` is specified on the command line; the default behavior is ``--and``.
+
+By default, ``search`` lists every matching release for every package, even if
+the same package has multiple matching releases.  To list no more than one
+release (the highest-versioned) per package, specify the ``-p``/``--packages``
+option.  The negation of this option is ``-r``/``--releases``.
 
 ``browse``
 ^^^^^^^^^^
