@@ -1,7 +1,8 @@
 v0.4.0 (in development)
 -----------------------
-- Gave `search` `--packages` and `--releases` options for controlling whether
-  to show one result per matching package or per matching package release
+- Gave `browse` and `search` `--packages` and `--releases` options for
+  controlling whether to show one result per matching package or per matching
+  package release
 - **Bugfix**: An error message will now be displayed for each nonexistent
   package/version given on the command line, not just the first one
 

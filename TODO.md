@@ -7,7 +7,6 @@
 - Add examples to the README for every subcommand
 - Write tests?
 - Give `--latest-version` a short form?
-- Give `browse` `-p/-v` options
 - Give `releases` an option for sorting by release date?
 - Try to make the use of "release" vs. "version" consistent
     - Give `releases` a `versions` synonym?

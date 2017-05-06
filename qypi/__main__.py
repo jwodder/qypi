@@ -1,11 +1,9 @@
-from   itertools         import groupby
-from   operator          import itemgetter
 import click
 from   packaging.version import parse
 from   .                 import __version__
 from   .api              import QyPI, first_upload
 from   .util             import JSONLister, JSONMapper, clean_pypi_dict, \
-                                    dumps, package_args
+                                    dumps, package_args, squish_versions
 
 #ENDPOINT = 'https://pypi.python.org/pypi'
 ENDPOINT = 'https://pypi.org/pypi'
@@ -163,18 +161,17 @@ def search(obj, terms, oper, packages):
         spec.setdefault(key, []).append(value)
     results = map(clean_pypi_dict, obj.xmlrpc('search', spec, oper))
     if packages:
-        results = (
-            max(versions, key=lambda v: parse(v["version"]))
-            # Assume multiple versions of the same package are always adjacent
-            for _, versions in groupby(results, itemgetter("name"))
-        )
-    click.echo(dumps(list(results)))
+        results = squish_versions(results)
+    click.echo(dumps(results))
 
 @qypi.command()
 @click.option('-f', '--file', type=click.File('r'))
+@click.option('-p/-r', '--packages/--releases', default=False,
+              help='Show one result per package/per release'
+                   ' [default: per release]')
 @click.argument('classifiers', nargs=-1)
 @click.pass_obj
-def browse(obj, classifiers, file):
+def browse(obj, classifiers, file, packages):
     """
     List packages with given trove classifiers.
 
@@ -184,10 +181,13 @@ def browse(obj, classifiers, file):
     """
     if file is not None:
         classifiers += tuple(map(str.strip, file))
-    click.echo(dumps([
+    results = [
         {"name": name, "version": version or None}
         for name, version in obj.xmlrpc('browse', classifiers)
-    ]))
+    ]
+    if packages:
+        results = squish_versions(results)
+    click.echo(dumps(results))
 
 @qypi.command()
 @package_args(versioned=False)

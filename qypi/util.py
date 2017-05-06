@@ -1,6 +1,10 @@
+from   collections.abc   import Iterator
+from   itertools         import groupby
 import json
+from   operator          import itemgetter
 import re
 import click
+from   packaging.version import parse
 
 def obj_option(*args, **kwargs):
     """
@@ -49,6 +53,8 @@ def package_args(versioned=True):
         )
 
 def dumps(obj):
+    if isinstance(obj, Iterator):
+        obj = list(obj)
     return json.dumps(obj, sort_keys=True, indent=4, ensure_ascii=False)
 
 def clean_pypi_dict(d):
@@ -56,6 +62,16 @@ def clean_pypi_dict(d):
         k: (None if v in ('', 'UNKNOWN') else v)
         for k,v in d.items() if not k.startswith(('cheesecake', '_pypi'))
     }
+
+def squish_versions(releases):
+    """
+    Given a list of `dict`s containing (at least) ``"name"`` and ``"version"``
+    fields, return for each name the `dict` with the highest version.
+
+    It is assumed that `dict`s with the same name are always adjacent.
+    """
+    for _, versions in groupby(releases, itemgetter("name")):
+        yield max(versions, key=lambda v: parse(v["version"]))
 
 class JSONLister:
     def __init__(self):
