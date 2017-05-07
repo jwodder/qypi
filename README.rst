@@ -97,21 +97,28 @@ Search terms on different fields are combined according to whether ``--and`` or
 
 By default, ``search`` lists every matching release for every package, even if
 the same package has multiple matching releases.  To list no more than one
-release (the highest-versioned) per package, specify the ``-p``/``--packages``
-option.  The negation of this option is ``-r``/``--releases``.
+release (specifically, the highest-versioned) per package, specify the
+``-p``/``--packages`` option on the command line.  ``-r``/``--releases``
+restores the default behavior.
 
 ``browse``
 ^^^^^^^^^^
 
 ::
 
-    qypi browse [-f|--file <file>] <classifier> ...
+    qypi browse [-f|--file <file>] [--packages|--releases] <classifier> ...
 
-List package releases with the given `trove classifiers
-<https://pypi.python.org/pypi?%3Aaction=list_classifiers>`_.  Because
+List packages or package releases with the given `trove classifiers
+<https://pypi.python.org/pypi?%3Aaction=list_classifiers>`_.  Because trove
 classifiers are not the most command-line friendly thing in the world, they may
 optionally be read from a file, one classifier per line.  Any further
 classifiers listed on the command line will be added to the file's list.
+
+By default, ``browse`` lists every matching release for every package, even if
+the same package has multiple matching releases.  To list no more than one
+release (specifically, the highest-versioned) per package, specify the
+``-p``/``--packages`` option on the command line.  ``-r``/``--releases``
+restores the default behavior.
 
 ``owned``
 ^^^^^^^^^
