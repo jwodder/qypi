@@ -1,5 +1,5 @@
-v0.4.0 (in development)
------------------------
+v0.4.0 (2017-05-07)
+-------------------
 - Gave `browse` and `search` `--packages` and `--releases` options for
   controlling whether to show one result per matching package or per matching
   package release
