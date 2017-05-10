@@ -2,7 +2,7 @@ from   collections.abc   import Iterator
 from   itertools         import groupby
 import json
 from   operator          import itemgetter
-import re
+from   textwrap          import indent
 import click
 from   packaging.version import parse
 
@@ -93,7 +93,7 @@ class JSONLister:
             self.first = False
         else:
             click.echo(',')
-        click.echo(re.sub(r'^', '    ', dumps(obj), flags=re.M), nl=False)
+        click.echo(indent(dumps(obj), ' '*4), nl=False)
 
 
 class JSONMapper:
@@ -116,7 +116,4 @@ class JSONMapper:
             self.first = False
         else:
             click.echo(',')
-        click.echo(
-            re.sub(r'^', '    ', json.dumps(key)+': '+dumps(value), flags=re.M),
-            nl=False,
-        )
+        click.echo(indent(json.dumps(key)+': '+dumps(value), ' '*4), nl=False)

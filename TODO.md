@@ -11,3 +11,6 @@
 - Try to make the use of "release" vs. "version" consistent
     - Give `releases` a `versions` synonym?
     - Rename `releases` to `versions`?
+- `search`: Make `keyword` a synonym of `keywords`
+- Accept "`legacy`" and "`warehouse`" (and their testing equivalents?) as
+  values for `--index-url`?
