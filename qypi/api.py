@@ -30,12 +30,16 @@ class QyPI:
     def get_latest_version(self, package):
         pkg = self.get_package(package)
         releases = {
-            parse(rel): first_upload(files)
+            (parse(rel), rel): first_upload(files)
+            # The unparsed version string needs to be kept around because the
+            # alternative approach (stringifying the Version object once
+            # comparisons are done) can result in a different string (e.g.,
+            # "2001.01.01" becomes "2001.1.1"), leading to a 404.
             for rel, files in pkg["releases"].items()
         }
         candidates = releases.keys()
         if not self.pre:
-            candidates = filter(lambda v: not v.is_prerelease, candidates)
+            candidates = filter(lambda v: not v[0].is_prerelease, candidates)
         if self.newest:
             latest = max(
                 filter(releases.__getitem__, candidates),
@@ -46,10 +50,7 @@ class QyPI:
             latest = max(candidates, default=None)
         if latest is None:
             raise QyPIError(package + ': no suitable versions available')
-        latest = str(latest)
-        ### TODO: Will stringifying the parsed version string instead of using
-        ### the original key from `pkg["releases"]` ever change the version
-        ### string in a meaningful way?
+        latest = latest[1]
         if pkg["info"]["version"] == latest:
             return pkg
         else:

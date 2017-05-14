@@ -1,6 +1,6 @@
 - For arguments of the form `package==version`, use `packaging`'s version
-  classes for the version comparison (This would involve an extra API call,
-  though)
+  classes for the version comparison (falling back to string comparison in the
+  pathological case of two different releases with equivalent versions)
 - When using a package name as a dictionary key in output, use the same casing
   as on the command line?
     - Normalize package names in output?
@@ -14,3 +14,6 @@
 - `search`: Make `keyword` a synonym of `keywords`
 - Accept "`legacy`" and "`warehouse`" (and their testing equivalents?) as
   values for `--index-url`?
+- Change the output formats of `releases`, `owner`, and `owned` to be lists of
+  objects, each of which has a `package`/`name`/`user` field giving what was
+  formerly the entry's key and another field for what was formerly the value?
