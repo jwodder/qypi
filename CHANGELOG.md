@@ -1,3 +1,8 @@
+v0.4.1 (in development)
+-----------------------
+- **Bugfix**: Better handling of package versions that aren't in PEP 440
+  normalized form
+
 v0.4.0 (2017-05-07)
 -------------------
 - Gave `browse` and `search` `--packages` and `--releases` options for

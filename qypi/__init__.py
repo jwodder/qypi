@@ -9,7 +9,7 @@ Run ``qypi --help`` or visit <https://github.com/jwodder/qypi> for more
 information.
 """
 
-__version__      = '0.4.0'
+__version__      = '0.4.1'
 __author__       = 'John Thorvald Wodder II'
 __author_email__ = 'qypi@varonathe.org'
 __license__      = 'MIT'
