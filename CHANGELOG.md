@@ -1,5 +1,5 @@
-v0.4.1 (in development)
------------------------
+v0.4.1 (2017-05-15)
+-------------------
 - **Bugfix**: Better handling of package versions that aren't in PEP 440
   normalized form
 
