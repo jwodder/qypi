@@ -1,3 +1,8 @@
+v0.5.0 (in development)
+-----------------------
+- `search` now accepts `homepage` and `keyword` as synonyms of `home_page` and
+  `keywords`, respectively
+
 v0.4.1 (2017-05-15)
 -------------------
 - **Bugfix**: Better handling of package versions that aren't in PEP 440

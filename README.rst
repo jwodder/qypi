@@ -81,11 +81,11 @@ are:
 - ``author_email``
 - ``maintainer``
 - ``maintainer_email``
-- ``home_page`` (alias: ``url``)
+- ``home_page`` (aliases: ``homepage`` and ``url``)
 - ``license``
 - ``summary``
 - ``description`` (aliases: ``long_description`` and ``readme``)
-- ``keywords``
+- ``keywords`` (alias: ``keyword``)
 - ``platform``
 - ``download_url``
 

@@ -9,6 +9,14 @@ from   .util             import JSONLister, JSONMapper, clean_pypi_dict, \
 ENDPOINT = 'https://pypi.org/pypi'
 TRUST_DOWNLOADS = False
 
+SEARCH_SYNONYMS = {
+    'homepage': 'home_page',
+    'url': 'home_page',
+    'long_description': 'description',
+    'readme': 'description',
+    'keyword': 'keywords',
+}
+
 @click.group(context_settings={"help_option_names": ["-h", "--help"]})
 @click.option('-i', '--index-url', default=ENDPOINT, metavar='URL',
               help='Use a different URL for PyPI', show_default=True)
@@ -153,10 +161,8 @@ def search(obj, terms, oper, packages):
         key, colon, value = t.partition(':')
         if colon == '':
             key, value = 'description', t
-        elif key == 'url':
-            key = 'home_page'
-        elif key in ('long_description', 'readme'):
-            key = 'description'
+        else:
+            key = SEARCH_SYNONYMS.get(key, key)
         # ServerProxy can't handle defaultdicts, so we can't use those instead.
         spec.setdefault(key, []).append(value)
     results = map(clean_pypi_dict, obj.xmlrpc('search', spec, oper))
