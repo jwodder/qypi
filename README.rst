@@ -4,29 +4,29 @@
           state and is being actively developed.
 
 .. image:: https://img.shields.io/pypi/pyversions/qypi.svg
-    :target: https://pypi.python.org/pypi/qypi
+    :target: https://pypi.org/project/qypi/
 
 .. image:: https://img.shields.io/github/license/jwodder/qypi.svg?maxAge=2592000
     :target: https://opensource.org/licenses/MIT
     :alt: MIT License
 
 `GitHub <https://github.com/jwodder/qypi>`_
-| `PyPI <https://pypi.python.org/pypi/qypi>`_
+| `PyPI <https://pypi.org/project/qypi/>`_
 | `Issues <https://github.com/jwodder/qypi/issues>`_
 
 ``qypi`` is a command-line client for querying & searching `the Python Package
-Index <https://pypi.python.org>`_ for Python package information and outputting
-JSON (with some minor opinionated changes to the output data structures; see
-the examples below).
+Index <https://pypi.org>`_ for Python package information and outputting JSON
+(with some minor opinionated changes to the output data structures; see the
+examples below).
 
 
 Installation
 ============
-``qypi`` requires Python 3.4 or newer.  Just use version 6.0 or higher of `pip
-<https://pip.pypa.io/>`_ for Python 3 (You have pip, right?) to install
-``qypi`` and its dependencies::
+``qypi`` requires Python 3.4 or higher.  Just use version 6.0 or higher of `pip
+<https://pip.pypa.io>`_ for Python 3 (You have pip, right?) to install ``qypi``
+and its dependencies::
 
-    pip3 install qypi
+    python3 -m pip install qypi
 
 
 Usage
@@ -41,11 +41,10 @@ Global Option
 
 - ``-i <URL>``, ``--index-url <URL>`` — Query the Python package server at the
   given URL, which must support both the `XML-RPC
-  <http://wiki.python.org/moin/PyPIXmlRpc>`_ and `JSON
-  <http://wiki.python.org/moin/PyPIJSON>`_ APIs.  By default, ``qypi`` queries
-  `Warehouse <https://pypi.org>`_ at ``https://pypi.org/pypi``; to use the
-  current/legacy PyPI instance instead, set the index URL to
-  ``https://pypi.python.org/pypi``.
+  <https://warehouse.readthedocs.io/api-reference/xml-rpc/>`_ and `JSON
+  <https://warehouse.readthedocs.io/api-reference/json/>`_ APIs.  By default,
+  ``qypi`` queries `PyPI (Warehouse) <https://pypi.org>`_ at
+  ``https://pypi.org/pypi``.
 
 
 List Packages
@@ -72,8 +71,8 @@ not output JSON.
 Search PyPI for packages or package releases matching the given search terms.
 Search terms consist of a field name and a value separated by a colon; a term
 without a colon searches the ``description`` field.  As documented `here
-<https://wiki.python.org/moin/PyPIXmlRpc>`_, the supported searchable fields
-are:
+<https://warehouse.readthedocs.io/api-reference/xml-rpc/>`_, the supported
+searchable fields are:
 
 - ``name``
 - ``version``
@@ -109,7 +108,7 @@ restores the default behavior.
     qypi browse [-f|--file <file>] [--packages|--releases] <classifier> ...
 
 List packages or package releases with the given `trove classifiers
-<https://pypi.python.org/pypi?%3Aaction=list_classifiers>`_.  Because trove
+<https://pypi.org/pypi?%3Aaction=list_classifiers>`_.  Because trove
 classifiers are not the most command-line friendly thing in the world, they may
 optionally be read from a file, one classifier per line.  Any further
 classifiers listed on the command line will be added to the file's list.
