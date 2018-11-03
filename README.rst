@@ -10,6 +10,9 @@
     :target: https://opensource.org/licenses/MIT
     :alt: MIT License
 
+.. image:: https://img.shields.io/badge/Say%20Thanks-!-1EAEDB.svg
+    :target: https://saythanks.io/to/jwodder
+
 `GitHub <https://github.com/jwodder/qypi>`_
 | `PyPI <https://pypi.org/project/qypi/>`_
 | `Issues <https://github.com/jwodder/qypi/issues>`_
