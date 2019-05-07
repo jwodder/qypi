@@ -2,6 +2,9 @@ v0.5.0 (in development)
 -----------------------
 - `search` now accepts `homepage` and `keyword` as synonyms of `home_page` and
   `keywords`, respectively
+- When getting the latest version of a package that only has prereleases, now
+  show information on the latest prerelease instead of erroring when `--pre`
+  isn't given
 
 v0.4.1 (2017-05-15)
 -------------------

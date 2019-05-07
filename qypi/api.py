@@ -38,7 +38,7 @@ class QyPI:
             for rel, files in pkg["releases"].items()
         }
         candidates = releases.keys()
-        if not self.pre:
+        if not self.pre and any(not v[0].is_prerelease for v in candidates):
             candidates = filter(lambda v: not v[0].is_prerelease, candidates)
         if self.newest:
             latest = max(
