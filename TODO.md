@@ -18,3 +18,4 @@
 - Add a `-q`/`--quiet` option for suppressing errors about missing
   packages/versions
 - Set a custom User-Agent?
+- Honor package yanking (PEP 592)

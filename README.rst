@@ -16,6 +16,7 @@
 `GitHub <https://github.com/jwodder/qypi>`_
 | `PyPI <https://pypi.org/project/qypi/>`_
 | `Issues <https://github.com/jwodder/qypi/issues>`_
+| `Changelog <https://github.com/jwodder/qypi/blob/master/CHANGELOG.md>`_
 
 ``qypi`` is a command-line client for querying & searching `the Python Package
 Index <https://pypi.org>`_ for Python package information and outputting JSON
