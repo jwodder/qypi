@@ -17,5 +17,4 @@
   formerly the entry's key and another field for what was formerly the value?
 - Add a `-q`/`--quiet` option for suppressing errors about missing
   packages/versions
-- Set a custom User-Agent?
 - Honor package yanking (PEP 592)

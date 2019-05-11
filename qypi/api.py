@@ -1,7 +1,17 @@
+import platform
 from   xmlrpc.client     import ServerProxy
 import click
 from   packaging.version import parse
 import requests
+from   .                 import __url__, __version__
+
+USER_AGENT = 'qypi/{} ({}) requests/{} {}/{}'.format(
+    __version__,
+    __url__,
+    requests.__version__,
+    platform.python_implementation(),
+    platform.python_version(),
+)
 
 class QyPI:
     def __init__(self, index_url):
@@ -16,6 +26,7 @@ class QyPI:
     def get(self, *path):
         if self.s is None:
             self.s = requests.Session()
+            self.s.headers["User-Agent"] = USER_AGENT
         return self.s.get(self.index_url.rstrip('/') + '/' + '/'.join(path))
 
     def get_package(self, package):
