@@ -1,5 +1,5 @@
-v0.5.0 (in development)
------------------------
+v0.5.0 (2019-05-18)
+-------------------
 - `search` now accepts `homepage` and `keyword` as synonyms of `home_page` and
   `keywords`, respectively
 - When getting the latest version of a package that only has prereleases, now
