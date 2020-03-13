@@ -118,4 +118,4 @@ class QyPIError(Exception):
 
 
 def first_upload(files):
-    return min((f["upload_time"] for f in files), default=None)
+    return min((f["upload_time_iso_8601"] for f in files), default=None)
