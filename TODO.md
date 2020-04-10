@@ -18,3 +18,9 @@
 - Add a `-q`/`--quiet` option for suppressing errors about missing
   packages/versions
 - Honor package yanking (PEP 592)
+- Remove `--trust-downloads`
+- Give `info` (et alii?) a `--raw` option for disabling post-processing
+  customizations
+- Set User-Agent for ServerProxy in Python 3.8+
+- Eliminate the `--packages`/`--releases` options from `search`?  (but not from
+  `browse`)  PyPI seems to now always return one result per package
