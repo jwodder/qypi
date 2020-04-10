@@ -3,6 +3,12 @@
     :alt: Project Status: Active — The project has reached a stable, usable
           state and is being actively developed.
 
+.. image:: https://travis-ci.com/jwodder/qypi.svg?branch=master
+    :target: https://travis-ci.com/jwodder/qypi
+
+.. image:: https://codecov.io/gh/jwodder/qypi/branch/master/graph/badge.svg
+    :target: https://codecov.io/gh/jwodder/qypi
+
 .. image:: https://img.shields.io/pypi/pyversions/qypi.svg
     :target: https://pypi.org/project/qypi/
 
