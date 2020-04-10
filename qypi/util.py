@@ -26,7 +26,8 @@ all_opt = obj_option(
     '-A',
     '--all-versions/--latest-version',
     default=False,
-    help='Show all versions/only the latest version when no version is specified [default: latest]',
+    help='Show all versions/only the latest version when no version is'
+         ' specified [default: latest]',
 )
 
 sort_opt = obj_option(
