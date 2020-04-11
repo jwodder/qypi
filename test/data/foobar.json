@@ -1,0 +1,167 @@
+{
+    "0.1.0": {
+        "info": {
+            "name": "foobar",
+            "summary": "Institution say voice five gas lot law.",
+            "description": "foobar v0.1.0\n\nHouse note policy hope information half large. Report leave political like onto. Letter meet item lead. Hotel off natural pretty situation eat.\n\nVote must base. Blood laugh difference town century stand she. Tonight certain coach three him thank we.\n\nSoldier realize strategy step simple business account receive.\n\nGenerated with Faker",
+            "author": "Rebecca Morris",
+            "author_email": "lkirby@yahoo.com",
+            "maintainer": "Amy Martin",
+            "maintainer_email": "dawn42@baldwin-alvarado.org",
+            "home_page": "https://www.wilson-espinoza.com/explore/explore/post/",
+            "package_url": "https://dummy.nil/pypi/foobar",
+            "release_url": "https://dummy.nil/pypi/foobar/0.1.0",
+            "downloads": {
+                "last_day": 16,
+                "last_week": 154,
+                "last_month": 637
+            },
+            "unknown_field": "passed through",
+            "classifiers": [
+                "Topic :: Software Development :: Testing",
+                "UNKNOWN"
+            ],
+            "platform": null,
+            "cheesecake_look-provide-gas": "HmHbSOlvwOIknMsxdkcQ",
+            "cheesecake_threat-number": 7761,
+            "_pypi_property-late": "xQnSZHqzpUXFuWEEuxZV",
+            "_pypi_like-strong-street": 4183
+        },
+        "files": [
+            {
+                "md5_digest": "1cfb811a80649283db985b283b2d9ead",
+                "digests": {
+                    "md5": "1cfb811a80649283db985b283b2d9ead",
+                    "sha256": "08cf0fe941ab697aada54b054191fd945b5b84913ed75634f714fcdb2ddd5dbb"
+                },
+                "filename": "foobar-0.1.0-py2.py3-none-any.whl",
+                "has_sig": true,
+                "packagetype": "bdist_wheel",
+                "python_version": "py2.py3",
+                "downloads": 95,
+                "size": 775,
+                "comment_text": "",
+                "unknown_field": "passed through",
+                "upload_time": "2013-01-18T18:53:56",
+                "upload_time_iso_8601": "2013-01-18T18:53:56.265173Z",
+                "url": "https://files.dummyhosted.nil/packages/ac/62/c3a61adf1cc9b1e3ec63ba06706d3f7af3e1ef389b97523e2b529fbe5432/foobar-0.1.0-py2.py3-none-any.whl"
+            },
+            {
+                "md5_digest": "2e93ea94a7f514f2d8f267dd90b47d37",
+                "digests": {
+                    "md5": "2e93ea94a7f514f2d8f267dd90b47d37",
+                    "sha256": "6a1027f685e8c329843beaa152ae94bdd04fae8adb20cf127ff26bd9cae48c33"
+                },
+                "filename": "foobar-0.1.0.tar.gz",
+                "has_sig": true,
+                "packagetype": "sdist",
+                "python_version": "source",
+                "downloads": 104,
+                "size": 743,
+                "comment_text": "",
+                "unknown_field": "passed through",
+                "upload_time": "2015-09-22T09:35:00",
+                "upload_time_iso_8601": "2015-09-22T09:35:00.441072Z",
+                "url": "https://files.dummyhosted.nil/packages/8e/75/d58d32eb92ad0956d69925acb9828191f18cb14004cc6db76f7687b025a5/foobar-0.1.0.tar.gz"
+            }
+        ]
+    },
+    "0.2.0": {
+        "info": {
+            "name": "foobar",
+            "summary": "Water audience cut call.",
+            "description": "foobar v0.2.0\n\nLead must laugh trouble expert else get million.\n\nTop shake walk. A cold national.\n\nBring energy yourself suffer. Catch concern official relate voice base.\n\nGenerated with Faker",
+            "author": "Sonya Johnson",
+            "author_email": "danielstewart@frye.com",
+            "maintainer": "Stephen Romero",
+            "maintainer_email": "maynardtim@hotmail.com",
+            "home_page": "http://www.sanchez.net/index.htm",
+            "package_url": "https://dummy.nil/pypi/foobar",
+            "release_url": "https://dummy.nil/pypi/foobar/0.2.0",
+            "downloads": {
+                "last_day": 18,
+                "last_week": 144,
+                "last_month": 581
+            },
+            "unknown_field": "passed through",
+            "classifiers": [
+                "Topic :: Software Development :: Testing",
+                "UNKNOWN"
+            ],
+            "platform": "Wood",
+            "cheesecake_woman-hold-hair": "DSBGtdRHISnyJfrGQizX",
+            "cheesecake_which-early-tax": 9055,
+            "_pypi_fight-time-rise": "PgLctIJSJoqxGGGFjdme",
+            "_pypi_general-tonight": 6318
+        },
+        "files": [
+            {
+                "md5_digest": "5ced02e62434eb5649276e6f12003009",
+                "digests": {
+                    "md5": "5ced02e62434eb5649276e6f12003009",
+                    "sha256": "f0862078b4f1af49f6b8c91153e9a7df88807900f9cf1b24287a901e515c824e"
+                },
+                "filename": "foobar-0.2.0-py2.py3-none-any.whl",
+                "has_sig": false,
+                "packagetype": "bdist_wheel",
+                "python_version": "py2.py3",
+                "downloads": 106,
+                "size": 752,
+                "comment_text": "",
+                "unknown_field": "passed through",
+                "upload_time": "2017-02-04T12:34:05",
+                "upload_time_iso_8601": "2017-02-04T12:34:05.766270Z",
+                "url": "https://files.dummyhosted.nil/packages/54/40/36eccb727704b5dabfda040e0eb23c29dbe26cf1a78cbeb24f33deb26b22/foobar-0.2.0-py2.py3-none-any.whl"
+            }
+        ]
+    },
+    "1.0.0": {
+        "info": {
+            "name": "foobar",
+            "summary": "Including drive environment my it.",
+            "description": "foobar v1.0.0\n\nDream political close attorney sit cost inside. Seek hard can bad investment authority walk we. Sing range late use speech citizen.\n\nCan money issue claim onto really case. Fact garden along all book sister trip step.\n\nView table woman her production result. Fine allow prepare should traditional. Send cultural two care eye.\n\nGenerated with Faker",
+            "author": "Brandon Perkins",
+            "author_email": "megan30@daniels.info",
+            "maintainer": "Denise Adkins",
+            "maintainer_email": "cspencer@paul-fisher.com",
+            "home_page": "https://www.johnson.com/homepage.php",
+            "package_url": "https://dummy.nil/pypi/foobar",
+            "release_url": "https://dummy.nil/pypi/foobar/1.0.0",
+            "downloads": {
+                "last_day": 20,
+                "last_week": 136,
+                "last_month": 588
+            },
+            "unknown_field": "passed through",
+            "classifiers": [
+                "Topic :: Software Development :: Testing",
+                "UNKNOWN"
+            ],
+            "platform": "Amiga",
+            "cheesecake_yourself-describe": "PVvGZKjzWEttoGekIqco",
+            "cheesecake_act-provide-name": 4972,
+            "_pypi_way-worry-bring": "wbsvtrUkNCZxpxEDrnFH",
+            "_pypi_space-watch-look-we": 4754
+        },
+        "files": [
+            {
+                "md5_digest": "f92e8964922878760a07f783341a58ae",
+                "digests": {
+                    "md5": "f92e8964922878760a07f783341a58ae",
+                    "sha256": "84750bd98e3f61441e4b86ab443ebae41e65557e2b071b5a8e22a7d61a48a59d"
+                },
+                "filename": "foobar-1.0.0-py2.py3-none-any.whl",
+                "has_sig": true,
+                "packagetype": "bdist_wheel",
+                "python_version": "py2.py3",
+                "downloads": 100,
+                "size": 735,
+                "comment_text": "",
+                "unknown_field": "passed through",
+                "upload_time": "2019-02-01T09:17:59",
+                "upload_time_iso_8601": "2019-02-01T09:17:59.172284Z",
+                "url": "https://files.dummyhosted.nil/packages/7f/97/e5ec19aed5d108c2f6c2fc6646d8247b1fadb49f0bf48e87a0fca8827696/foobar-1.0.0-py2.py3-none-any.whl"
+            }
+        ]
+    }
+}
