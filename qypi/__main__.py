@@ -196,18 +196,15 @@ def browse(obj, classifiers, file, packages):
     click.echo(dumps(results))
 
 @qypi.command()
-@package_args(versioned=False)
-# Map through the JSON API so we can get the correct casing to query the
-# XML-RPC API with
+@click.argument('packages', nargs=-1)
 @click.pass_obj
 def owner(obj, packages):
     """ List package owners & maintainers """
     with JSONMapper() as jmap:
         for pkg in packages:
-            name = pkg["info"]["name"]
-            jmap.append(name, [
+            jmap.append(pkg, [
                 {"role": role, "user": user}
-                for role, user in obj.xmlrpc('package_roles', name)
+                for role, user in obj.xmlrpc('package_roles', pkg)
             ])
 
 @qypi.command()
