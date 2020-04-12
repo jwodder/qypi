@@ -261,5 +261,118 @@ def test_info(mock_pypi_json):
         ']\n'
     )
 
+def test_info_description(mock_pypi_json):
+    r = CliRunner().invoke(qypi, ['info', '--description', 'foobar'])
+    assert r.exit_code == 0, show_result(r)
+    assert r.output == (
+        '[\n'
+        '    {\n'
+        '        "classifiers": [\n'
+        '            "Topic :: Software Development :: Testing",\n'
+        '            "UNKNOWN"\n'
+        '        ],\n'
+        '        "description": "foobar v1.0.0\\n\\nDream political close attorney sit cost inside. Seek hard can bad investment authority walk we. Sing range late use speech citizen.\\n\\nCan money issue claim onto really case. Fact garden along all book sister trip step.\\n\\nView table woman her production result. Fine allow prepare should traditional. Send cultural two care eye.\\n\\nGenerated with Faker",\n'  # noqa: B950
+        '        "name": "foobar",\n'
+        '        "people": [\n'
+        '            {\n'
+        '                "email": "megan30@daniels.info",\n'
+        '                "name": "Brandon Perkins",\n'
+        '                "role": "author"\n'
+        '            },\n'
+        '            {\n'
+        '                "email": "cspencer@paul-fisher.com",\n'
+        '                "name": "Denise Adkins",\n'
+        '                "role": "maintainer"\n'
+        '            }\n'
+        '        ],\n'
+        '        "platform": "Amiga",\n'
+        '        "project_url": "https://dummy.nil/pypi/foobar",\n'
+        '        "release_date": "2019-02-01T09:17:59.172284Z",\n'
+        '        "release_url": "https://dummy.nil/pypi/foobar/1.0.0",\n'
+        '        "summary": "Including drive environment my it.",\n'
+        '        "unknown_field": "passed through",\n'
+        '        "url": "https://www.johnson.com/homepage.php",\n'
+        '        "version": "1.0.0"\n'
+        '    }\n'
+        ']\n'
+    )
+
+def test_readme(mock_pypi_json):
+    r = CliRunner().invoke(qypi, ['readme', 'foobar'])
+    assert r.exit_code == 0, show_result(r)
+    assert r.output == (
+        "foobar v1.0.0\n"
+        "\n"
+        "Dream political close attorney sit cost inside. Seek hard can bad investment authority walk we. Sing range late use speech citizen.\n"  # noqa: B950
+        "\n"
+        "Can money issue claim onto really case. Fact garden along all book sister trip step.\n"  # noqa: B950
+        "\n"
+        "View table woman her production result. Fine allow prepare should traditional. Send cultural two care eye.\n"  # noqa: B950
+        "\n"
+        "Generated with Faker\n"
+    )
+
+def test_files(mock_pypi_json):
+    r = CliRunner().invoke(qypi, ['files', 'foobar'])
+    assert r.exit_code == 0, show_result(r)
+    assert r.output == (
+        '[\n'
+        '    {\n'
+        '        "files": [\n'
+        '            {\n'
+        '                "comment_text": "",\n'
+        '                "digests": {\n'
+        '                    "md5": "f92e8964922878760a07f783341a58ae",\n'
+        '                    "sha256": "84750bd98e3f61441e4b86ab443ebae41e65557e2b071b5a8e22a7d61a48a59d"\n'  # noqa: B950
+        '                },\n'
+        '                "filename": "foobar-1.0.0-py2.py3-none-any.whl",\n'
+        '                "has_sig": true,\n'
+        '                "md5_digest": "f92e8964922878760a07f783341a58ae",\n'
+        '                "packagetype": "bdist_wheel",\n'
+        '                "python_version": "py2.py3",\n'
+        '                "size": 735,\n'
+        '                "unknown_field": "passed through",\n'
+        '                "upload_time": "2019-02-01T09:17:59",\n'
+        '                "upload_time_iso_8601": "2019-02-01T09:17:59.172284Z",\n'
+        '                "url": "https://files.dummyhosted.nil/packages/7f/97/e5ec19aed5d108c2f6c2fc6646d8247b1fadb49f0bf48e87a0fca8827696/foobar-1.0.0-py2.py3-none-any.whl"\n'  # noqa: B950
+        '            }\n'
+        '        ],\n'
+        '        "name": "foobar",\n'
+        '        "version": "1.0.0"\n'
+        '    }\n'
+        ']\n'
+    )
+
+def test_releases(mock_pypi_json):
+    r = CliRunner().invoke(qypi, ['releases', 'foobar'])
+    assert r.exit_code == 0, show_result(r)
+    assert r.output == (
+        '{\n'
+        '    "foobar": [\n'
+        '        {\n'
+        '            "is_prerelease": false,\n'
+        '            "release_date": "2013-01-18T18:53:56.265173Z",\n'
+        '            "release_url": "https://dummy.nil/pypi/foobar/0.1.0",\n'
+        '            "version": "0.1.0"\n'
+        '        },\n'
+        '        {\n'
+        '            "is_prerelease": false,\n'
+        '            "release_date": "2017-02-04T12:34:05.766270Z",\n'
+        '            "release_url": "https://dummy.nil/pypi/foobar/0.2.0",\n'
+        '            "version": "0.2.0"\n'
+        '        },\n'
+        '        {\n'
+        '            "is_prerelease": false,\n'
+        '            "release_date": "2019-02-01T09:17:59.172284Z",\n'
+        '            "release_url": "https://dummy.nil/pypi/foobar/1.0.0",\n'
+        '            "version": "1.0.0"\n'
+        '        }\n'
+        '    ]\n'
+        '}\n'
+    )
+
 # Test `owner` with multiple arguments
 # Test `owned` with multiple arguments
+# Test `info` with multiple packages
+# Test `info`, `readme`, & `files` with `==VERSION`
+# `qypi --index-url`

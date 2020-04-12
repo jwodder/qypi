@@ -126,7 +126,7 @@ def files(packages, trust_downloads):
                 if not trust_downloads:
                     pf.pop("downloads", None)
                 pf.pop("path", None)
-                ### Change empty comment_text fields to None?
+                ### TODO: Change empty comment_text fields to None?
             jlist.append({
                 "name": pkg["info"]["name"],
                 "version": pkg["info"]["version"],
