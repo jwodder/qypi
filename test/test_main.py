@@ -367,6 +367,79 @@ def test_info_description(mock_pypi_json):
         ']\n'
     )
 
+def test_info_nonexistent(mock_pypi_json):
+    r = CliRunner().invoke(qypi, ['info', 'does-not-exist', 'foobar'])
+    assert r.exit_code == 1, show_result(r)
+    assert r.output == (
+        '[\n'
+        '    {\n'
+        '        "classifiers": [\n'
+        '            "Topic :: Software Development :: Testing",\n'
+        '            "UNKNOWN"\n'
+        '        ],\n'
+        '        "name": "foobar",\n'
+        '        "people": [\n'
+        '            {\n'
+        '                "email": "megan30@daniels.info",\n'
+        '                "name": "Brandon Perkins",\n'
+        '                "role": "author"\n'
+        '            },\n'
+        '            {\n'
+        '                "email": "cspencer@paul-fisher.com",\n'
+        '                "name": "Denise Adkins",\n'
+        '                "role": "maintainer"\n'
+        '            }\n'
+        '        ],\n'
+        '        "platform": "Amiga",\n'
+        '        "project_url": "https://dummy.nil/pypi/foobar",\n'
+        '        "release_date": "2019-02-01T09:17:59.172284Z",\n'
+        '        "release_url": "https://dummy.nil/pypi/foobar/1.0.0",\n'
+        '        "summary": "Including drive environment my it.",\n'
+        '        "unknown_field": "passed through",\n'
+        '        "url": "https://www.johnson.com/homepage.php",\n'
+        '        "version": "1.0.0"\n'
+        '    }\n'
+        ']\n'
+        'qypi: does-not-exist: package not found\n'
+    )
+
+def test_info_nonexistent_split(mock_pypi_json):
+    r = CliRunner(mix_stderr=False)\
+            .invoke(qypi, ['info', 'does-not-exist', 'foobar'])
+    assert r.exit_code == 1, show_result(r)
+    assert r.stdout == (
+        '[\n'
+        '    {\n'
+        '        "classifiers": [\n'
+        '            "Topic :: Software Development :: Testing",\n'
+        '            "UNKNOWN"\n'
+        '        ],\n'
+        '        "name": "foobar",\n'
+        '        "people": [\n'
+        '            {\n'
+        '                "email": "megan30@daniels.info",\n'
+        '                "name": "Brandon Perkins",\n'
+        '                "role": "author"\n'
+        '            },\n'
+        '            {\n'
+        '                "email": "cspencer@paul-fisher.com",\n'
+        '                "name": "Denise Adkins",\n'
+        '                "role": "maintainer"\n'
+        '            }\n'
+        '        ],\n'
+        '        "platform": "Amiga",\n'
+        '        "project_url": "https://dummy.nil/pypi/foobar",\n'
+        '        "release_date": "2019-02-01T09:17:59.172284Z",\n'
+        '        "release_url": "https://dummy.nil/pypi/foobar/1.0.0",\n'
+        '        "summary": "Including drive environment my it.",\n'
+        '        "unknown_field": "passed through",\n'
+        '        "url": "https://www.johnson.com/homepage.php",\n'
+        '        "version": "1.0.0"\n'
+        '    }\n'
+        ']\n'
+    )
+    assert r.stderr == 'qypi: does-not-exist: package not found\n'
+
 def test_readme(mock_pypi_json):
     r = CliRunner().invoke(qypi, ['readme', 'foobar'])
     assert r.exit_code == 0, show_result(r)
