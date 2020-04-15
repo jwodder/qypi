@@ -1,6 +1,7 @@
-from traceback     import format_exception
-from click.testing import CliRunner
-from qypi.__main__ import qypi
+import json
+from   traceback     import format_exception
+from   click.testing import CliRunner
+from   qypi.__main__ import qypi
 
 def show_result(r):
     if r.exception is not None:
@@ -439,6 +440,18 @@ def test_info_nonexistent_split(mock_pypi_json):
         ']\n'
     )
     assert r.stderr == 'qypi: does-not-exist: package not found\n'
+
+def test_info_latest_is_prerelease(mock_pypi_json):
+    r = CliRunner().invoke(qypi, ['info', 'has-prerel'])
+    assert r.exit_code == 0, show_result(r)
+    data = json.loads(r.output)
+    assert data[0]["version"] == "1.0.0"
+
+def test_info_latest_is_prerelease_pre(mock_pypi_json):
+    r = CliRunner().invoke(qypi, ['info', '--pre', 'has-prerel'])
+    assert r.exit_code == 0, show_result(r)
+    data = json.loads(r.output)
+    assert data[0]["version"] == "1.0.1a1"
 
 def test_readme(mock_pypi_json):
     r = CliRunner().invoke(qypi, ['readme', 'foobar'])
