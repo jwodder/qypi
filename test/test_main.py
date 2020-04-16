@@ -453,6 +453,12 @@ def test_info_latest_is_prerelease_pre(mock_pypi_json):
     data = json.loads(r.output)
     assert data[0]["version"] == "1.0.1a1"
 
+def test_info_all_are_prerelease(mock_pypi_json):
+    r = CliRunner().invoke(qypi, ['info', 'prerelease-only'])
+    assert r.exit_code == 0, show_result(r)
+    data = json.loads(r.output)
+    assert data[0]["version"] == "0.2a1"
+
 def test_readme(mock_pypi_json):
     r = CliRunner().invoke(qypi, ['readme', 'foobar'])
     assert r.exit_code == 0, show_result(r)
