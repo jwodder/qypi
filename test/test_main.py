@@ -441,6 +441,20 @@ def test_info_nonexistent_split(mock_pypi_json):
     )
     assert r.stderr == 'qypi: does-not-exist: package not found\n'
 
+def test_info_nonexistent_version(mock_pypi_json):
+    r = CliRunner().invoke(qypi, ['info', 'foobar==2.23.42'])
+    assert r.exit_code == 1, show_result(r)
+    assert r.output == (
+        '[]\n'
+        'qypi: foobar: version 2.23.42 not found\n'
+    )
+
+def test_info_nonexistent_version_split(mock_pypi_json):
+    r = CliRunner(mix_stderr=False).invoke(qypi, ['info', 'foobar==2.23.42'])
+    assert r.exit_code == 1, show_result(r)
+    assert r.stdout == '[]\n'
+    assert r.stderr == 'qypi: foobar: version 2.23.42 not found\n'
+
 def test_info_latest_is_prerelease(mock_pypi_json):
     r = CliRunner().invoke(qypi, ['info', 'has-prerel'])
     assert r.exit_code == 0, show_result(r)
