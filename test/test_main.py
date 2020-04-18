@@ -59,6 +59,53 @@ def test_owner(mocker):
     spclass.assert_called_once_with('https://pypi.org/pypi')
     assert spinstance.method_calls == [mocker.call.package_roles('foobar')]
 
+def test_multiple_owner(mocker):
+    package_roles_iter = iter([
+        [
+            ['Owner', 'luser'],
+            ['Maintainer', 'jsmith'],
+        ],
+        [
+            ['Owner', 'jsmith'],
+            ['Owner', 'froody'],
+        ],
+    ])
+    spinstance = mocker.Mock(**{
+        'package_roles.side_effect': lambda _: next(package_roles_iter),
+    })
+    spclass = mocker.patch('qypi.api.ServerProxy', return_value=spinstance)
+    r = CliRunner().invoke(qypi, ['owner', 'foobar', 'Glarch'])
+    assert r.exit_code == 0, show_result(r)
+    assert r.output == (
+        '{\n'
+        '    "foobar": [\n'
+        '        {\n'
+        '            "role": "Owner",\n'
+        '            "user": "luser"\n'
+        '        },\n'
+        '        {\n'
+        '            "role": "Maintainer",\n'
+        '            "user": "jsmith"\n'
+        '        }\n'
+        '    ],\n'
+        '    "Glarch": [\n'
+        '        {\n'
+        '            "role": "Owner",\n'
+        '            "user": "jsmith"\n'
+        '        },\n'
+        '        {\n'
+        '            "role": "Owner",\n'
+        '            "user": "froody"\n'
+        '        }\n'
+        '    ]\n'
+        '}\n'
+    )
+    spclass.assert_called_once_with('https://pypi.org/pypi')
+    assert spinstance.method_calls == [
+        mocker.call.package_roles('foobar'),
+        mocker.call.package_roles('Glarch'),
+    ]
+
 def test_owned(mocker):
     spinstance = mocker.Mock(**{
         'user_packages.return_value': [
@@ -85,6 +132,53 @@ def test_owned(mocker):
     )
     spclass.assert_called_once_with('https://pypi.org/pypi')
     assert spinstance.method_calls == [mocker.call.user_packages('luser')]
+
+def test_multiple_owned(mocker):
+    user_packages_iter = iter([
+        [
+            ['Owner', 'foobar'],
+            ['Maintainer', 'quux'],
+        ],
+        [
+            ['Maintainer', 'foobar'],
+            ['Owner', 'Glarch'],
+        ],
+    ])
+    spinstance = mocker.Mock(**{
+        'user_packages.side_effect': lambda _: next(user_packages_iter),
+    })
+    spclass = mocker.patch('qypi.api.ServerProxy', return_value=spinstance)
+    r = CliRunner().invoke(qypi, ['owned', 'luser', 'jsmith'])
+    assert r.exit_code == 0, show_result(r)
+    assert r.output == (
+        '{\n'
+        '    "luser": [\n'
+        '        {\n'
+        '            "package": "foobar",\n'
+        '            "role": "Owner"\n'
+        '        },\n'
+        '        {\n'
+        '            "package": "quux",\n'
+        '            "role": "Maintainer"\n'
+        '        }\n'
+        '    ],\n'
+        '    "jsmith": [\n'
+        '        {\n'
+        '            "package": "foobar",\n'
+        '            "role": "Maintainer"\n'
+        '        },\n'
+        '        {\n'
+        '            "package": "Glarch",\n'
+        '            "role": "Owner"\n'
+        '        }\n'
+        '    ]\n'
+        '}\n'
+    )
+    spclass.assert_called_once_with('https://pypi.org/pypi')
+    assert spinstance.method_calls == [
+        mocker.call.user_packages('luser'),
+        mocker.call.user_packages('jsmith'),
+    ]
 
 def test_search(mocker):
     spinstance = mocker.Mock(**{
@@ -547,8 +641,6 @@ def test_releases(mock_pypi_json):
         '}\n'
     )
 
-# Test `owner` with multiple arguments
-# Test `owned` with multiple arguments
 # Test `info` with multiple packages
 # Test `info`, `readme`, & `files` with `==VERSION`
 # `qypi --index-url`
