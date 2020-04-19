@@ -561,6 +561,12 @@ def test_info_latest_is_prerelease_pre(mock_pypi_json):
     data = json.loads(r.output)
     assert data[0]["version"] == "1.0.1a1"
 
+def test_info_explicit_prerelease(mock_pypi_json):
+    r = CliRunner().invoke(qypi, ['info', 'has-prerel==1.0.1a1'])
+    assert r.exit_code == 0, show_result(r)
+    data = json.loads(r.output)
+    assert data[0]["version"] == "1.0.1a1"
+
 def test_info_all_are_prerelease(mock_pypi_json):
     r = CliRunner().invoke(qypi, ['info', 'prerelease-only'])
     assert r.exit_code == 0, show_result(r)
@@ -642,5 +648,5 @@ def test_releases(mock_pypi_json):
     )
 
 # Test `info` with multiple packages
-# Test `info`, `readme`, & `files` with `==VERSION`
+# Test `readme` & `files` with `==VERSION`
 # `qypi --index-url`
