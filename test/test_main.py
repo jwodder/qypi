@@ -588,6 +588,21 @@ def test_readme(mock_pypi_json):
         "Generated with Faker\n"
     )
 
+def test_readme_explicit_version(mock_pypi_json):
+    r = CliRunner().invoke(qypi, ['readme', 'foobar==0.2.0'])
+    assert r.exit_code == 0, show_result(r)
+    assert r.output == (
+        "foobar v0.2.0\n"
+        "\n"
+        "Lead must laugh trouble expert else get million.\n"
+        "\n"
+        "Top shake walk. A cold national.\n"
+        "\n"
+        "Bring energy yourself suffer. Catch concern official relate voice base.\n"
+        "\n"
+        "Generated with Faker\n"
+    )
+
 def test_files(mock_pypi_json):
     r = CliRunner().invoke(qypi, ['files', 'foobar'])
     assert r.exit_code == 0, show_result(r)
@@ -615,6 +630,37 @@ def test_files(mock_pypi_json):
         '        ],\n'
         '        "name": "foobar",\n'
         '        "version": "1.0.0"\n'
+        '    }\n'
+        ']\n'
+    )
+
+def test_files_explicit_version(mock_pypi_json):
+    r = CliRunner().invoke(qypi, ['files', 'foobar==0.2.0'])
+    assert r.exit_code == 0, show_result(r)
+    assert r.output == (
+        '[\n'
+        '    {\n'
+        '        "files": [\n'
+        '            {\n'
+        '                "comment_text": "",\n'
+        '                "digests": {\n'
+        '                    "md5": "5ced02e62434eb5649276e6f12003009",\n'
+        '                    "sha256": "f0862078b4f1af49f6b8c91153e9a7df88807900f9cf1b24287a901e515c824e"\n'  # noqa: B950
+        '                },\n'
+        '                "filename": "foobar-0.2.0-py2.py3-none-any.whl",\n'
+        '                "has_sig": false,\n'
+        '                "md5_digest": "5ced02e62434eb5649276e6f12003009",\n'
+        '                "packagetype": "bdist_wheel",\n'
+        '                "python_version": "py2.py3",\n'
+        '                "size": 752,\n'
+        '                "unknown_field": "passed through",\n'
+        '                "upload_time": "2017-02-04T12:34:05",\n'
+        '                "upload_time_iso_8601": "2017-02-04T12:34:05.766270Z",\n'
+        '                "url": "https://files.dummyhosted.nil/packages/54/40/36eccb727704b5dabfda040e0eb23c29dbe26cf1a78cbeb24f33deb26b22/foobar-0.2.0-py2.py3-none-any.whl"\n'  # noqa: B950
+        '            }\n'
+        '        ],\n'
+        '        "name": "foobar",\n'
+        '        "version": "0.2.0"\n'
         '    }\n'
         ']\n'
     )
@@ -648,5 +694,4 @@ def test_releases(mock_pypi_json):
     )
 
 # Test `info` with multiple packages
-# Test `readme` & `files` with `==VERSION`
 # `qypi --index-url`
