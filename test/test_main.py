@@ -588,6 +588,36 @@ def test_info_all_are_prerelease(mock_pypi_json):
     data = json.loads(r.output)
     assert data[0]["version"] == "0.2a1"
 
+def test_info_nullfields(mock_pypi_json):
+    r = CliRunner().invoke(qypi, ['info', 'nullfields'])
+    assert r.exit_code == 0, show_result(r)
+    assert r.output == (
+        '[\n'
+        '    {\n'
+        '        "classifiers": [\n'
+        '            "Topic :: Software Development :: Testing",\n'
+        '            "UNKNOWN"\n'
+        '        ],\n'
+        '        "name": "nullfields",\n'
+        '        "people": [\n'
+        '            {\n'
+        '                "email": "barbara10@yahoo.com",\n'
+        '                "name": "Philip Gonzalez",\n'
+        '                "role": "author"\n'
+        '            }\n'
+        '        ],\n'
+        '        "platform": null,\n'
+        '        "project_url": "https://dummy.nil/pypi/nullfields",\n'
+        '        "release_date": "2007-10-08T07:21:06.191703Z",\n'
+        '        "release_url": "https://dummy.nil/pypi/nullfields/1.0.0",\n'
+        '        "summary": "Film station choose short.",\n'
+        '        "unknown_field": null,\n'
+        '        "url": "https://bryant.com/wp-content/search/author/",\n'
+        '        "version": "1.0.0"\n'
+        '    }\n'
+        ']\n'
+    )
+
 def test_readme(mock_pypi_json):
     r = CliRunner().invoke(qypi, ['readme', 'foobar'])
     assert r.exit_code == 0, show_result(r)

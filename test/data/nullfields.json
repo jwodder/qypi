@@ -1,0 +1,63 @@
+{
+    "1.0.0": {
+        "info": {
+            "name": "nullfields",
+            "summary": "Film station choose short.",
+            "description": "nullfields v1.0.0\n\nSeven life effect wife shoulder writer prevent. Mind miss go wall become Mr.\n\nThird decade power major. Pay past chance spring. Movie career recently scene in.\n\nHappy common rather attack. Sure economy least charge measure whatever lose most. Dark need film character perform recently behavior.\n\nGenerated with Faker",
+            "author": "Philip Gonzalez",
+            "author_email": "barbara10@yahoo.com",
+            "home_page": "https://bryant.com/wp-content/search/author/",
+            "package_url": "https://dummy.nil/pypi/nullfields",
+            "release_url": "https://dummy.nil/pypi/nullfields/1.0.0",
+            "downloads": {
+                "last_day": 21,
+                "last_week": 137,
+                "last_month": 623
+            },
+            "unknown_field": "UNKNOWN",
+            "classifiers": [
+                "Topic :: Software Development :: Testing",
+                "UNKNOWN"
+            ],
+            "platform": ""
+        },
+        "files": [
+            {
+                "md5_digest": "de0ac1afb988b1a7d55cb3f2d1633c2c",
+                "digests": {
+                    "md5": "de0ac1afb988b1a7d55cb3f2d1633c2c",
+                    "sha256": "97a4489767938dd8892f7f62d98f07863ba2532bf9c136637d6a8e58cbc346c3"
+                },
+                "filename": "nullfields-1.0.0.tar.gz",
+                "has_sig": false,
+                "packagetype": "sdist",
+                "python_version": "source",
+                "downloads": 96,
+                "size": 750,
+                "comment_text": "",
+                "unknown_field": "passed through",
+                "upload_time": "2007-10-08T07:21:06",
+                "upload_time_iso_8601": "2007-10-08T07:21:06.191703Z",
+                "url": "https://files.dummyhosted.nil/packages/5d/ec/a2ae6831e7419344c28971b4a4f4748424a0841e66ab2464451e63f19990/nullfields-1.0.0.tar.gz"
+            },
+            {
+                "md5_digest": "d4cd0d857311318c574d9a5713b4a955",
+                "digests": {
+                    "md5": "d4cd0d857311318c574d9a5713b4a955",
+                    "sha256": "3ff97f9fd5051f93728e86edea907db3ffe9daa0daaeb9aa6186f775b13b0f52"
+                },
+                "filename": "nullfields-1.0.0-py2.py3-none-any.whl",
+                "has_sig": false,
+                "packagetype": "bdist_wheel",
+                "python_version": "py2.py3",
+                "downloads": 93,
+                "size": 730,
+                "comment_text": "",
+                "unknown_field": "passed through",
+                "upload_time": "2009-01-10T16:37:05",
+                "upload_time_iso_8601": "2009-01-10T16:37:05.820291Z",
+                "url": "https://files.dummyhosted.nil/packages/88/29/3097d542abba807cf3d6ece379ec583f5e373e32e522cf524bad939cd93e/nullfields-1.0.0-py2.py3-none-any.whl"
+            }
+        ]
+    }
+}
