@@ -436,7 +436,7 @@ def test_info_description(mock_pypi_json):
         '            "Topic :: Software Development :: Testing",\n'
         '            "UNKNOWN"\n'
         '        ],\n'
-        '        "description": "foobar v1.0.0\\n\\nDream political close attorney sit cost inside. Seek hard can bad investment authority walk we. Sing range late use speech citizen.\\n\\nCan money issue claim onto really case. Fact garden along all book sister trip step.\\n\\nView table woman her production result. Fine allow prepare should traditional. Send cultural two care eye.\\n\\nGenerated with Faker",\n'  # noqa: B950
+        '        "description": "foobar v1.0.0\\n\\nDream political close attorney sit cost inside. Seek hard can bad investment authority walk we. Sing range late use speech citizen.\\n\\nCan money issue claim onto really case. Fact garden along all book sister trip step.\\n\\nView table woman her production result. Fine allow prepare should traditional. Send cultural two care eye.\\n\\nGenerated with Faker",\n'
         '        "name": "foobar",\n'
         '        "people": [\n'
         '            {\n'
@@ -686,11 +686,11 @@ def test_readme(mock_pypi_json):
     assert r.output == (
         "foobar v1.0.0\n"
         "\n"
-        "Dream political close attorney sit cost inside. Seek hard can bad investment authority walk we. Sing range late use speech citizen.\n"  # noqa: B950
+        "Dream political close attorney sit cost inside. Seek hard can bad investment authority walk we. Sing range late use speech citizen.\n"
         "\n"
-        "Can money issue claim onto really case. Fact garden along all book sister trip step.\n"  # noqa: B950
+        "Can money issue claim onto really case. Fact garden along all book sister trip step.\n"
         "\n"
-        "View table woman her production result. Fine allow prepare should traditional. Send cultural two care eye.\n"  # noqa: B950
+        "View table woman her production result. Fine allow prepare should traditional. Send cultural two care eye.\n"
         "\n"
         "Generated with Faker\n"
     )
@@ -721,7 +721,7 @@ def test_files(mock_pypi_json):
         '                "comment_text": "",\n'
         '                "digests": {\n'
         '                    "md5": "f92e8964922878760a07f783341a58ae",\n'
-        '                    "sha256": "84750bd98e3f61441e4b86ab443ebae41e65557e2b071b5a8e22a7d61a48a59d"\n'  # noqa: B950
+        '                    "sha256": "84750bd98e3f61441e4b86ab443ebae41e65557e2b071b5a8e22a7d61a48a59d"\n'
         '                },\n'
         '                "filename": "foobar-1.0.0-py2.py3-none-any.whl",\n'
         '                "has_sig": true,\n'
@@ -732,7 +732,7 @@ def test_files(mock_pypi_json):
         '                "unknown_field": "passed through",\n'
         '                "upload_time": "2019-02-01T09:17:59",\n'
         '                "upload_time_iso_8601": "2019-02-01T09:17:59.172284Z",\n'
-        '                "url": "https://files.dummyhosted.nil/packages/7f/97/e5ec19aed5d108c2f6c2fc6646d8247b1fadb49f0bf48e87a0fca8827696/foobar-1.0.0-py2.py3-none-any.whl"\n'  # noqa: B950
+        '                "url": "https://files.dummyhosted.nil/packages/7f/97/e5ec19aed5d108c2f6c2fc6646d8247b1fadb49f0bf48e87a0fca8827696/foobar-1.0.0-py2.py3-none-any.whl"\n'
         '            }\n'
         '        ],\n'
         '        "name": "foobar",\n'
@@ -752,7 +752,7 @@ def test_files_explicit_version(mock_pypi_json):
         '                "comment_text": "",\n'
         '                "digests": {\n'
         '                    "md5": "5ced02e62434eb5649276e6f12003009",\n'
-        '                    "sha256": "f0862078b4f1af49f6b8c91153e9a7df88807900f9cf1b24287a901e515c824e"\n'  # noqa: B950
+        '                    "sha256": "f0862078b4f1af49f6b8c91153e9a7df88807900f9cf1b24287a901e515c824e"\n'
         '                },\n'
         '                "filename": "foobar-0.2.0-py2.py3-none-any.whl",\n'
         '                "has_sig": false,\n'
@@ -763,7 +763,7 @@ def test_files_explicit_version(mock_pypi_json):
         '                "unknown_field": "passed through",\n'
         '                "upload_time": "2017-02-04T12:34:05",\n'
         '                "upload_time_iso_8601": "2017-02-04T12:34:05.766270Z",\n'
-        '                "url": "https://files.dummyhosted.nil/packages/54/40/36eccb727704b5dabfda040e0eb23c29dbe26cf1a78cbeb24f33deb26b22/foobar-0.2.0-py2.py3-none-any.whl"\n'  # noqa: B950
+        '                "url": "https://files.dummyhosted.nil/packages/54/40/36eccb727704b5dabfda040e0eb23c29dbe26cf1a78cbeb24f33deb26b22/foobar-0.2.0-py2.py3-none-any.whl"\n'
         '            }\n'
         '        ],\n'
         '        "name": "foobar",\n'
