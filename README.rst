@@ -3,8 +3,9 @@
     :alt: Project Status: Active — The project has reached a stable, usable
           state and is being actively developed.
 
-.. image:: https://travis-ci.com/jwodder/qypi.svg?branch=master
-    :target: https://travis-ci.com/jwodder/qypi
+.. image:: https://github.com/jwodder/qypi/workflows/Test/badge.svg?branch=master
+    :target: https://github.com/jwodder/qypi/actions?workflow=Test
+    :alt: CI Status
 
 .. image:: https://codecov.io/gh/jwodder/qypi/branch/master/graph/badge.svg
     :target: https://codecov.io/gh/jwodder/qypi
