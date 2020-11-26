@@ -70,7 +70,7 @@ class QyPI:
     def get_version(self, package, version):
         r = self.get(package, version, 'json')
         if r.status_code == 404:
-            raise QyPIError('{}: version {} not found'.format(package, version))
+            raise QyPIError(f'{package}: version {version} not found')
         r.raise_for_status()
         return r.json()
 

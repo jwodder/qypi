@@ -5,7 +5,6 @@ from   .api              import QyPI, first_upload
 from   .util             import JSONLister, JSONMapper, clean_pypi_dict, \
                                     dumps, package_args, squish_versions
 
-#ENDPOINT = 'https://pypi.python.org/pypi'
 ENDPOINT = 'https://pypi.org/pypi'
 TRUST_DOWNLOADS = False
 

@@ -4,7 +4,8 @@ v0.6.0 (in development)
 - `"release_date"` fields are now derived from `"upload_time_iso_8601"` fields
   instead of `"upload_time"`.  They thus now include microseconds and the
   timezone.
-- Drop support for Python 3.4
+- Drop support for Python 3.4 and 3.5
+- Support PyPy3
 
 v0.5.0 (2019-05-18)
 -------------------
