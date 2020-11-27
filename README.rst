@@ -47,13 +47,14 @@ Usage
 Global Option
 -------------
 
-- ``-i <URL>``, ``--index-url <URL>`` — Query the Python package server at the
-  given URL, which must support both the `XML-RPC
-  <https://warehouse.readthedocs.io/api-reference/xml-rpc/>`_ and `JSON
-  <https://warehouse.readthedocs.io/api-reference/json/>`_ APIs.  By default,
-  ``qypi`` queries `PyPI (Warehouse) <https://pypi.org>`_ at
-  ``https://pypi.org/pypi``.
+-i URL, --index-url URL
+                        Query the Python package server at the given URL, which
+                        must support both the XML-RPC_ and JSON_ APIs.  By
+                        default, ``qypi`` queries `PyPI (Warehouse)
+                        <https://pypi.org>`_ at ``https://pypi.org/pypi``.
 
+.. _XML-RPC: https://warehouse.readthedocs.io/api-reference/xml-rpc/
+.. _JSON: https://warehouse.readthedocs.io/api-reference/json/
 
 List Packages
 -------------
@@ -226,19 +227,25 @@ Arguments that are just a package name refer to (by default) the
 highest-numbered non-prerelease version of the package.  This can be changed
 with the following options:
 
-- ``--all-versions``/``--latest-version`` — Show information for all versions
-  (in PEP 440 order, excluding prereleases unless ``--pre`` is given)/only the
-  latest version of each package; default: latest only
+-A, --all-versions      Show information for all versions of each package (in
+                        PEP 440 order, excluding prereleases unless ``--pre``
+                        is given)
 
-  - ``--all-versions`` may optionally be written ``-A``.
+--latest-version        Show information for only the latest version of each
+                        package; this is the default
 
-- ``--newest``/``--highest`` — Define "latest version" to mean the most
-  recently released/highest-numbered version; default: highest-numbered.
-  ``--newest`` determines release dates based on file upload times; releases
-  without file uploads are thus ignored.
+--newest                Define "latest version" to mean the most recently
+                        released version.  Release dates are based on file
+                        upload times; releases without file uploads are thus
+                        ignored.
 
-- ``--pre``/``--no-pre`` — Include/don't include prerelease & development
-  versions; default: don't include
+--highest               Define "latest version" to mean the highest-numbered
+                        version; this is the default.
+
+--pre                   Include prerelease & development versions
+
+--no-pre                Don't include prerelease & development versions; this
+                        is the default.
 
 ``info``
 ^^^^^^^^
