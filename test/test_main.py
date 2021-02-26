@@ -60,18 +60,17 @@ def test_owner(mocker):
     assert spinstance.method_calls == [mocker.call.package_roles('foobar')]
 
 def test_multiple_owner(mocker):
-    package_roles_iter = iter([
-        [
-            ['Owner', 'luser'],
-            ['Maintainer', 'jsmith'],
-        ],
-        [
-            ['Owner', 'jsmith'],
-            ['Owner', 'froody'],
-        ],
-    ])
     spinstance = mocker.Mock(**{
-        'package_roles.side_effect': lambda _: next(package_roles_iter),
+        'package_roles.side_effect': [
+            [
+                ['Owner', 'luser'],
+                ['Maintainer', 'jsmith'],
+            ],
+            [
+                ['Owner', 'jsmith'],
+                ['Owner', 'froody'],
+            ],
+        ],
     })
     spclass = mocker.patch('qypi.api.ServerProxy', return_value=spinstance)
     r = CliRunner().invoke(qypi, ['owner', 'foobar', 'Glarch'])
@@ -134,18 +133,17 @@ def test_owned(mocker):
     assert spinstance.method_calls == [mocker.call.user_packages('luser')]
 
 def test_multiple_owned(mocker):
-    user_packages_iter = iter([
-        [
-            ['Owner', 'foobar'],
-            ['Maintainer', 'quux'],
-        ],
-        [
-            ['Maintainer', 'foobar'],
-            ['Owner', 'Glarch'],
-        ],
-    ])
     spinstance = mocker.Mock(**{
-        'user_packages.side_effect': lambda _: next(user_packages_iter),
+        'user_packages.side_effect': [
+            [
+                ['Owner', 'foobar'],
+                ['Maintainer', 'quux'],
+            ],
+            [
+                ['Maintainer', 'foobar'],
+                ['Owner', 'Glarch'],
+            ],
+        ],
     })
     spclass = mocker.patch('qypi.api.ServerProxy', return_value=spinstance)
     r = CliRunner().invoke(qypi, ['owned', 'luser', 'jsmith'])
