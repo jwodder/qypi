@@ -1,6 +1,7 @@
 import json
 from   traceback     import format_exception
 from   click.testing import CliRunner
+import pytest
 from   qypi.__main__ import qypi
 
 def show_result(r):
@@ -319,7 +320,8 @@ def test_browse_packages(mocker):
         mocker.call.browse(('Typing :: Typed', 'Topic :: Utilities'))
     ]
 
-def test_info(mock_pypi_json):
+@pytest.mark.usefixtures("mock_pypi_json")
+def test_info():
     r = CliRunner().invoke(qypi, ['info', 'foobar'])
     assert r.exit_code == 0, show_result(r)
     assert r.output == (
@@ -354,7 +356,8 @@ def test_info(mock_pypi_json):
         ']\n'
     )
 
-def test_info_explicit_latest_version(mock_pypi_json):
+@pytest.mark.usefixtures("mock_pypi_json")
+def test_info_explicit_latest_version():
     r = CliRunner().invoke(qypi, ['info', 'foobar==1.0.0'])
     assert r.exit_code == 0, show_result(r)
     assert r.output == (
@@ -389,7 +392,8 @@ def test_info_explicit_latest_version(mock_pypi_json):
         ']\n'
     )
 
-def test_info_explicit_version(mock_pypi_json):
+@pytest.mark.usefixtures("mock_pypi_json")
+def test_info_explicit_version():
     r = CliRunner().invoke(qypi, ['info', 'foobar==0.2.0'])
     assert r.exit_code == 0, show_result(r)
     assert r.output == (
@@ -424,7 +428,8 @@ def test_info_explicit_version(mock_pypi_json):
         ']\n'
     )
 
-def test_info_description(mock_pypi_json):
+@pytest.mark.usefixtures("mock_pypi_json")
+def test_info_description():
     r = CliRunner().invoke(qypi, ['info', '--description', 'foobar'])
     assert r.exit_code == 0, show_result(r)
     assert r.output == (
@@ -460,7 +465,8 @@ def test_info_description(mock_pypi_json):
         ']\n'
     )
 
-def test_multiple_info(mock_pypi_json):
+@pytest.mark.usefixtures("mock_pypi_json")
+def test_multiple_info():
     r = CliRunner().invoke(qypi, ['info', 'has-prerel', 'foobar'])
     assert r.exit_code == 0, show_result(r)
     assert r.output == (
@@ -522,7 +528,8 @@ def test_multiple_info(mock_pypi_json):
         ']\n'
     )
 
-def test_info_nonexistent(mock_pypi_json):
+@pytest.mark.usefixtures("mock_pypi_json")
+def test_info_nonexistent():
     r = CliRunner().invoke(qypi, ['info', 'does-not-exist', 'foobar'])
     assert r.exit_code == 1, show_result(r)
     assert r.output == (
@@ -558,7 +565,8 @@ def test_info_nonexistent(mock_pypi_json):
         'qypi: does-not-exist: package not found\n'
     )
 
-def test_info_nonexistent_split(mock_pypi_json):
+@pytest.mark.usefixtures("mock_pypi_json")
+def test_info_nonexistent_split():
     r = CliRunner(mix_stderr=False)\
             .invoke(qypi, ['info', 'does-not-exist', 'foobar'])
     assert r.exit_code == 1, show_result(r)
@@ -595,7 +603,8 @@ def test_info_nonexistent_split(mock_pypi_json):
     )
     assert r.stderr == 'qypi: does-not-exist: package not found\n'
 
-def test_info_nonexistent_version(mock_pypi_json):
+@pytest.mark.usefixtures("mock_pypi_json")
+def test_info_nonexistent_version():
     r = CliRunner().invoke(qypi, ['info', 'foobar==2.23.42'])
     assert r.exit_code == 1, show_result(r)
     assert r.output == (
@@ -603,13 +612,15 @@ def test_info_nonexistent_version(mock_pypi_json):
         'qypi: foobar: version 2.23.42 not found\n'
     )
 
-def test_info_nonexistent_version_split(mock_pypi_json):
+@pytest.mark.usefixtures("mock_pypi_json")
+def test_info_nonexistent_version_split():
     r = CliRunner(mix_stderr=False).invoke(qypi, ['info', 'foobar==2.23.42'])
     assert r.exit_code == 1, show_result(r)
     assert r.stdout == '[]\n'
     assert r.stderr == 'qypi: foobar: version 2.23.42 not found\n'
 
-def test_info_nonexistent_explicit_version(mock_pypi_json):
+@pytest.mark.usefixtures("mock_pypi_json")
+def test_info_nonexistent_explicit_version():
     r = CliRunner().invoke(qypi, ['info', 'does-not-exist==2.23.42'])
     assert r.exit_code == 1, show_result(r)
     assert r.output == (
@@ -617,38 +628,44 @@ def test_info_nonexistent_explicit_version(mock_pypi_json):
         'qypi: does-not-exist: version 2.23.42 not found\n'
     )
 
-def test_info_nonexistent_explicit_version_split(mock_pypi_json):
+@pytest.mark.usefixtures("mock_pypi_json")
+def test_info_nonexistent_explicit_version_split():
     r = CliRunner(mix_stderr=False)\
             .invoke(qypi, ['info', 'does-not-exist==2.23.42'])
     assert r.exit_code == 1, show_result(r)
     assert r.stdout == '[]\n'
     assert r.stderr == 'qypi: does-not-exist: version 2.23.42 not found\n'
 
-def test_info_latest_is_prerelease(mock_pypi_json):
+@pytest.mark.usefixtures("mock_pypi_json")
+def test_info_latest_is_prerelease():
     r = CliRunner().invoke(qypi, ['info', 'has-prerel'])
     assert r.exit_code == 0, show_result(r)
     data = json.loads(r.output)
     assert data[0]["version"] == "1.0.0"
 
-def test_info_latest_is_prerelease_pre(mock_pypi_json):
+@pytest.mark.usefixtures("mock_pypi_json")
+def test_info_latest_is_prerelease_pre():
     r = CliRunner().invoke(qypi, ['info', '--pre', 'has-prerel'])
     assert r.exit_code == 0, show_result(r)
     data = json.loads(r.output)
     assert data[0]["version"] == "1.0.1a1"
 
-def test_info_explicit_prerelease(mock_pypi_json):
+@pytest.mark.usefixtures("mock_pypi_json")
+def test_info_explicit_prerelease():
     r = CliRunner().invoke(qypi, ['info', 'has-prerel==1.0.1a1'])
     assert r.exit_code == 0, show_result(r)
     data = json.loads(r.output)
     assert data[0]["version"] == "1.0.1a1"
 
-def test_info_all_are_prerelease(mock_pypi_json):
+@pytest.mark.usefixtures("mock_pypi_json")
+def test_info_all_are_prerelease():
     r = CliRunner().invoke(qypi, ['info', 'prerelease-only'])
     assert r.exit_code == 0, show_result(r)
     data = json.loads(r.output)
     assert data[0]["version"] == "0.2a1"
 
-def test_info_nullfields(mock_pypi_json):
+@pytest.mark.usefixtures("mock_pypi_json")
+def test_info_nullfields():
     r = CliRunner().invoke(qypi, ['info', 'nullfields'])
     assert r.exit_code == 0, show_result(r)
     assert r.output == (
@@ -678,7 +695,8 @@ def test_info_nullfields(mock_pypi_json):
         ']\n'
     )
 
-def test_readme(mock_pypi_json):
+@pytest.mark.usefixtures("mock_pypi_json")
+def test_readme():
     r = CliRunner().invoke(qypi, ['readme', 'foobar'])
     assert r.exit_code == 0, show_result(r)
     assert r.output == (
@@ -693,7 +711,8 @@ def test_readme(mock_pypi_json):
         "Generated with Faker\n"
     )
 
-def test_readme_explicit_version(mock_pypi_json):
+@pytest.mark.usefixtures("mock_pypi_json")
+def test_readme_explicit_version():
     r = CliRunner().invoke(qypi, ['readme', 'foobar==0.2.0'])
     assert r.exit_code == 0, show_result(r)
     assert r.output == (
@@ -708,7 +727,8 @@ def test_readme_explicit_version(mock_pypi_json):
         "Generated with Faker\n"
     )
 
-def test_files(mock_pypi_json):
+@pytest.mark.usefixtures("mock_pypi_json")
+def test_files():
     r = CliRunner().invoke(qypi, ['files', 'foobar'])
     assert r.exit_code == 0, show_result(r)
     assert r.output == (
@@ -739,7 +759,8 @@ def test_files(mock_pypi_json):
         ']\n'
     )
 
-def test_files_explicit_version(mock_pypi_json):
+@pytest.mark.usefixtures("mock_pypi_json")
+def test_files_explicit_version():
     r = CliRunner().invoke(qypi, ['files', 'foobar==0.2.0'])
     assert r.exit_code == 0, show_result(r)
     assert r.output == (
@@ -770,7 +791,8 @@ def test_files_explicit_version(mock_pypi_json):
         ']\n'
     )
 
-def test_releases(mock_pypi_json):
+@pytest.mark.usefixtures("mock_pypi_json")
+def test_releases():
     r = CliRunner().invoke(qypi, ['releases', 'foobar'])
     assert r.exit_code == 0, show_result(r)
     assert r.output == (

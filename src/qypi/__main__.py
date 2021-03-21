@@ -28,7 +28,7 @@ def qypi(ctx, index_url):
 
 @qypi.resultcallback()
 @click.pass_context
-def cleanup(ctx, *args, **kwargs):
+def cleanup(ctx, *_args, **_kwargs):
     ctx.obj.cleanup(ctx)
 
 @qypi.command()

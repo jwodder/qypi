@@ -82,7 +82,7 @@ class JSONLister:
         click.echo('[', nl=False)
         return self
 
-    def __exit__(self, exc_type, exc_value, traceback):
+    def __exit__(self, _exc_type, _exc_value, _traceback):
         if not self.first:
             click.echo()
         click.echo(']')
@@ -105,7 +105,7 @@ class JSONMapper:
         click.echo('{', nl=False)
         return self
 
-    def __exit__(self, exc_type, exc_value, traceback):
+    def __exit__(self, _exc_type, _exc_value, _traceback):
         if not self.first:
             click.echo()
         click.echo('}')
