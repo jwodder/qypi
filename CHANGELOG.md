@@ -1,5 +1,5 @@
-v0.6.0 (in development)
------------------------
+v0.6.0 (2021-05-31)
+-------------------
 - Support Python 3.8 and 3.9
 - `"release_date"` fields are now derived from `"upload_time_iso_8601"` fields
   instead of `"upload_time"`.  They thus now include microseconds and the
