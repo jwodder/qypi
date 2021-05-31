@@ -26,7 +26,7 @@ def qypi(ctx, index_url):
     """ Query PyPI from the command line """
     ctx.obj = QyPI(index_url)
 
-@qypi.resultcallback()
+@qypi.result_callback()
 @click.pass_context
 def cleanup(ctx, *_args, **_kwargs):
     ctx.obj.cleanup(ctx)

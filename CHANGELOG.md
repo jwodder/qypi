@@ -6,6 +6,7 @@ v0.6.0 (in development)
   timezone.
 - Drop support for Python 3.4 and 3.5
 - Support PyPy3
+- Update Click to 8.0
 
 v0.5.0 (2019-05-18)
 -------------------
