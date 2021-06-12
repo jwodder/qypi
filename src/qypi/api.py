@@ -1,17 +1,18 @@
 import platform
-from   xmlrpc.client     import ServerProxy
+from xmlrpc.client import ServerProxy
 import click
-from   packaging.version import parse
+from packaging.version import parse
 import requests
-from   .                 import __url__, __version__
+from . import __url__, __version__
 
-USER_AGENT = 'qypi/{} ({}) requests/{} {}/{}'.format(
+USER_AGENT = "qypi/{} ({}) requests/{} {}/{}".format(
     __version__,
     __url__,
     requests.__version__,
     platform.python_implementation(),
     platform.python_version(),
 )
+
 
 class QyPI:
     def __init__(self, index_url):
@@ -27,14 +28,14 @@ class QyPI:
         if self.s is None:
             self.s = requests.Session()
             self.s.headers["User-Agent"] = USER_AGENT
-        return self.s.get(self.index_url.rstrip('/') + '/' + '/'.join(path))
+        return self.s.get(self.index_url.rstrip("/") + "/" + "/".join(path))
 
     def get_package(self, package):
-        r = self.get(package, 'json')
+        r = self.get(package, "json")
         # Unlike the XML-RPC API, the JSON API accepts package names regardless
         # of normalization
         if r.status_code == 404:
-            raise QyPIError(package + ': package not found')
+            raise QyPIError(package + ": package not found")
         r.raise_for_status()
         return r.json()
 
@@ -60,7 +61,7 @@ class QyPI:
         else:
             latest = max(candidates, default=None)
         if latest is None:
-            raise QyPIError(package + ': no suitable versions available')
+            raise QyPIError(package + ": no suitable versions available")
         latest = latest[1]
         if pkg["info"]["version"] == latest:
             return pkg
@@ -68,9 +69,9 @@ class QyPI:
             return self.get_version(package, latest)
 
     def get_version(self, package, version):
-        r = self.get(package, version, 'json')
+        r = self.get(package, version, "json")
         if r.status_code == 404:
-            raise QyPIError(f'{package}: version {version} not found')
+            raise QyPIError(f"{package}: version {version} not found")
         r.raise_for_status()
         return r.json()
 
@@ -88,10 +89,10 @@ class QyPI:
 
     def lookup_package_version(self, args):
         for spec in args:
-            name, eq, version = spec.partition('=')
+            name, eq, version = spec.partition("=")
             try:
-                if eq != '':
-                    yield self.get_version(name, version.lstrip('='))
+                if eq != "":
+                    yield self.get_version(name, version.lstrip("="))
                 elif self.all_versions:
                     p = self.get_package(name)
                     for v in sorted(p["releases"], key=parse):
@@ -109,7 +110,7 @@ class QyPI:
     def cleanup(self, ctx):
         if self.errmsgs:
             for msg in self.errmsgs:
-                click.echo(ctx.command_path + ': ' + msg, err=True)
+                click.echo(ctx.command_path + ": " + msg, err=True)
             ctx.exit(1)
 
 

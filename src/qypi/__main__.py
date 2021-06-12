@@ -1,41 +1,63 @@
 import click
-from   packaging.version import parse
-from   .                 import __version__
-from   .api              import QyPI, first_upload
-from   .util             import JSONLister, JSONMapper, clean_pypi_dict, \
-                                    dumps, package_args, squish_versions
+from packaging.version import parse
+from . import __version__
+from .api import QyPI, first_upload
+from .util import (
+    JSONLister,
+    JSONMapper,
+    clean_pypi_dict,
+    dumps,
+    package_args,
+    squish_versions,
+)
 
-ENDPOINT = 'https://pypi.org/pypi'
+ENDPOINT = "https://pypi.org/pypi"
 TRUST_DOWNLOADS = False
 
 SEARCH_SYNONYMS = {
-    'homepage': 'home_page',
-    'url': 'home_page',
-    'long_description': 'description',
-    'readme': 'description',
-    'keyword': 'keywords',
+    "homepage": "home_page",
+    "url": "home_page",
+    "long_description": "description",
+    "readme": "description",
+    "keyword": "keywords",
 }
 
+
 @click.group(context_settings={"help_option_names": ["-h", "--help"]})
-@click.option('-i', '--index-url', default=ENDPOINT, metavar='URL',
-              help='Use a different URL for PyPI', show_default=True)
-@click.version_option(__version__, '-V', '--version',
-                      message='%(prog)s %(version)s')
+@click.option(
+    "-i",
+    "--index-url",
+    default=ENDPOINT,
+    metavar="URL",
+    help="Use a different URL for PyPI",
+    show_default=True,
+)
+@click.version_option(__version__, "-V", "--version", message="%(prog)s %(version)s")
 @click.pass_context
 def qypi(ctx, index_url):
-    """ Query PyPI from the command line """
+    """Query PyPI from the command line"""
     ctx.obj = QyPI(index_url)
+
 
 @qypi.result_callback()
 @click.pass_context
 def cleanup(ctx, *_args, **_kwargs):
     ctx.obj.cleanup(ctx)
 
+
 @qypi.command()
-@click.option('--description/--no-description', default=False,
-              help='Include (long) descriptions', show_default=True)
-@click.option('--trust-downloads/--no-trust-downloads', default=TRUST_DOWNLOADS,
-              help='Show download stats', show_default=True)
+@click.option(
+    "--description/--no-description",
+    default=False,
+    help="Include (long) descriptions",
+    show_default=True,
+)
+@click.option(
+    "--trust-downloads/--no-trust-downloads",
+    default=TRUST_DOWNLOADS,
+    help="Show download stats",
+    show_default=True,
+)
 @package_args()
 def info(packages, trust_downloads, description):
     """
@@ -48,25 +70,28 @@ def info(packages, trust_downloads, description):
         for pkg in packages:
             info = clean_pypi_dict(pkg["info"])
             if not description:
-                info.pop('description', None)
+                info.pop("description", None)
             if not trust_downloads:
-                info.pop('downloads', None)
-            info["url"] = info.pop('home_page', None)
+                info.pop("downloads", None)
+            info["url"] = info.pop("home_page", None)
             info["release_date"] = first_upload(pkg["urls"])
             info["people"] = []
-            for role in ('author', 'maintainer'):
+            for role in ("author", "maintainer"):
                 name = info.pop(role, None)
-                email = info.pop(role + '_email', None)
+                email = info.pop(role + "_email", None)
                 if name or email:
-                    info["people"].append({
-                        "name": name,
-                        "email": email,
-                        "role": role,
-                    })
+                    info["people"].append(
+                        {
+                            "name": name,
+                            "email": email,
+                            "role": role,
+                        }
+                    )
             if "package_url" in info and "project_url" not in info:
                 # Field was renamed between PyPI Legacy and Warehouse
                 info["project_url"] = info.pop("package_url")
             jlist.append(info)
+
 
 @qypi.command()
 @package_args()
@@ -84,31 +109,40 @@ def readme(packages):
     for pkg in packages:
         click.echo_via_pager(pkg["info"]["description"])
 
+
 @qypi.command()
 @package_args(versioned=False)
 def releases(packages):
-    """ List released package versions """
+    """List released package versions"""
     with JSONMapper() as jmap:
         for pkg in packages:
             try:
                 project_url = pkg["info"]["project_url"]
             except KeyError:
                 project_url = pkg["info"]["package_url"]
-            if not project_url.endswith('/'):
-                project_url += '/'
+            if not project_url.endswith("/"):
+                project_url += "/"
             jmap.append(
                 pkg["info"]["name"],
-                [{
-                    "version": version,
-                    "is_prerelease": parse(version).is_prerelease,
-                    "release_date": first_upload(pkg["releases"][version]),
-                    "release_url": project_url + version,
-                } for version in sorted(pkg["releases"], key=parse)],
+                [
+                    {
+                        "version": version,
+                        "is_prerelease": parse(version).is_prerelease,
+                        "release_date": first_upload(pkg["releases"][version]),
+                        "release_url": project_url + version,
+                    }
+                    for version in sorted(pkg["releases"], key=parse)
+                ],
             )
 
+
 @qypi.command()
-@click.option('--trust-downloads/--no-trust-downloads', default=TRUST_DOWNLOADS,
-              help='Show download stats', show_default=True)
+@click.option(
+    "--trust-downloads/--no-trust-downloads",
+    default=TRUST_DOWNLOADS,
+    help="Show download stats",
+    show_default=True,
+)
 @package_args()
 def files(packages, trust_downloads):
     """
@@ -126,27 +160,39 @@ def files(packages, trust_downloads):
                     pf.pop("downloads", None)
                 pf.pop("path", None)
                 ### TODO: Change empty comment_text fields to None?
-            jlist.append({
-                "name": pkg["info"]["name"],
-                "version": pkg["info"]["version"],
-                "files": pkgfiles,
-            })
+            jlist.append(
+                {
+                    "name": pkg["info"]["name"],
+                    "version": pkg["info"]["version"],
+                    "files": pkgfiles,
+                }
+            )
 
-@qypi.command('list')
+
+@qypi.command("list")
 @click.pass_obj
 def listcmd(obj):
-    """ List all packages on PyPI """
-    for pkg in obj.xmlrpc('list_packages'):
+    """List all packages on PyPI"""
+    for pkg in obj.xmlrpc("list_packages"):
         click.echo(pkg)
 
+
 @qypi.command()
-@click.option('--and', 'oper', flag_value='and', default=True,
-              help='AND conditions together [default]')
-@click.option('--or', 'oper', flag_value='or', help='OR conditions together')
-@click.option('-p/-r', '--packages/--releases', default=False,
-              help='Show one result per package/per release'
-                   ' [default: per release]')
-@click.argument('terms', nargs=-1, required=True)
+@click.option(
+    "--and",
+    "oper",
+    flag_value="and",
+    default=True,
+    help="AND conditions together [default]",
+)
+@click.option("--or", "oper", flag_value="or", help="OR conditions together")
+@click.option(
+    "-p/-r",
+    "--packages/--releases",
+    default=False,
+    help="Show one result per package/per release" " [default: per release]",
+)
+@click.argument("terms", nargs=-1, required=True)
 @click.pass_obj
 def search(obj, terms, oper, packages):
     """
@@ -157,24 +203,28 @@ def search(obj, terms, oper, packages):
     """
     spec = {}
     for t in terms:
-        key, colon, value = t.partition(':')
-        if colon == '':
-            key, value = 'description', t
+        key, colon, value = t.partition(":")
+        if colon == "":
+            key, value = "description", t
         else:
             key = SEARCH_SYNONYMS.get(key, key)
         # ServerProxy can't handle defaultdicts, so we can't use those instead.
         spec.setdefault(key, []).append(value)
-    results = map(clean_pypi_dict, obj.xmlrpc('search', spec, oper))
+    results = map(clean_pypi_dict, obj.xmlrpc("search", spec, oper))
     if packages:
         results = squish_versions(results)
     click.echo(dumps(results))
 
+
 @qypi.command()
-@click.option('-f', '--file', type=click.File('r'))
-@click.option('-p/-r', '--packages/--releases', default=False,
-              help='Show one result per package/per release'
-                   ' [default: per release]')
-@click.argument('classifiers', nargs=-1)
+@click.option("-f", "--file", type=click.File("r"))
+@click.option(
+    "-p/-r",
+    "--packages/--releases",
+    default=False,
+    help="Show one result per package/per release" " [default: per release]",
+)
+@click.argument("classifiers", nargs=-1)
 @click.pass_obj
 def browse(obj, classifiers, file, packages):
     """
@@ -188,35 +238,44 @@ def browse(obj, classifiers, file, packages):
         classifiers += tuple(map(str.strip, file))
     results = [
         {"name": name, "version": version or None}
-        for name, version in obj.xmlrpc('browse', classifiers)
+        for name, version in obj.xmlrpc("browse", classifiers)
     ]
     if packages:
         results = squish_versions(results)
     click.echo(dumps(results))
 
+
 @qypi.command()
-@click.argument('packages', nargs=-1)
+@click.argument("packages", nargs=-1)
 @click.pass_obj
 def owner(obj, packages):
-    """ List package owners & maintainers """
+    """List package owners & maintainers"""
     with JSONMapper() as jmap:
         for pkg in packages:
-            jmap.append(pkg, [
-                {"role": role, "user": user}
-                for role, user in obj.xmlrpc('package_roles', pkg)
-            ])
+            jmap.append(
+                pkg,
+                [
+                    {"role": role, "user": user}
+                    for role, user in obj.xmlrpc("package_roles", pkg)
+                ],
+            )
+
 
 @qypi.command()
-@click.argument('users', nargs=-1)
+@click.argument("users", nargs=-1)
 @click.pass_obj
 def owned(obj, users):
-    """ List packages owned/maintained by a user """
+    """List packages owned/maintained by a user"""
     with JSONMapper() as jmap:
         for u in users:
-            jmap.append(u, [
-                {"role": role, "package": pkg}
-                for role, pkg in obj.xmlrpc('user_packages', u)
-            ])
+            jmap.append(
+                u,
+                [
+                    {"role": role, "package": pkg}
+                    for role, pkg in obj.xmlrpc("user_packages", u)
+                ],
+            )
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     qypi()

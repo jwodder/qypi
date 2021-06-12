@@ -9,8 +9,8 @@ Run ``qypi --help`` or visit <https://github.com/jwodder/qypi> for more
 information.
 """
 
-__version__      = '0.6.0'
-__author__       = 'John Thorvald Wodder II'
-__author_email__ = 'qypi@varonathe.org'
-__license__      = 'MIT'
-__url__          = 'https://github.com/jwodder/qypi'
+__version__ = "0.6.0"
+__author__ = "John Thorvald Wodder II"
+__author_email__ = "qypi@varonathe.org"
+__license__ = "MIT"
+__url__ = "https://github.com/jwodder/qypi"
