@@ -44,7 +44,7 @@ sort_opt = obj_option(
 def package_args(versioned=True):
     if versioned:
 
-        def callback(ctx, param, value):
+        def callback(ctx, _param, value):
             return ctx.obj.lookup_package_version(value)
 
         def wrapper(f):
@@ -59,7 +59,7 @@ def package_args(versioned=True):
         return click.argument(
             "packages",
             nargs=-1,
-            callback=lambda ctx, param, value: ctx.obj.lookup_package(value),
+            callback=lambda ctx, _param, value: ctx.obj.lookup_package(value),
         )
 
 
