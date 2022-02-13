@@ -1,4 +1,6 @@
+from contextlib import ExitStack
 import platform
+import sys
 from xmlrpc.client import ServerProxy
 import click
 from packaging.version import parse
@@ -17,17 +19,28 @@ USER_AGENT = "qypi/{} ({}) requests/{} {}/{}".format(
 class QyPI:
     def __init__(self, index_url):
         self.index_url = index_url
-        self.s = None
-        self.xsp = None
+        self.s = requests.Session()
+        self.s.headers["User-Agent"] = USER_AGENT
+        if sys.version_info >= (3, 8):
+            xsp_kwargs = {"headers": [("User-Agent", USER_AGENT)]}
+        else:
+            xsp_kwargs = {}
+        self.xsp = ServerProxy(self.index_url, **xsp_kwargs)
         self.pre = False
         self.newest = False
         self.all_versions = False
         self.errmsgs = []
+        self.ctx_stack = ExitStack()
+
+    def __enter__(self) -> "QyPI":
+        self.ctx_stack.enter_context(self.s)
+        self.ctx_stack.enter_context(self.xsp)
+        return self
+
+    def __exit__(self, *_exc) -> None:
+        self.ctx_stack.close()
 
     def get(self, *path):
-        if self.s is None:
-            self.s = requests.Session()
-            self.s.headers["User-Agent"] = USER_AGENT
         return self.s.get(self.index_url.rstrip("/") + "/" + "/".join(path))
 
     def get_package(self, package):
@@ -76,8 +89,6 @@ class QyPI:
         return r.json()
 
     def xmlrpc(self, method, *args, **kwargs):
-        if self.xsp is None:
-            self.xsp = ServerProxy(self.index_url)
         return getattr(self.xsp, method)(*args, **kwargs)
 
     def lookup_package(self, args):

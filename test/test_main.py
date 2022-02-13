@@ -1,8 +1,10 @@
 import json
+import sys
 from traceback import format_exception
 from click.testing import CliRunner
 import pytest
 from qypi.__main__ import qypi
+from qypi.api import USER_AGENT
 
 
 def show_result(r):
@@ -13,7 +15,7 @@ def show_result(r):
 
 
 def test_list(mocker):
-    spinstance = mocker.Mock(
+    spinstance = mocker.MagicMock(
         **{
             "list_packages.return_value": [
                 "foobar",
@@ -30,12 +32,17 @@ def test_list(mocker):
     assert r.output == (
         "foobar\n" "BarFoo\n" "quux\n" "Gnusto-Cleesh\n" "XYZZY_PLUGH\n"
     )
-    spclass.assert_called_once_with("https://pypi.org/pypi")
+    if sys.version_info >= (3, 8):
+        spclass.assert_called_once_with(
+            "https://pypi.org/pypi", headers=[("User-Agent", USER_AGENT)]
+        )
+    else:
+        spclass.assert_called_once_with("https://pypi.org/pypi")
     assert spinstance.method_calls == [mocker.call.list_packages()]
 
 
 def test_owner(mocker):
-    spinstance = mocker.Mock(
+    spinstance = mocker.MagicMock(
         **{
             "package_roles.return_value": [
                 ["Owner", "luser"],
@@ -60,12 +67,17 @@ def test_owner(mocker):
         "    ]\n"
         "}\n"
     )
-    spclass.assert_called_once_with("https://pypi.org/pypi")
+    if sys.version_info >= (3, 8):
+        spclass.assert_called_once_with(
+            "https://pypi.org/pypi", headers=[("User-Agent", USER_AGENT)]
+        )
+    else:
+        spclass.assert_called_once_with("https://pypi.org/pypi")
     assert spinstance.method_calls == [mocker.call.package_roles("foobar")]
 
 
 def test_multiple_owner(mocker):
-    spinstance = mocker.Mock(
+    spinstance = mocker.MagicMock(
         **{
             "package_roles.side_effect": [
                 [
@@ -106,7 +118,12 @@ def test_multiple_owner(mocker):
         "    ]\n"
         "}\n"
     )
-    spclass.assert_called_once_with("https://pypi.org/pypi")
+    if sys.version_info >= (3, 8):
+        spclass.assert_called_once_with(
+            "https://pypi.org/pypi", headers=[("User-Agent", USER_AGENT)]
+        )
+    else:
+        spclass.assert_called_once_with("https://pypi.org/pypi")
     assert spinstance.method_calls == [
         mocker.call.package_roles("foobar"),
         mocker.call.package_roles("Glarch"),
@@ -114,7 +131,7 @@ def test_multiple_owner(mocker):
 
 
 def test_owned(mocker):
-    spinstance = mocker.Mock(
+    spinstance = mocker.MagicMock(
         **{
             "user_packages.return_value": [
                 ["Owner", "foobar"],
@@ -139,12 +156,17 @@ def test_owned(mocker):
         "    ]\n"
         "}\n"
     )
-    spclass.assert_called_once_with("https://pypi.org/pypi")
+    if sys.version_info >= (3, 8):
+        spclass.assert_called_once_with(
+            "https://pypi.org/pypi", headers=[("User-Agent", USER_AGENT)]
+        )
+    else:
+        spclass.assert_called_once_with("https://pypi.org/pypi")
     assert spinstance.method_calls == [mocker.call.user_packages("luser")]
 
 
 def test_multiple_owned(mocker):
-    spinstance = mocker.Mock(
+    spinstance = mocker.MagicMock(
         **{
             "user_packages.side_effect": [
                 [
@@ -185,7 +207,12 @@ def test_multiple_owned(mocker):
         "    ]\n"
         "}\n"
     )
-    spclass.assert_called_once_with("https://pypi.org/pypi")
+    if sys.version_info >= (3, 8):
+        spclass.assert_called_once_with(
+            "https://pypi.org/pypi", headers=[("User-Agent", USER_AGENT)]
+        )
+    else:
+        spclass.assert_called_once_with("https://pypi.org/pypi")
     assert spinstance.method_calls == [
         mocker.call.user_packages("luser"),
         mocker.call.user_packages("jsmith"),
@@ -193,7 +220,7 @@ def test_multiple_owned(mocker):
 
 
 def test_search(mocker):
-    spinstance = mocker.Mock(
+    spinstance = mocker.MagicMock(
         **{
             "search.return_value": [
                 {
@@ -239,7 +266,12 @@ def test_search(mocker):
         "    }\n"
         "]\n"
     )
-    spclass.assert_called_once_with("https://pypi.org/pypi")
+    if sys.version_info >= (3, 8):
+        spclass.assert_called_once_with(
+            "https://pypi.org/pypi", headers=[("User-Agent", USER_AGENT)]
+        )
+    else:
+        spclass.assert_called_once_with("https://pypi.org/pypi")
     assert spinstance.method_calls == [
         mocker.call.search(
             {"description": ["term", "bar"], "keywords": ["foo"]},
@@ -249,7 +281,7 @@ def test_search(mocker):
 
 
 def test_browse(mocker):
-    spinstance = mocker.Mock(
+    spinstance = mocker.MagicMock(
         **{
             "browse.return_value": [
                 ["foobar", "1.2.3"],
@@ -295,14 +327,19 @@ def test_browse(mocker):
         "    }\n"
         "]\n"
     )
-    spclass.assert_called_once_with("https://pypi.org/pypi")
+    if sys.version_info >= (3, 8):
+        spclass.assert_called_once_with(
+            "https://pypi.org/pypi", headers=[("User-Agent", USER_AGENT)]
+        )
+    else:
+        spclass.assert_called_once_with("https://pypi.org/pypi")
     assert spinstance.method_calls == [
         mocker.call.browse(("Typing :: Typed", "Topic :: Utilities"))
     ]
 
 
 def test_browse_packages(mocker):
-    spinstance = mocker.Mock(
+    spinstance = mocker.MagicMock(
         **{
             "browse.return_value": [
                 ["foobar", "1.2.3"],
@@ -336,7 +373,12 @@ def test_browse_packages(mocker):
         "    }\n"
         "]\n"
     )
-    spclass.assert_called_once_with("https://pypi.org/pypi")
+    if sys.version_info >= (3, 8):
+        spclass.assert_called_once_with(
+            "https://pypi.org/pypi", headers=[("User-Agent", USER_AGENT)]
+        )
+    else:
+        spclass.assert_called_once_with("https://pypi.org/pypi")
     assert spinstance.method_calls == [
         mocker.call.browse(("Typing :: Typed", "Topic :: Utilities"))
     ]

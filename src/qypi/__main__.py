@@ -36,7 +36,7 @@ SEARCH_SYNONYMS = {
 @click.pass_context
 def qypi(ctx, index_url):
     """Query PyPI from the command line"""
-    ctx.obj = QyPI(index_url)
+    ctx.obj = ctx.with_resource(QyPI(index_url))
 
 
 @qypi.result_callback()
