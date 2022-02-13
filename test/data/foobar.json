@@ -10,18 +10,21 @@
             "maintainer_email": "dawn42@baldwin-alvarado.org",
             "home_page": "https://www.wilson-espinoza.com/explore/explore/post/",
             "package_url": "https://dummy.nil/pypi/foobar",
+            "project_url": "https://dummy.nil/pypi/foobar",
             "release_url": "https://dummy.nil/pypi/foobar/0.1.0",
             "downloads": {
                 "last_day": 16,
                 "last_week": 154,
                 "last_month": 637
             },
-            "unknown_field": "passed through",
+            "unknown_field": "not passed through",
             "classifiers": [
                 "Topic :: Software Development :: Testing",
                 "UNKNOWN"
             ],
             "platform": null,
+            "yanked": false,
+            "yanked_reason": null,
             "cheesecake_look-provide-gas": "HmHbSOlvwOIknMsxdkcQ",
             "cheesecake_threat-number": 7761,
             "_pypi_property-late": "xQnSZHqzpUXFuWEEuxZV",
@@ -41,10 +44,12 @@
                 "downloads": 95,
                 "size": 775,
                 "comment_text": "",
-                "unknown_field": "passed through",
+                "unknown_field": "not passed through",
                 "upload_time": "2013-01-18T18:53:56",
                 "upload_time_iso_8601": "2013-01-18T18:53:56.265173Z",
-                "url": "https://files.dummyhosted.nil/packages/ac/62/c3a61adf1cc9b1e3ec63ba06706d3f7af3e1ef389b97523e2b529fbe5432/foobar-0.1.0-py2.py3-none-any.whl"
+                "url": "https://files.dummyhosted.nil/packages/ac/62/c3a61adf1cc9b1e3ec63ba06706d3f7af3e1ef389b97523e2b529fbe5432/foobar-0.1.0-py2.py3-none-any.whl",
+                "yanked": false,
+                "yanked_reason": null
             },
             {
                 "md5_digest": "2e93ea94a7f514f2d8f267dd90b47d37",
@@ -59,10 +64,12 @@
                 "downloads": 104,
                 "size": 743,
                 "comment_text": "",
-                "unknown_field": "passed through",
+                "unknown_field": "not passed through",
                 "upload_time": "2015-09-22T09:35:00",
                 "upload_time_iso_8601": "2015-09-22T09:35:00.441072Z",
-                "url": "https://files.dummyhosted.nil/packages/8e/75/d58d32eb92ad0956d69925acb9828191f18cb14004cc6db76f7687b025a5/foobar-0.1.0.tar.gz"
+                "url": "https://files.dummyhosted.nil/packages/8e/75/d58d32eb92ad0956d69925acb9828191f18cb14004cc6db76f7687b025a5/foobar-0.1.0.tar.gz",
+                "yanked": false,
+                "yanked_reason": null
             }
         ]
     },
@@ -77,18 +84,21 @@
             "maintainer_email": "maynardtim@hotmail.com",
             "home_page": "http://www.sanchez.net/index.htm",
             "package_url": "https://dummy.nil/pypi/foobar",
+            "project_url": "https://dummy.nil/pypi/foobar",
             "release_url": "https://dummy.nil/pypi/foobar/0.2.0",
             "downloads": {
                 "last_day": 18,
                 "last_week": 144,
                 "last_month": 581
             },
-            "unknown_field": "passed through",
+            "unknown_field": "not passed through",
             "classifiers": [
                 "Topic :: Software Development :: Testing",
                 "UNKNOWN"
             ],
             "platform": "Wood",
+            "yanked": false,
+            "yanked_reason": null,
             "cheesecake_woman-hold-hair": "DSBGtdRHISnyJfrGQizX",
             "cheesecake_which-early-tax": 9055,
             "_pypi_fight-time-rise": "PgLctIJSJoqxGGGFjdme",
@@ -108,10 +118,12 @@
                 "downloads": 106,
                 "size": 752,
                 "comment_text": "",
-                "unknown_field": "passed through",
+                "unknown_field": "not passed through",
                 "upload_time": "2017-02-04T12:34:05",
                 "upload_time_iso_8601": "2017-02-04T12:34:05.766270Z",
-                "url": "https://files.dummyhosted.nil/packages/54/40/36eccb727704b5dabfda040e0eb23c29dbe26cf1a78cbeb24f33deb26b22/foobar-0.2.0-py2.py3-none-any.whl"
+                "url": "https://files.dummyhosted.nil/packages/54/40/36eccb727704b5dabfda040e0eb23c29dbe26cf1a78cbeb24f33deb26b22/foobar-0.2.0-py2.py3-none-any.whl",
+                "yanked": false,
+                "yanked_reason": null
             }
         ]
     },
@@ -126,18 +138,21 @@
             "maintainer_email": "cspencer@paul-fisher.com",
             "home_page": "https://www.johnson.com/homepage.php",
             "package_url": "https://dummy.nil/pypi/foobar",
+            "project_url": "https://dummy.nil/pypi/foobar",
             "release_url": "https://dummy.nil/pypi/foobar/1.0.0",
             "downloads": {
                 "last_day": 20,
                 "last_week": 136,
                 "last_month": 588
             },
-            "unknown_field": "passed through",
+            "unknown_field": "not passed through",
             "classifiers": [
                 "Topic :: Software Development :: Testing",
                 "UNKNOWN"
             ],
             "platform": "Amiga",
+            "yanked": false,
+            "yanked_reason": null,
             "cheesecake_yourself-describe": "PVvGZKjzWEttoGekIqco",
             "cheesecake_act-provide-name": 4972,
             "_pypi_way-worry-bring": "wbsvtrUkNCZxpxEDrnFH",
@@ -157,10 +172,12 @@
                 "downloads": 100,
                 "size": 735,
                 "comment_text": "",
-                "unknown_field": "passed through",
+                "unknown_field": "not passed through",
                 "upload_time": "2019-02-01T09:17:59",
                 "upload_time_iso_8601": "2019-02-01T09:17:59.172284Z",
-                "url": "https://files.dummyhosted.nil/packages/7f/97/e5ec19aed5d108c2f6c2fc6646d8247b1fadb49f0bf48e87a0fca8827696/foobar-1.0.0-py2.py3-none-any.whl"
+                "url": "https://files.dummyhosted.nil/packages/7f/97/e5ec19aed5d108c2f6c2fc6646d8247b1fadb49f0bf48e87a0fca8827696/foobar-1.0.0-py2.py3-none-any.whl",
+                "yanked": false,
+                "yanked_reason": null
             }
         ]
     }

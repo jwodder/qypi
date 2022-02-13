@@ -1,6 +1,24 @@
-v0.7.0 (in development)
+v1.0.0 (in development)
 -----------------------
+- Package data returned from the JSON API is now internally represented by
+  [pydantic](https://github.com/samuelcolvin/pydantic)-based classes.  As a
+  result, unknown fields returned by the JSON API are no longer output, and
+  there may be some errors interacting with non-Warehouse project indices that
+  do not define all of the same fields as Warehouse.  [Please report any
+  instances of the latter.](https://github.com/jwodder/qypi/issues)
+- The `info`, `readme`, `releases`, `files`, `owner`, and `owned` commands now
+  take exactly one positional argument, and the output formats of many of these
+  commands have been simplified for this case
+- The `readme` command no longer takes an `--all-versions`/`-A` option
+- The output from the `releases` command now includes an `is_yanked` field
+- The `--packages` option to the `search` and `browse` commands is now named
+  `--projects`
+- The output from the `owned` command has changed to use the more accurate
+  "project" instead of "package".
+- Output timestamps now use `+00:00` as the timezone offset instead of `Z`
+- Honor package yanking (PEP 592)
 - Support Python 3.10, 3.11, and 3.12
+- Drop support for Python 3.6
 
 v0.6.0 (2021-05-31)
 -------------------
