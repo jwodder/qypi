@@ -1,9 +1,13 @@
 from contextlib import ExitStack
+from enum import Enum
+import json
 import platform
 import sys
+from typing import Dict, List, Optional, Union, cast
 from xmlrpc.client import ServerProxy
 import click
 from packaging.version import parse
+from pydantic import BaseModel, validator
 import requests
 from . import __url__, __version__
 
@@ -14,6 +18,45 @@ USER_AGENT = "qypi/{} ({}) requests/{} {}/{}".format(
     platform.python_implementation(),
     platform.python_version(),
 )
+
+
+class Role(Enum):
+    OWNER = "Owner"
+    MAINTAINER = "Maintainer"
+
+
+class JSONableBase(BaseModel):
+    def json_dict(self) -> dict:
+        return cast(dict, json.loads(self.json()))
+
+
+class PackageRole(JSONableBase):
+    user: str
+    role: Role
+
+
+class UserRole(JSONableBase):
+    package: str
+    role: Role
+
+
+class SearchResult(JSONableBase):
+    name: str
+    summary: Optional[str]
+    version: str
+
+    @validator("summary")
+    @classmethod
+    def _nullify_summary(cls, v: Optional[str]) -> Optional[str]:
+        if v == "" or v == "UNKNOWN":
+            return None
+        else:
+            return v
+
+
+class BrowseResult(JSONableBase):
+    name: str
+    version: str
 
 
 class QyPI:
@@ -91,6 +134,34 @@ class QyPI:
 
     def xmlrpc(self, method, *args, **kwargs):
         return getattr(self.xsp, method)(*args, **kwargs)
+
+    def get_all_packages(self) -> List[str]:
+        return cast(List[str], self.xmlrpc("list_packages"))
+
+    def get_package_roles(self, package: str) -> List[PackageRole]:
+        return [
+            PackageRole(role=role, user=user)
+            for role, user in self.xmlrpc("package_roles", package)
+        ]
+
+    def get_user_roles(self, user: str) -> List[UserRole]:
+        return [
+            UserRole(role=role, package=package)
+            for role, package in self.xmlrpc("user_packages", user)
+        ]
+
+    def search(
+        self, spec: Dict[str, Union[str, List[str]]], operator: str = "and"
+    ) -> List[SearchResult]:
+        return [
+            SearchResult.parse_obj(r) for r in self.xmlrpc("search", spec, operator)
+        ]
+
+    def browse(self, classifiers: List[str]) -> List[BrowseResult]:
+        return [
+            BrowseResult(name=name, version=version)
+            for name, version in self.xmlrpc("browse", classifiers)
+        ]
 
     def lookup_package(self, args):
         # TODO: Eliminate

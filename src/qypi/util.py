@@ -1,10 +1,11 @@
 from collections.abc import Iterator
 from itertools import groupby
 import json
-from operator import itemgetter
+from operator import attrgetter
 from textwrap import indent
 import click
 from packaging.version import parse
+from .api import JSONableBase
 
 
 def obj_option(*args, **kwargs):
@@ -63,10 +64,19 @@ def package_args(versioned=True):
         )
 
 
+def json_default(x):
+    if isinstance(x, JSONableBase):
+        return x.json_dict()
+    else:
+        return x
+
+
 def dumps(obj):
     if isinstance(obj, Iterator):
         obj = list(obj)
-    return json.dumps(obj, sort_keys=True, indent=4, ensure_ascii=False)
+    return json.dumps(
+        obj, sort_keys=True, indent=4, ensure_ascii=False, default=json_default
+    )
 
 
 def clean_pypi_dict(d):
@@ -79,13 +89,13 @@ def clean_pypi_dict(d):
 
 def squish_versions(releases):
     """
-    Given a list of `dict`s containing (at least) ``"name"`` and ``"version"``
-    fields, return for each name the `dict` with the highest version.
+    Given a list of `SearchResult`\\s or `BrowseResult`\\s, return for each
+    name the result with the highest version.
 
     It is assumed that `dict`s with the same name are always adjacent.
     """
-    for _, versions in groupby(releases, itemgetter("name")):
-        yield max(versions, key=lambda v: parse(v["version"]))
+    for _, versions in groupby(releases, attrgetter("name")):
+        yield max(versions, key=lambda v: parse(v.version))
 
 
 class JSONLister:

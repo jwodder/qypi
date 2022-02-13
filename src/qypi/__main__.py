@@ -173,7 +173,7 @@ def files(packages, trust_downloads):
 @click.pass_obj
 def listcmd(obj):
     """List all packages on PyPI"""
-    for pkg in obj.xmlrpc("list_packages"):
+    for pkg in obj.get_all_packages():
         click.echo(pkg)
 
 
@@ -210,7 +210,7 @@ def search(obj, terms, oper, packages):
             key = SEARCH_SYNONYMS.get(key, key)
         # ServerProxy can't handle defaultdicts, so we can't use those instead.
         spec.setdefault(key, []).append(value)
-    results = map(clean_pypi_dict, obj.xmlrpc("search", spec, oper))
+    results = obj.search(spec, oper)
     if packages:
         results = squish_versions(results)
     click.echo(dumps(results))
@@ -236,10 +236,7 @@ def browse(obj, classifiers, file, packages):
     """
     if file is not None:
         classifiers += tuple(map(str.strip, file))
-    results = [
-        {"name": name, "version": version or None}
-        for name, version in obj.xmlrpc("browse", classifiers)
-    ]
+    results = obj.browse(classifiers)
     if packages:
         results = squish_versions(results)
     click.echo(dumps(results))
@@ -252,13 +249,7 @@ def owner(obj, packages):
     """List package owners & maintainers"""
     with JSONMapper() as jmap:
         for pkg in packages:
-            jmap.append(
-                pkg,
-                [
-                    {"role": role, "user": user}
-                    for role, user in obj.xmlrpc("package_roles", pkg)
-                ],
-            )
+            jmap.append(pkg, [pr.json_dict() for pr in obj.get_package_roles(pkg)])
 
 
 @qypi.command()
@@ -268,13 +259,7 @@ def owned(obj, users):
     """List packages owned/maintained by a user"""
     with JSONMapper() as jmap:
         for u in users:
-            jmap.append(
-                u,
-                [
-                    {"role": role, "package": pkg}
-                    for role, pkg in obj.xmlrpc("user_packages", u)
-                ],
-            )
+            jmap.append(u, [ur.json_dict() for ur in obj.get_user_roles(u)])
 
 
 if __name__ == "__main__":
