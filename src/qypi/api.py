@@ -53,6 +53,7 @@ class QyPI:
         return r.json()
 
     def get_latest_version(self, package):
+        # TODO: Eliminate
         pkg = self.get_package(package)
         releases = {
             (parse(rel), rel): first_upload(files)
@@ -79,9 +80,9 @@ class QyPI:
         if pkg["info"]["version"] == latest:
             return pkg
         else:
-            return self.get_version(package, latest)
+            return self.get_package_version(package, latest)
 
-    def get_version(self, package, version):
+    def get_package_version(self, package, version):
         r = self.get(package, version, "json")
         if r.status_code == 404:
             raise QyPIError(f"{package}: version {version} not found")
@@ -92,6 +93,7 @@ class QyPI:
         return getattr(self.xsp, method)(*args, **kwargs)
 
     def lookup_package(self, args):
+        # TODO: Eliminate
         for name in args:
             try:
                 yield self.get_package(name)
@@ -103,7 +105,7 @@ class QyPI:
             name, eq, version = spec.partition("=")
             try:
                 if eq != "":
-                    yield self.get_version(name, version.lstrip("="))
+                    yield self.get_package_version(name, version.lstrip("="))
                 elif self.all_versions:
                     p = self.get_package(name)
                     for v in sorted(p["releases"], key=parse):
@@ -112,13 +114,14 @@ class QyPI:
                                 yield p
                             else:
                                 ### TODO: Can this call ever fail?
-                                yield self.get_version(name, v)
+                                yield self.get_package_version(name, v)
                 else:
                     yield self.get_latest_version(name)
             except QyPIError as e:
                 self.errmsgs.append(str(e))
 
     def cleanup(self, ctx):
+        # TODO: Eliminate
         if self.errmsgs:
             for msg in self.errmsgs:
                 click.echo(ctx.command_path + ": " + msg, err=True)
