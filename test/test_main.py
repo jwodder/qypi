@@ -2,20 +2,22 @@ import json
 import sys
 from traceback import format_exception
 import click
-from click.testing import CliRunner
+from click.testing import CliRunner, Result
 import pytest
+from pytest_mock import MockerFixture
 from qypi.__main__ import main
 from qypi.api import USER_AGENT
 
 
-def show_result(r):
+def show_result(r: Result) -> str:
     if r.exception is not None:
+        assert isinstance(r.exc_info, tuple)
         return "".join(format_exception(*r.exc_info))
     else:
         return r.output
 
 
-def test_list(mocker):
+def test_list(mocker: MockerFixture) -> None:
     spinstance = mocker.MagicMock(
         **{
             "list_packages.return_value": [
@@ -40,7 +42,7 @@ def test_list(mocker):
     assert spinstance.method_calls == [mocker.call.list_packages()]
 
 
-def test_owner(mocker):
+def test_owner(mocker: MockerFixture) -> None:
     spinstance = mocker.MagicMock(
         **{
             "package_roles.return_value": [
@@ -73,7 +75,7 @@ def test_owner(mocker):
     assert spinstance.method_calls == [mocker.call.package_roles("foobar")]
 
 
-def test_owned(mocker):
+def test_owned(mocker: MockerFixture) -> None:
     spinstance = mocker.MagicMock(
         **{
             "user_packages.return_value": [
@@ -106,7 +108,7 @@ def test_owned(mocker):
     assert spinstance.method_calls == [mocker.call.user_packages("luser")]
 
 
-def test_search(mocker):
+def test_search(mocker: MockerFixture) -> None:
     spinstance = mocker.MagicMock(
         **{
             "search.return_value": [
@@ -167,7 +169,7 @@ def test_search(mocker):
     ]
 
 
-def test_browse(mocker):
+def test_browse(mocker: MockerFixture) -> None:
     spinstance = mocker.MagicMock(
         **{
             "browse.return_value": [
@@ -221,11 +223,11 @@ def test_browse(mocker):
     else:
         spclass.assert_called_once_with("https://pypi.org/pypi")
     assert spinstance.method_calls == [
-        mocker.call.browse(("Typing :: Typed", "Topic :: Utilities"))
+        mocker.call.browse(["Typing :: Typed", "Topic :: Utilities"])
     ]
 
 
-def test_browse_packages(mocker):
+def test_browse_packages(mocker: MockerFixture) -> None:
     spinstance = mocker.MagicMock(
         **{
             "browse.return_value": [
@@ -267,12 +269,12 @@ def test_browse_packages(mocker):
     else:
         spclass.assert_called_once_with("https://pypi.org/pypi")
     assert spinstance.method_calls == [
-        mocker.call.browse(("Typing :: Typed", "Topic :: Utilities"))
+        mocker.call.browse(["Typing :: Typed", "Topic :: Utilities"])
     ]
 
 
 @pytest.mark.usefixtures("mock_pypi_json")
-def test_info():
+def test_info() -> None:
     r = CliRunner().invoke(main, ["info", "foobar"])
     assert r.exit_code == 0, show_result(r)
     assert r.output == (
@@ -309,7 +311,7 @@ def test_info():
 
 
 @pytest.mark.usefixtures("mock_pypi_json")
-def test_info_explicit_latest_version():
+def test_info_explicit_latest_version() -> None:
     r = CliRunner().invoke(main, ["info", "foobar==1.0.0"])
     assert r.exit_code == 0, show_result(r)
     assert r.output == (
@@ -346,7 +348,7 @@ def test_info_explicit_latest_version():
 
 
 @pytest.mark.usefixtures("mock_pypi_json")
-def test_info_explicit_version():
+def test_info_explicit_version() -> None:
     r = CliRunner().invoke(main, ["info", "foobar==0.2.0"])
     assert r.exit_code == 0, show_result(r)
     assert r.output == (
@@ -383,7 +385,7 @@ def test_info_explicit_version():
 
 
 @pytest.mark.usefixtures("mock_pypi_json")
-def test_info_description():
+def test_info_description() -> None:
     r = CliRunner().invoke(main, ["info", "--description", "foobar"])
     assert r.exit_code == 0, show_result(r)
     assert r.output == (
@@ -422,7 +424,7 @@ def test_info_description():
 
 @pytest.mark.usefixtures("mock_pypi_json")
 @pytest.mark.parametrize("arg", ["does-not-exist", "does-not-exist==2.23.42"])
-def test_info_nonexistent(arg):
+def test_info_nonexistent(arg: str) -> None:
     r = CliRunner().invoke(main, ["info", arg], standalone_mode=False)
     assert r.exit_code != 0, show_result(r)
     assert r.output == ""
@@ -431,7 +433,7 @@ def test_info_nonexistent(arg):
 
 
 @pytest.mark.usefixtures("mock_pypi_json")
-def test_info_nonexistent_version():
+def test_info_nonexistent_version() -> None:
     r = CliRunner().invoke(main, ["info", "foobar==2.23.42"], standalone_mode=False)
     assert r.exit_code != 0, show_result(r)
     assert r.output == ""
@@ -440,7 +442,7 @@ def test_info_nonexistent_version():
 
 
 @pytest.mark.usefixtures("mock_pypi_json")
-def test_info_latest_is_prerelease():
+def test_info_latest_is_prerelease() -> None:
     r = CliRunner().invoke(main, ["info", "has-prerel"])
     assert r.exit_code == 0, show_result(r)
     data = json.loads(r.output)
@@ -448,7 +450,7 @@ def test_info_latest_is_prerelease():
 
 
 @pytest.mark.usefixtures("mock_pypi_json")
-def test_info_latest_is_prerelease_pre():
+def test_info_latest_is_prerelease_pre() -> None:
     r = CliRunner().invoke(main, ["info", "--pre", "has-prerel"])
     assert r.exit_code == 0, show_result(r)
     data = json.loads(r.output)
@@ -456,7 +458,7 @@ def test_info_latest_is_prerelease_pre():
 
 
 @pytest.mark.usefixtures("mock_pypi_json")
-def test_info_explicit_prerelease():
+def test_info_explicit_prerelease() -> None:
     r = CliRunner().invoke(main, ["info", "has-prerel==1.0.1a1"])
     assert r.exit_code == 0, show_result(r)
     data = json.loads(r.output)
@@ -464,7 +466,7 @@ def test_info_explicit_prerelease():
 
 
 @pytest.mark.usefixtures("mock_pypi_json")
-def test_info_all_are_prerelease():
+def test_info_all_are_prerelease() -> None:
     r = CliRunner().invoke(main, ["info", "prerelease-only"])
     assert r.exit_code == 0, show_result(r)
     data = json.loads(r.output)
@@ -472,7 +474,7 @@ def test_info_all_are_prerelease():
 
 
 @pytest.mark.usefixtures("mock_pypi_json")
-def test_info_nullfields():
+def test_info_nullfields() -> None:
     r = CliRunner().invoke(main, ["info", "nullfields"])
     assert r.exit_code == 0, show_result(r)
     assert r.output == (
@@ -504,7 +506,7 @@ def test_info_nullfields():
 
 
 @pytest.mark.usefixtures("mock_pypi_json")
-def test_readme():
+def test_readme() -> None:
     r = CliRunner().invoke(main, ["readme", "foobar"])
     assert r.exit_code == 0, show_result(r)
     assert r.output == (
@@ -521,7 +523,7 @@ def test_readme():
 
 
 @pytest.mark.usefixtures("mock_pypi_json")
-def test_readme_explicit_version():
+def test_readme_explicit_version() -> None:
     r = CliRunner().invoke(main, ["readme", "foobar==0.2.0"])
     assert r.exit_code == 0, show_result(r)
     assert r.output == (
@@ -538,7 +540,7 @@ def test_readme_explicit_version():
 
 
 @pytest.mark.usefixtures("mock_pypi_json")
-def test_files():
+def test_files() -> None:
     r = CliRunner().invoke(main, ["files", "foobar"])
     assert r.exit_code == 0, show_result(r)
     assert r.output == (
@@ -566,7 +568,7 @@ def test_files():
 
 
 @pytest.mark.usefixtures("mock_pypi_json")
-def test_files_explicit_version():
+def test_files_explicit_version() -> None:
     r = CliRunner().invoke(main, ["files", "foobar==0.2.0"])
     assert r.exit_code == 0, show_result(r)
     assert r.output == (
@@ -594,7 +596,7 @@ def test_files_explicit_version():
 
 
 @pytest.mark.usefixtures("mock_pypi_json")
-def test_releases():
+def test_releases() -> None:
     r = CliRunner().invoke(main, ["releases", "foobar"])
     assert r.exit_code == 0, show_result(r)
     assert r.output == (

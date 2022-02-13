@@ -2,8 +2,10 @@ from collections import OrderedDict
 import json
 from pathlib import Path
 import re
+from typing import Dict, Iterator, Tuple
 from packaging.utils import canonicalize_name
 import pytest
+from requests import PreparedRequest
 import responses
 
 DATA_DIR = Path(__file__).with_name("data")
@@ -12,7 +14,7 @@ urlre = re.compile(r"^https://pypi\.org/pypi/([-.\w]+)(?:/([^/]+))?/json$")
 
 
 @pytest.fixture
-def mock_pypi_json():
+def mock_pypi_json() -> Iterator[responses.RequestsMock]:
     with responses.RequestsMock() as rsps:
         rsps.add_callback(
             responses.GET,
@@ -23,7 +25,8 @@ def mock_pypi_json():
         yield rsps
 
 
-def mkresponse(r):
+def mkresponse(r: PreparedRequest) -> Tuple[int, Dict[str, str], str]:
+    assert r.url is not None
     m = urlre.match(r.url)
     assert m
     package, version = m.groups()

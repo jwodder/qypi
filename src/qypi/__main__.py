@@ -1,9 +1,12 @@
-from typing import List, Optional, Sequence, TextIO
+from collections import defaultdict
+from itertools import groupby
+from operator import attrgetter
+from typing import Dict, List, Optional, TextIO, Tuple
 import click
 from packaging.version import parse
 from . import __version__
 from .api import DEFAULT_ENDPOINT, QyPI, QyPIError
-from .util import dumps, show_datetime, squish_versions
+from .util import dumps, show_datetime
 
 SEARCH_SYNONYMS = {
     "homepage": "home_page",
@@ -46,7 +49,7 @@ sort_opt = click.option(
 )
 @click.version_option(__version__, "-V", "--version", message="%(prog)s %(version)s")
 @click.pass_context
-def main(ctx, index_url):
+def main(ctx: click.Context, index_url: str) -> None:
     """Query PyPI from the command line"""
     ctx.obj = ctx.with_resource(QyPI(index_url))
 
@@ -86,7 +89,7 @@ def info(
     """
     if all_versions:
         try:
-            vs = qypi.get_all_requirement(project, yanked=False, prereleases=pre)
+            vs = qypi.get_all_requirements(project, yanked=False, prereleases=pre)
         except QyPIError as e:
             raise click.UsageError(str(e))
         click.echo(
@@ -132,7 +135,10 @@ def readme(qypi: QyPI, project: str, newest: bool, pre: Optional[bool]) -> None:
     ``version``.
     """
     v = qypi.get_requirement(project, most_recent=newest, yanked=False, prereleases=pre)
-    click.echo_via_pager(v.info.description)
+    if v.info.description is not None:
+        click.echo_via_pager(v.info.description)
+    else:
+        click.echo_via_pager("--- no description ---")
 
 
 @main.command()
@@ -184,7 +190,7 @@ def files(
     ``version``.
     """
     if all_versions:
-        vs = qypi.get_all_requirement(project, yanked=False, prereleases=pre)
+        vs = qypi.get_all_requirements(project, yanked=False, prereleases=pre)
         click.echo(
             dumps(
                 {
@@ -212,7 +218,7 @@ def files(
 
 @main.command("list")
 @click.pass_obj
-def listcmd(qypi):
+def listcmd(qypi: QyPI) -> None:
     """List all projects on PyPI"""
     for pkg in qypi.list_all_projects():
         click.echo(pkg)
@@ -235,25 +241,27 @@ def listcmd(qypi):
 )
 @click.argument("terms", nargs=-1, required=True)
 @click.pass_obj
-def search(qypi: QyPI, terms, oper, projects):
+def search(qypi: QyPI, terms: Tuple[str], oper: str, projects: bool) -> None:
     """
     Search PyPI for projects or releases thereof.
 
     Search terms may be specified as either ``field:value`` (e.g.,
     ``summary:Django``) or just ``value`` to search long descriptions.
     """
-    spec = {}
+    spec: Dict[str, List[str]] = defaultdict(list)
     for t in terms:
         key, colon, value = t.partition(":")
         if colon == "":
             key, value = "description", t
         else:
             key = SEARCH_SYNONYMS.get(key, key)
-        # ServerProxy can't handle defaultdicts, so we can't use those instead.
-        spec.setdefault(key, []).append(value)
-    results = qypi.search(spec, oper)
+        spec[key].append(value)
+    results = qypi.search(dict(spec), oper)
     if projects:
-        results = squish_versions(results)
+        results = [
+            max(versions, key=lambda v: parse(v.version))
+            for _, versions in groupby(results, attrgetter("name"))
+        ]
     click.echo(dumps(results))
 
 
@@ -268,7 +276,7 @@ def search(qypi: QyPI, terms, oper, projects):
 @click.argument("classifiers", nargs=-1)
 @click.pass_obj
 def browse(
-    qypi: QyPI, classifiers: Sequence[str], file: Optional[TextIO], projects: bool
+    qypi: QyPI, classifiers: Tuple[str, ...], file: Optional[TextIO], projects: bool
 ) -> None:
     """
     List projects with given trove classifiers.
@@ -279,9 +287,12 @@ def browse(
     """
     if file is not None:
         classifiers += tuple(map(str.strip, file))
-    results = qypi.browse(classifiers)
+    results = qypi.browse(list(classifiers))
     if projects:
-        results = squish_versions(results)
+        results = [
+            max(versions, key=lambda v: parse(v.version))
+            for _, versions in groupby(results, attrgetter("name"))
+        ]
     click.echo(dumps(results))
 
 

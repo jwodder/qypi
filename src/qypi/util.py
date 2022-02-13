@@ -1,38 +1,24 @@
 from collections.abc import Iterator
 from datetime import datetime
-from itertools import groupby
 import json
-from operator import attrgetter
-from typing import Optional
-from packaging.version import parse
+from typing import Any, Optional
 
 
-def json_default(x):
+def json_default(x: Any) -> Any:
     from .api import JSONableBase
 
-    if isinstance(x, JSONableBase):
+    if isinstance(x, Iterator):
+        return list(x)
+    elif isinstance(x, JSONableBase):
         return x.json_dict()
     else:
         return x
 
 
-def dumps(obj):
-    if isinstance(obj, Iterator):
-        obj = list(obj)
+def dumps(obj: Any) -> str:
     return json.dumps(
         obj, sort_keys=True, indent=4, ensure_ascii=False, default=json_default
     )
-
-
-def squish_versions(releases):
-    """
-    Given a list of `SearchResult`\\s or `BrowseResult`\\s, return for each
-    name the result with the highest version.
-
-    It is assumed that `dict`s with the same name are always adjacent.
-    """
-    for _, versions in groupby(releases, attrgetter("name")):
-        yield max(versions, key=lambda v: parse(v.version))
 
 
 def show_datetime(dt: Optional[datetime]) -> Optional[str]:

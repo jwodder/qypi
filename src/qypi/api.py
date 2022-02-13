@@ -36,7 +36,7 @@ class QyPI:
             xsp_kwargs = {"headers": [("User-Agent", USER_AGENT)]}
         else:
             xsp_kwargs = {}
-        self.xsp = ServerProxy(self.index_url, **xsp_kwargs)
+        self.xsp = ServerProxy(self.index_url, **xsp_kwargs)  # type: ignore[arg-type]
         self.ctx_stack = ExitStack()
 
     def __enter__(self) -> QyPI:
@@ -44,7 +44,7 @@ class QyPI:
         self.ctx_stack.enter_context(self.xsp)
         return self
 
-    def __exit__(self, *_exc) -> None:
+    def __exit__(self, *_exc: Any) -> None:
         self.ctx_stack.close()
 
     def get_requirement(
@@ -66,7 +66,7 @@ class QyPI:
 
     def get_all_requirements(
         self, req: str, yanked: bool = False, prereleases: Optional[bool] = None
-    ) -> Optional[ProjectVersion]:
+    ) -> List[ProjectVersion]:
         reqobj = Requirement(req)
         ### TODO: Warn if reqobj has non-None marker, extras, or url?
         project = self.get_project(reqobj.name)
@@ -90,7 +90,7 @@ class QyPI:
         r.raise_for_status()
         return ProjectVersion.from_response_json(r.json())
 
-    def xmlrpc(self, method, *args, **kwargs):
+    def xmlrpc(self, method: str, *args: Any, **kwargs: Any) -> Any:
         return getattr(self.xsp, method)(*args, **kwargs)
 
     def list_all_projects(self) -> List[str]:
