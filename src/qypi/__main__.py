@@ -23,6 +23,13 @@ pre_opt = click.option(
     show_default=True,
 )
 
+yanked_opt = click.option(
+    "--yanked/--no-yanked",
+    default=False,
+    help="Show yanked versions",
+    show_default=True,
+)
+
 all_opt = click.option(
     "-A",
     "--all-versions/--latest-version",
@@ -70,6 +77,7 @@ def main(ctx: click.Context, index_url: str) -> None:
 @all_opt
 @sort_opt
 @pre_opt
+@yanked_opt
 @click.argument("project")
 @click.pass_obj
 def info(
@@ -80,6 +88,7 @@ def info(
     all_versions: bool,
     newest: bool,
     pre: Optional[bool],
+    yanked: bool,
 ) -> None:
     """
     Show project details.
@@ -89,7 +98,7 @@ def info(
     """
     if all_versions:
         try:
-            vs = qypi.get_all_requirements(project, yanked=False, prereleases=pre)
+            vs = qypi.get_all_requirements(project, yanked=yanked, prereleases=pre)
         except QyPIError as e:
             raise click.UsageError(str(e))
         click.echo(
@@ -105,7 +114,7 @@ def info(
     else:
         try:
             v = qypi.get_requirement(
-                project, most_recent=newest, yanked=False, prereleases=pre
+                project, most_recent=newest, yanked=yanked, prereleases=pre
             )
         except QyPIError as e:
             raise click.UsageError(str(e))
@@ -121,9 +130,12 @@ def info(
 @main.command()
 @sort_opt
 @pre_opt
+@yanked_opt
 @click.argument("project")
 @click.pass_obj
-def readme(qypi: QyPI, project: str, newest: bool, pre: Optional[bool]) -> None:
+def readme(
+    qypi: QyPI, project: str, newest: bool, pre: Optional[bool], yanked: bool
+) -> None:
     """
     View projects' long descriptions.
 
@@ -134,7 +146,9 @@ def readme(qypi: QyPI, project: str, newest: bool, pre: Optional[bool]) -> None:
     version or as ``projectname==version`` to show the long description for
     ``version``.
     """
-    v = qypi.get_requirement(project, most_recent=newest, yanked=False, prereleases=pre)
+    v = qypi.get_requirement(
+        project, most_recent=newest, yanked=yanked, prereleases=pre
+    )
     if v.info.description is not None:
         click.echo_via_pager(v.info.description)
     else:
@@ -172,6 +186,7 @@ def releases(qypi: QyPI, project: str) -> None:
 @all_opt
 @sort_opt
 @pre_opt
+@yanked_opt
 @click.argument("project")
 @click.pass_obj
 def files(
@@ -181,6 +196,7 @@ def files(
     all_versions: bool,
     newest: bool,
     pre: Optional[bool],
+    yanked: bool,
 ) -> None:
     """
     List files available for download.
@@ -190,7 +206,7 @@ def files(
     ``version``.
     """
     if all_versions:
-        vs = qypi.get_all_requirements(project, yanked=False, prereleases=pre)
+        vs = qypi.get_all_requirements(project, yanked=yanked, prereleases=pre)
         click.echo(
             dumps(
                 {
@@ -204,7 +220,7 @@ def files(
         )
     else:
         v = qypi.get_requirement(
-            project, most_recent=newest, yanked=False, prereleases=pre
+            project, most_recent=newest, yanked=yanked, prereleases=pre
         )
         click.echo(
             dumps(

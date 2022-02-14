@@ -16,7 +16,11 @@ v1.0.0 (in development)
 - The output from the `owned` command has changed to use the more accurate
   "project" instead of "package".
 - Output timestamps now use `+00:00` as the timezone offset instead of `Z`
-- Honor package yanking (PEP 592)
+- Honor yanking (PEP 592)
+    - Yanked versions are no longer shown by default
+    - The `info`, `readme`, and `files` commands now have
+      `--yanked`/`--no-yanked` options for controlling whether to display
+      yanked versions
 - Support Python 3.10, 3.11, and 3.12
 - Drop support for Python 3.6
 
