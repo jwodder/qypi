@@ -6,7 +6,7 @@ import json
 from operator import attrgetter
 import platform
 import sys
-from typing import Any, Dict, List, Optional, Union, cast
+from typing import Any, Dict, List, Optional, cast
 from xmlrpc.client import ServerProxy
 from packaging.requirements import Requirement
 from packaging.specifiers import SpecifierSet
@@ -66,7 +66,7 @@ class QyPI:
 
     def get_all_requirements(
         self, req: str, yanked: bool = False, prereleases: Optional[bool] = None
-    ) -> List[ProjectVersion]:
+    ) -> list[ProjectVersion]:
         reqobj = Requirement(req)
         ### TODO: Warn if reqobj has non-None marker, extras, or url?
         project = self.get_project(reqobj.name)
@@ -93,29 +93,29 @@ class QyPI:
     def xmlrpc(self, method: str, *args: Any, **kwargs: Any) -> Any:
         return getattr(self.xsp, method)(*args, **kwargs)
 
-    def list_all_projects(self) -> List[str]:
-        return cast(List[str], self.xmlrpc("list_packages"))
+    def list_all_projects(self) -> list[str]:
+        return cast("list[str]", self.xmlrpc("list_packages"))
 
-    def get_project_roles(self, project: str) -> List[ProjectRole]:
+    def get_project_roles(self, project: str) -> list[ProjectRole]:
         return [
             ProjectRole(role=role, user=user)
             for role, user in self.xmlrpc("package_roles", project)
         ]
 
-    def get_user_roles(self, user: str) -> List[UserRole]:
+    def get_user_roles(self, user: str) -> list[UserRole]:
         return [
             UserRole(role=role, project=project)
             for role, project in self.xmlrpc("user_packages", user)
         ]
 
     def search(
-        self, spec: Dict[str, Union[str, List[str]]], operator: str = "and"
-    ) -> List[SearchResult]:
+        self, spec: dict[str, str | list[str]], operator: str = "and"
+    ) -> list[SearchResult]:
         return [
             SearchResult.parse_obj(r) for r in self.xmlrpc("search", spec, operator)
         ]
 
-    def browse(self, classifiers: List[str]) -> List[BrowseResult]:
+    def browse(self, classifiers: list[str]) -> list[BrowseResult]:
         return [
             BrowseResult(name=name, version=version)
             for name, version in self.xmlrpc("browse", classifiers)
@@ -338,7 +338,7 @@ class Project(JSONableBase):
         return self.default_version.name
 
     @property
-    def versions(self) -> List[str]:
+    def versions(self) -> list[str]:
         return list(self.files.keys())
 
     def get_version(self, version: str) -> ProjectVersion:
@@ -352,7 +352,7 @@ class Project(JSONableBase):
 
     def get_version_by_spec(
         self,
-        spec: Union[str, SpecifierSet],
+        spec: str | SpecifierSet,
         most_recent: bool = False,
         yanked: bool = False,
         prereleases: Optional[bool] = None,
@@ -376,10 +376,10 @@ class Project(JSONableBase):
 
     def get_all_versions_by_spec(
         self,
-        spec: Union[str, SpecifierSet],
+        spec: str | SpecifierSet,
         yanked: bool = False,
         prereleases: Optional[bool] = None,
-    ) -> List[ProjectVersion]:
+    ) -> list[ProjectVersion]:
         if not isinstance(spec, SpecifierSet):
             spec = SpecifierSet(spec)
         vs = list(spec.filter(self.versions, prereleases=prereleases))

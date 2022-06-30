@@ -1,8 +1,9 @@
+from __future__ import annotations
 from collections import OrderedDict
+from collections.abc import Iterator
 import json
 from pathlib import Path
 import re
-from typing import Dict, Iterator, Tuple
 from packaging.utils import canonicalize_name
 import pytest
 from requests import PreparedRequest
@@ -25,7 +26,7 @@ def mock_pypi_json() -> Iterator[responses.RequestsMock]:
         yield rsps
 
 
-def mkresponse(r: PreparedRequest) -> Tuple[int, Dict[str, str], str]:
+def mkresponse(r: PreparedRequest) -> tuple[int, dict[str, str], str]:
     assert r.url is not None
     m = urlre.match(r.url)
     assert m

@@ -1,7 +1,8 @@
+from __future__ import annotations
 from collections import defaultdict
 from itertools import groupby
 from operator import attrgetter
-from typing import Dict, List, Optional, TextIO, Tuple
+from typing import Optional, TextIO
 import click
 from packaging.version import parse
 from . import __version__
@@ -161,7 +162,7 @@ def readme(
 def releases(qypi: QyPI, project: str) -> None:
     """List released project versions"""
     pkg = qypi.get_project(project)
-    data: List[dict] = []
+    data: list[dict] = []
     for v in sorted(pkg.versions, key=parse):
         pv = pkg.get_version(v)
         data.append(
@@ -257,14 +258,14 @@ def listcmd(qypi: QyPI) -> None:
 )
 @click.argument("terms", nargs=-1, required=True)
 @click.pass_obj
-def search(qypi: QyPI, terms: Tuple[str], oper: str, projects: bool) -> None:
+def search(qypi: QyPI, terms: tuple[str, ...], oper: str, projects: bool) -> None:
     """
     Search PyPI for projects or releases thereof.
 
     Search terms may be specified as either ``field:value`` (e.g.,
     ``summary:Django``) or just ``value`` to search long descriptions.
     """
-    spec: Dict[str, List[str]] = defaultdict(list)
+    spec: dict[str, list[str]] = defaultdict(list)
     for t in terms:
         key, colon, value = t.partition(":")
         if colon == "":
@@ -292,7 +293,7 @@ def search(qypi: QyPI, terms: Tuple[str], oper: str, projects: bool) -> None:
 @click.argument("classifiers", nargs=-1)
 @click.pass_obj
 def browse(
-    qypi: QyPI, classifiers: Tuple[str, ...], file: Optional[TextIO], projects: bool
+    qypi: QyPI, classifiers: tuple[str, ...], file: Optional[TextIO], projects: bool
 ) -> None:
     """
     List projects with given trove classifiers.
