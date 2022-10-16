@@ -32,6 +32,7 @@ class QyPI:
         self.index_url = index_url
         self.s = requests.Session()
         self.s.headers["User-Agent"] = USER_AGENT
+        xsp_kwargs: dict[str, Any]
         if sys.version_info >= (3, 8):
             xsp_kwargs = {"headers": [("User-Agent", USER_AGENT)]}
         else:
