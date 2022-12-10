@@ -360,7 +360,7 @@ class Project(JSONableBase):
     ) -> ProjectVersion:
         if not isinstance(spec, SpecifierSet):
             spec = SpecifierSet(spec)
-        vs = list(spec.filter(self.versions, prereleases=prereleases))
+        vs = list(map(str, spec.filter(self.versions, prereleases=prereleases)))
         if most_recent:
             vobjs = [self.get_version(v) for v in vs]
             if not yanked:
@@ -383,7 +383,7 @@ class Project(JSONableBase):
     ) -> list[ProjectVersion]:
         if not isinstance(spec, SpecifierSet):
             spec = SpecifierSet(spec)
-        vs = list(spec.filter(self.versions, prereleases=prereleases))
+        vs = list(map(str, spec.filter(self.versions, prereleases=prereleases)))
         vobjs = [self.get_version(v) for v in vs]
         if not yanked:
             vobjs = [v for v in vobjs if not v.is_yanked]
