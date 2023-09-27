@@ -279,7 +279,7 @@ def search(qypi: QyPI, terms: tuple[str, ...], oper: str, projects: bool) -> Non
             max(versions, key=lambda v: parse(v.version))
             for _, versions in groupby(results, attrgetter("name"))
         ]
-    click.echo(dumps(results))
+    click.echo(dumps([r.json_dict() for r in results]))
 
 
 @main.command()
@@ -310,7 +310,7 @@ def browse(
             max(versions, key=lambda v: parse(v.version))
             for _, versions in groupby(results, attrgetter("name"))
         ]
-    click.echo(dumps(results))
+    click.echo(dumps([r.json_dict() for r in results]))
 
 
 @main.command()

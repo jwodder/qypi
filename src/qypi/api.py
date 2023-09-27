@@ -2,7 +2,6 @@ from __future__ import annotations
 from contextlib import ExitStack
 from datetime import datetime
 from enum import Enum
-import json
 from operator import attrgetter
 import platform
 import sys
@@ -11,7 +10,7 @@ from xmlrpc.client import ServerProxy
 from packaging.requirements import Requirement
 from packaging.specifiers import SpecifierSet
 from packaging.version import parse
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field, field_serializer, field_validator
 import requests
 from . import __url__, __version__
 from .util import show_datetime
@@ -113,7 +112,8 @@ class QyPI:
         self, spec: dict[str, str | list[str]], operator: str = "and"
     ) -> list[SearchResult]:
         return [
-            SearchResult.parse_obj(r) for r in self.xmlrpc("search", spec, operator)
+            SearchResult.model_validate(r)
+            for r in self.xmlrpc("search", spec, operator)
         ]
 
     def browse(self, classifiers: list[str]) -> list[BrowseResult]:
@@ -134,7 +134,7 @@ class Role(Enum):
 
 class JSONableBase(BaseModel):
     def json_dict(self, **kwargs: Any) -> dict:
-        return cast(dict, json.loads(self.json(**kwargs)))
+        return self.model_dump(mode="json", **kwargs)
 
 
 class ProjectRole(JSONableBase):
@@ -149,10 +149,10 @@ class UserRole(JSONableBase):
 
 class SearchResult(JSONableBase):
     name: str
-    summary: Optional[str]
+    summary: Optional[str] = None
     version: str
 
-    @validator("summary")
+    @field_validator("summary")
     @classmethod
     def _nullify_summary(cls, v: Optional[str]) -> Optional[str]:
         if v == "" or v == "UNKNOWN":
@@ -173,34 +173,34 @@ class Downloads(JSONableBase):
 
 
 class ProjectInfo(JSONableBase):
-    author: Optional[str]
-    author_email: Optional[str]
-    bugtrack_url: Optional[str]
+    author: Optional[str] = None
+    author_email: Optional[str] = None
+    bugtrack_url: Optional[str] = None
     classifiers: List[str]
-    description: Optional[str]
-    description_content_type: Optional[str]
-    docs_url: Optional[str]
-    download_url: Optional[str]
+    description: Optional[str] = None
+    description_content_type: Optional[str] = None
+    docs_url: Optional[str] = None
+    download_url: Optional[str] = None
     downloads: Downloads
-    home_page: Optional[str]
-    keywords: Optional[str]
-    license: Optional[str]
-    maintainer: Optional[str]
-    maintainer_email: Optional[str]
+    home_page: Optional[str] = None
+    keywords: Optional[str] = None
+    license: Optional[str] = None
+    maintainer: Optional[str] = None
+    maintainer_email: Optional[str] = None
     name: str
     package_url: str
-    platform: Optional[str]
+    platform: Optional[str] = None
     project_url: str
-    project_urls: Optional[Dict[str, str]]
+    project_urls: Optional[Dict[str, str]] = None
     release_url: str
-    requires_dist: Optional[List[str]]
-    requires_python: Optional[str]
-    summary: Optional[str]
+    requires_dist: Optional[List[str]] = None
+    requires_python: Optional[str] = None
+    summary: Optional[str] = None
     version: str
     yanked: bool
-    yanked_reason: Optional[str]
+    yanked_reason: Optional[str] = None
 
-    @validator(
+    @field_validator(
         "author",
         "author_email",
         "bugtrack_url",
@@ -228,7 +228,7 @@ class ProjectInfo(JSONableBase):
 
 
 class ProjectFile(JSONableBase):
-    comment_text: Optional[str]  # TODO: Nullify?
+    comment_text: Optional[str] = None  # TODO: Nullify?
     digests: Dict[str, str]
     downloads: int
     filename: str
@@ -236,13 +236,21 @@ class ProjectFile(JSONableBase):
     md5_digest: str
     packagetype: str
     python_version: str
-    requires_python: Optional[str]
+    requires_python: Optional[str] = None
     size: int
     upload_time: datetime
     upload_time_iso_8601: datetime
     url: str
     yanked: bool
-    yanked_reason: Optional[str]
+    yanked_reason: Optional[str] = None
+
+    @field_serializer("upload_time", "upload_time_iso_8601")
+    def _serialize_dt(self, dt: datetime) -> str:
+        # For consistency with how `release_date` is serialized for
+        # `qypi_json_dict()`.  Without this custom serializer, Pydantic would
+        # serialize UTC timestamps with "Z" at the end instead of the "+00:00"
+        # used by `datetime.isoformat()`.
+        return dt.isoformat()
 
     def json_dict(self, trust_downloads: bool = False, **kwargs: Any) -> dict:
         if not trust_downloads:
@@ -316,16 +324,13 @@ class ProjectVersion(JSONableBase):
         return info
 
 
-class Project(JSONableBase):
+class Project(JSONableBase, arbitrary_types_allowed=True):
     client: QyPI = Field(exclude=True)
     default_version: ProjectVersion
     files: Dict[str, List[ProjectFile]]
     version_cache: Dict[str, ProjectVersion] = Field(
         default_factory=dict, exclude=True, repr=False
     )
-
-    class Config:
-        arbitrary_types_allowed = True
 
     @classmethod
     def from_response_json(cls, client: QyPI, data: dict) -> Project:
