@@ -5,6 +5,7 @@ from enum import Enum
 from operator import attrgetter
 import platform
 import sys
+from types import TracebackType
 from typing import Any, Dict, List, Optional, cast
 from xmlrpc.client import ServerProxy
 from packaging.requirements import Requirement
@@ -44,7 +45,12 @@ class QyPI:
         self.ctx_stack.enter_context(self.xsp)
         return self
 
-    def __exit__(self, *_exc: Any) -> None:
+    def __exit__(
+        self,
+        _exc_type: type[BaseException] | None,
+        _exc_val: BaseException | None,
+        _exc_tb: TracebackType | None,
+    ) -> None:
         self.ctx_stack.close()
 
     def get_requirement(
