@@ -22,6 +22,9 @@ v1.0.0 (in development)
     - The `info`, `readme`, and `files` commands now have
       `--yanked`/`--no-yanked` options for controlling whether to display
       yanked versions
+- Package arguments to `info`, `files`, and `readme` can now be requirements
+  specifiers that are used to filter the available versions
+- Public library API added
 - Support Python 3.10, 3.11, and 3.12
 - Drop support for Python 3.6
 
