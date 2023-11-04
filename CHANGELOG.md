@@ -6,15 +6,16 @@ v1.0.0 (in development)
   there may be some errors interacting with non-Warehouse project indices that
   do not define all of the same fields as Warehouse.  [Please report any
   instances of the latter.](https://github.com/jwodder/qypi/issues)
-- The `info`, `readme`, `releases`, `files`, `owner`, and `owned` commands now
-  take exactly one positional argument, and the output formats of many of these
-  commands have been simplified for this case
-- The `readme` command no longer takes an `--all-versions`/`-A` option
+- **Breaking**: The `info`, `readme`, `releases`, `files`, `owner`, and `owned`
+  commands now take exactly one positional argument, and the output formats of
+  many of these commands have been simplified for this case
+- **Breaking**: The `readme` command no longer takes an `--all-versions`/`-A`
+  option
 - The output from the `releases` command now includes an `is_yanked` field
-- The `--packages` option to the `search` and `browse` commands is now named
-  `--projects`
-- The output from the `owned` command has changed to use the more accurate
-  "project" instead of "package".
+- **Breaking**: The `--packages` option to the `search` and `browse` commands
+  is now named `--projects`
+- **Breaking**: The output from the `owned` command has changed to use the more
+  accurate "project" instead of "package".
 - Output timestamps now use `+00:00` as the timezone offset instead of `Z`
 - Honor yanking (PEP 592)
     - Yanked versions are no longer shown by default
