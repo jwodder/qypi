@@ -8,6 +8,7 @@
             "author_email": "barbara10@yahoo.com",
             "home_page": "https://bryant.com/wp-content/search/author/",
             "package_url": "https://dummy.nil/pypi/nullfields",
+            "project_url": "https://dummy.nil/pypi/nullfields",
             "release_url": "https://dummy.nil/pypi/nullfields/1.0.0",
             "downloads": {
                 "last_day": 21,
@@ -19,7 +20,9 @@
                 "Topic :: Software Development :: Testing",
                 "UNKNOWN"
             ],
-            "platform": ""
+            "platform": "",
+            "yanked": false,
+            "yanked_reason": null
         },
         "files": [
             {
@@ -35,10 +38,12 @@
                 "downloads": 96,
                 "size": 750,
                 "comment_text": "",
-                "unknown_field": "passed through",
+                "unknown_field": "not passed through",
                 "upload_time": "2007-10-08T07:21:06",
                 "upload_time_iso_8601": "2007-10-08T07:21:06.191703Z",
-                "url": "https://files.dummyhosted.nil/packages/5d/ec/a2ae6831e7419344c28971b4a4f4748424a0841e66ab2464451e63f19990/nullfields-1.0.0.tar.gz"
+                "url": "https://files.dummyhosted.nil/packages/5d/ec/a2ae6831e7419344c28971b4a4f4748424a0841e66ab2464451e63f19990/nullfields-1.0.0.tar.gz",
+                "yanked": false,
+                "yanked_reason": null
             },
             {
                 "md5_digest": "d4cd0d857311318c574d9a5713b4a955",
@@ -53,10 +58,12 @@
                 "downloads": 93,
                 "size": 730,
                 "comment_text": "",
-                "unknown_field": "passed through",
+                "unknown_field": "not passed through",
                 "upload_time": "2009-01-10T16:37:05",
                 "upload_time_iso_8601": "2009-01-10T16:37:05.820291Z",
-                "url": "https://files.dummyhosted.nil/packages/88/29/3097d542abba807cf3d6ece379ec583f5e373e32e522cf524bad939cd93e/nullfields-1.0.0-py2.py3-none-any.whl"
+                "url": "https://files.dummyhosted.nil/packages/88/29/3097d542abba807cf3d6ece379ec583f5e373e32e522cf524bad939cd93e/nullfields-1.0.0-py2.py3-none-any.whl",
+                "yanked": false,
+                "yanked_reason": null
             }
         ]
     }
