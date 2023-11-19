@@ -1,3 +1,72 @@
 [build-system]
-requires = ["setuptools >= 46.4.0"]
-build-backend = "setuptools.build_meta"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "qypi"
+dynamic = ["version"]
+description = "Query PyPI from the command line"
+readme = "README.rst"
+requires-python = ">=3.6"
+license = "MIT"
+license-files = { paths = ["LICENSE"] }
+authors = [
+    { name = "John Thorvald Wodder II", email = "qypi@varonathe.org" }
+]
+
+keywords = [
+    "pypi",
+    "warehouse",
+    "search",
+    "packages",
+    "pip",
+]
+
+classifiers = [
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.6",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Programming Language :: Python :: Implementation :: PyPy",
+    "License :: OSI Approved :: MIT License",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Information Technology",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: System :: Software Distribution",
+]
+
+dependencies = [
+    "click     ~= 8.0",
+    "packaging >= 16",
+    "requests  ~= 2.20",
+]
+
+[project.scripts]
+qypi = "qypi.__main__:qypi"
+
+[project.urls]
+"Source Code" = "https://github.com/jwodder/qypi"
+"Bug Tracker" = "https://github.com/jwodder/qypi/issues"
+
+[tool.hatch.version]
+path = "src/qypi/__init__.py"
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "/docs",
+    "/src",
+    "/test",
+    "CHANGELOG.*",
+    "CONTRIBUTORS.*",
+    "tox.ini",
+]
+
+[tool.hatch.envs.default]
+python = "3"
