@@ -595,7 +595,7 @@ def test_info_nonexistent():
 
 @pytest.mark.usefixtures("mock_pypi_json")
 def test_info_nonexistent_split():
-    r = CliRunner(mix_stderr=False).invoke(qypi, ["info", "does-not-exist", "foobar"])
+    r = CliRunner().invoke(qypi, ["info", "does-not-exist", "foobar"])
     assert r.exit_code == 1, show_result(r)
     assert r.stdout == (
         "[\n"
@@ -640,7 +640,7 @@ def test_info_nonexistent_version():
 
 @pytest.mark.usefixtures("mock_pypi_json")
 def test_info_nonexistent_version_split():
-    r = CliRunner(mix_stderr=False).invoke(qypi, ["info", "foobar==2.23.42"])
+    r = CliRunner().invoke(qypi, ["info", "foobar==2.23.42"])
     assert r.exit_code == 1, show_result(r)
     assert r.stdout == "[]\n"
     assert r.stderr == "qypi: foobar: version 2.23.42 not found\n"
@@ -655,7 +655,7 @@ def test_info_nonexistent_explicit_version():
 
 @pytest.mark.usefixtures("mock_pypi_json")
 def test_info_nonexistent_explicit_version_split():
-    r = CliRunner(mix_stderr=False).invoke(qypi, ["info", "does-not-exist==2.23.42"])
+    r = CliRunner().invoke(qypi, ["info", "does-not-exist==2.23.42"])
     assert r.exit_code == 1, show_result(r)
     assert r.stdout == "[]\n"
     assert r.stderr == "qypi: does-not-exist: version 2.23.42 not found\n"
