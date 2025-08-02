@@ -1,8 +1,10 @@
-v0.7.0 (in development)
+v0.6.1 (in development)
 -----------------------
 - Support Python 3.10, 3.11, 3.12, and 3.13
 - Migrated from setuptools to hatch
 - Drop support for Python 3.6, 3.7, 3.8, and 3.9
+- Exclude click v8.2.2 from dependencies due to breakage caused by
+  https://github.com/pallets/click/issues/3024
 
 v0.6.0 (2021-05-31)
 -------------------

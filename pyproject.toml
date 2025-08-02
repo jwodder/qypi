@@ -39,7 +39,7 @@ classifiers = [
 ]
 
 dependencies = [
-    "click     ~= 8.2",
+    "click     ~= 8.2, != 8.2.2",
     "packaging >= 16",
     "requests  ~= 2.20",
 ]
