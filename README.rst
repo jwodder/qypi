@@ -1,9 +1,10 @@
 |repostatus| |ci-status| |coverage| |pyversions| |license|
 
-.. |repostatus| image:: https://www.repostatus.org/badges/latest/active.svg
-    :target: https://www.repostatus.org/#active
-    :alt: Project Status: Active — The project has reached a stable, usable
-          state and is being actively developed.
+.. |repostatus| image:: https://www.repostatus.org/badges/latest/unsupported.svg
+    :target: https://www.repostatus.org/#unsupported
+    :alt: Project Status: Unsupported – The project has reached a stable,
+          usable state but the author(s) have ceased all work on it. A new
+          maintainer may be desired.
 
 .. |ci-status| image:: https://github.com/jwodder/qypi/actions/workflows/test.yml/badge.svg
     :target: https://github.com/jwodder/qypi/actions/workflows/test.yml
